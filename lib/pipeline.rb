@@ -219,6 +219,7 @@ module Pipeline
       require 'pipeline/scanner'
       require 'pipeline/tracker'
       require 'pipeline/reporter'
+      require 'pipeline/mounters'
     rescue LoadError => e
       $stderr.puts e.message
       raise NoPipelineError, "Cannot find lib/ directory."
@@ -226,24 +227,20 @@ module Pipeline
 
     add_external_tasks options
 
-    #Start scanning
     tracker = Tracker.new options
+
+    # Make the target accessible.    
+    target = Pipeline::Mounters.mount options[:target], tracker
+
+    #Start scanning
     scanner = Scanner.new options
     reporter = Reporter.new options
 
     notify "Processing target...#{options[:target]}"
-    scanner.process tracker
-
-    if options[:output_files]
-      notify "Generating report..."
-    #  write_report_to_files tracker, options[:output_files]
-    elsif options[:print_report]
-      notify "Generating report..."
-    #  write_report_to_formats tracker, options[:output_formats]
-    end
+    scanner.process target, tracker
 
     reporter.report tracker 
-    
+
     tracker
   end
 
