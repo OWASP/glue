@@ -1,4 +1,7 @@
 ## 0.1.0
-
   * Structure for pipeline and initial tool series.
-
+  * TODO:  gem packaging
+  * TODO:  clean up documentation
+  * TODO:  clean up finding / reporting
+  * TODO:  docker mounting
+  
