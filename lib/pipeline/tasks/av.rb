@@ -24,8 +24,8 @@ class Pipeline::AV < Pipeline::BaseTask
 	  list.each do |v|
 	     # v.slice! installdir 
 	     Pipeline.notify v
-	     report v    # Alert on any detected Virus
-	  end
+       report "Malicious file identified.", v, @name, :medium
+    end
   end
 
   def supported?

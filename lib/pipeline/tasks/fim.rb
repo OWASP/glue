@@ -48,7 +48,7 @@ class Pipeline::FIM < Pipeline::BaseTask
     list.each do |v|
        # v.slice! installdir 
        Pipeline.notify v
-       report v    # Alert on any file changes
+       report "File changed.", v, @name, :low
     end
   end
 

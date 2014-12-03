@@ -218,6 +218,7 @@ module Pipeline
     begin
       require 'pipeline/scanner'
       require 'pipeline/tracker'
+      require 'pipeline/reporter'
     rescue LoadError => e
       $stderr.puts e.message
       raise NoPipelineError, "Cannot find lib/ directory."
@@ -228,6 +229,7 @@ module Pipeline
     #Start scanning
     tracker = Tracker.new options
     scanner = Scanner.new options
+    reporter = Reporter.new options
 
     notify "Processing target...#{options[:target]}"
     scanner.process tracker
@@ -240,6 +242,8 @@ module Pipeline
     #  write_report_to_formats tracker, options[:output_formats]
     end
 
+    reporter.report tracker 
+    
     tracker
   end
 

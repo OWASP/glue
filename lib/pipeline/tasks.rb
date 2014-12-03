@@ -68,6 +68,9 @@ class Pipeline::Tasks
             Pipeline.notify "#{stage} - #{task_name}"
             task.run
             task.analyze
+            task.findings.each do | finding | 
+              tracker.report finding
+            end
           end
         rescue => e
           Pipeline.notify e.message

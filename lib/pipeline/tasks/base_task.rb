@@ -12,7 +12,8 @@ class Pipeline::BaseTask
     @trigger = trigger
   end
 
-  def report finding
+  def report description, detail, source, severity
+    finding = Pipeline::Finding.new( description, detail, source, severity )
     @findings << finding
   end
 
