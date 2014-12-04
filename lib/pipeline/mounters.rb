@@ -26,12 +26,14 @@ class Pipeline::Mounters
     @warnings << warning
   end
 
-  def self.mount target, tracker
+  def self.mount options, tracker
+  	target = options[:target]
   	trigger = Pipeline::Event.new()
   	@mounters.each do | c |
-  	  mounter = c.new trigger, @options
+  	  mounter = c.new trigger, options
  	  begin 
   	    if mounter.supports? target
+	  	  Pipeline.notify "Mounting #{target} with #{mounter}"
 	  	  path = mounter.mount target
 	  	  Pipeline.notify "Mounted #{target} with #{mounter}"
 		  return path

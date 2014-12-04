@@ -94,7 +94,8 @@ module Pipeline
   def self.default_options
     { 
       :parallel_tasks => true, 
-      :skip_tasks => Set.new()
+      :skip_tasks => Set.new(),
+      :working_dir => "/var/redsky/tmp/"
     }
   end
 
@@ -230,7 +231,7 @@ module Pipeline
     tracker = Tracker.new options
 
     # Make the target accessible.    
-    target = Pipeline::Mounters.mount options[:target], tracker
+    target = Pipeline::Mounters.mount options, tracker
 
     #Start scanning
     scanner = Scanner.new options

@@ -3,7 +3,6 @@ require 'pipeline/mounters/base_mounter'
 class Pipeline::FileSystemMounter < Pipeline::BaseMounter
   Pipeline::Mounters.add self
   
-  #Pass in path to the root of the Rails application
   def initialize trigger, options
     super(trigger)
     @options = options
