@@ -28,10 +28,12 @@ class Pipeline::Mounters
 
   def self.mount options, tracker
   	target = options[:target]
+  	Pipeline.debug "Mounting target: #{target}"
   	trigger = Pipeline::Event.new()
   	@mounters.each do | c |
   	  mounter = c.new trigger, options
  	  begin 
+	  	Pipeline.debug "Checking about mounting #{target} with #{mounter}"
   	    if mounter.supports? target
 	  	  Pipeline.notify "Mounting #{target} with #{mounter}"
 	  	  path = mounter.mount target

@@ -2,5 +2,18 @@
 * AV
 * FIM
 
+FUTURE:
+* oscap - https://www.redhat.com/archives/open-scap-list/2013-May/msg00007.html
+* pmd
+* brakeman
+* dependency checker
+* codescan
+
 # Images
 * Raw directory on file system.
+* git
+* docker
+
+FUTURE:
+* iso
+* vmdk, vdi, ami

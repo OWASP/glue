@@ -229,7 +229,7 @@ module Pipeline
     add_external_tasks options
 
     tracker = Tracker.new options
-
+    debug "Mounting ... #{options[:target]}"
     # Make the target accessible.    
     target = Pipeline::Mounters.mount options, tracker
 

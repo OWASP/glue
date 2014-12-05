@@ -16,6 +16,14 @@ pipeline <image>
 
 For a full list of options, use `pipeline --help` or see the OPTIONS.md file.
 
+# Dependencies
+
+* clamav
+* hashdeep
+* rm (*nix)
+* git
+* mount (*nix)
+* docker
 
 # Development
 
