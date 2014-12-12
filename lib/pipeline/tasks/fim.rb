@@ -13,10 +13,11 @@ class Pipeline::FIM < Pipeline::BaseTask
     @description = "File integrity monitor"
     @stage = :file
     @result = ''
+    @labels << "filesystem"
   end
 
   def run
-    Pipeline.notify "FIM Check"
+    Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     if File.exists?("/area81/tmp/#{rootpath}/filehash")
       Pipeline.notify "File Hashes found, comparing to file system"

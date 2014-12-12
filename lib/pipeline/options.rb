@@ -72,6 +72,11 @@ module Pipeline::Options
           end
         end
 
+        opts.on "-l", "--labels Label1,Label2,etc", Array, "Run the checks with the supplied labels" do |labels|
+          options[:labels] ||= Set.new
+          options[:labels].merge labels
+        end
+
         opts.on "--add-checks-path path1,path2,etc", Array, "A directory containing additional out-of-tree checks to run" do |paths|
           options[:additional_checks_path] ||= Set.new
           options[:additional_checks_path].merge paths.map {|p| File.expand_path p}

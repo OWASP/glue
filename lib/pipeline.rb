@@ -95,7 +95,8 @@ module Pipeline
     { 
       :parallel_tasks => true, 
       :skip_tasks => Set.new(),
-      :working_dir => "/var/redsky/tmp/"
+      :working_dir => "/var/redsky/tmp/",
+      :labels => Set.new() << "filesystem"     # Defaults to run.
     }
   end
 

@@ -1,7 +1,8 @@
 require 'pipeline/finding'
+require 'set'
 
 class Pipeline::BaseTask
-  attr_reader :findings, :warnings, :trigger
+  attr_reader :findings, :warnings, :trigger, :labels
   attr_accessor :name
   attr_accessor :description
   attr_accessor :stage
@@ -9,6 +10,7 @@ class Pipeline::BaseTask
   def initialize(trigger)
     @findings = []
     @warnings = []
+    @labels = Set.new
     @trigger = trigger
   end
 

@@ -11,6 +11,7 @@ class Pipeline::AV < Pipeline::BaseTask
     @name = "AV"
     @description = "Test for virus/malware"
     @stage = :file
+    @labels << "filesystem"
   end
 
   def run
