@@ -2,6 +2,10 @@
   * Structure for pipeline and initial tool series.
   * gem packaging
   * Finding / reporting
-  * TODO:  docker mounting
-  * TODO:  clean up documentation
-  
+  * docker mounting
+  * Support for task labels.  Run with 'pipeline -l label' and only tasks that identify with that label will run. 
+  * Move to only keep options in tracker.
+  * TODO:  add scap
+  * TODO:  Devtools:  pmd, brakeman, dependency checker, codescan, scanjs, bandit, etc.
+  * TODO:  Misc OS checks
+

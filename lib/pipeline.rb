@@ -232,11 +232,11 @@ module Pipeline
     tracker = Tracker.new options
     debug "Mounting ... #{options[:target]}"
     # Make the target accessible.    
-    target = Pipeline::Mounters.mount options, tracker
+    target = Pipeline::Mounters.mount tracker
 
     #Start scanning
-    scanner = Scanner.new options
-    reporter = Reporter.new options
+    scanner = Scanner.new
+    reporter = Reporter.new
 
     notify "Processing target...#{options[:target]}"
     scanner.process target, tracker

@@ -3,13 +3,11 @@ require 'pipeline/tracker'
 require 'pipeline/tasks'
 
 class Pipeline::Scanner
-  attr_reader :options
   attr_reader :tracker
   attr_reader :mounter
 
   #Pass in path to the root of the Rails application
-  def initialize options
-    @options = options
+  def initialize
     @stage = :wait
     @stages = [ :wait, :mount, :file, :code, :live, :done]
   end

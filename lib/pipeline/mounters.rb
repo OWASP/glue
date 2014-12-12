@@ -6,7 +6,6 @@ class Pipeline::Mounters
   @mounters = []
 
   attr_reader :target
-  attr_reader :options
   attr_reader :warnings
    
   def self.add klass
@@ -17,21 +16,20 @@ class Pipeline::Mounters
   	@mounters
   end
 
-  def initialize options
+  def initialize
   	@warnings = []
-  	@options = options
   end
 
   def add_warning warning
     @warnings << warning
   end
 
-  def self.mount options, tracker
-  	target = options[:target]
+  def self.mount tracker
+  	target = tracker.options[:target]
   	Pipeline.debug "Mounting target: #{target}"
   	trigger = Pipeline::Event.new()
   	@mounters.each do | c |
-  	  mounter = c.new trigger, options
+  	  mounter = c.new trigger, tracker.options
  	  begin 
 	  	Pipeline.debug "Checking about mounting #{target} with #{mounter}"
   	    if mounter.supports? target

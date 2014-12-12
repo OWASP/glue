@@ -4,7 +4,9 @@ class Pipeline::Tracker
   attr_reader :errors
   attr_reader :findings
 
-  #Pass in path to the root of the Rails application
+  # Pass in the options.
+  # Let the Tracker be the one thing that gets passed around
+  # with options and collecting output.
   def initialize options
     @options = options
     @warnings = []
