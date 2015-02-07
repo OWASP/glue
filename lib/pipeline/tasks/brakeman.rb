@@ -1,30 +1,45 @@
 require 'pipeline/tasks/base_task'
+require 'json'
 
 class Pipeline::Brakeman < Pipeline::BaseTask
   
   Pipeline::Tasks.add self
   
   def initialize(trigger)
-  	super(trigger)
+    super(trigger)
     @name = "Brakeman"
     @description = "Source analysis for Ruby"
     @stage = :code
     @labels << "code" << "rails"
   end
-
+  
   def run
     Pipeline.notify "#{@name}"
-  	rootpath = @trigger.path
-	  @result=`brakeman -q -f json "#{rootpath}"`
+    rootpath = @trigger.path
+    @result=`brakeman -q -f json "#{rootpath}"`
   end
 
   def analyze
-    # TODO:  Process JSON
+    # puts @result
+    begin
+      parsed = JSON.parse(@result)
+      parsed["warnings"].each do |warning|
+        detail = "Message: #{warning['message']} Link: #{warning['link']}"
+        source = "File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
+        report warning["warning_type"], detail, source, warning["confidence"] 
+      end
+    rescue
+      Pipeline.notify "Appears not to be a rails project ... brakeman skipped."
+    end
   end
 
   def supported?
-  	# In future, verify tool is available.
-  	return true 
+    supported=`brakeman -v`
+    if supported =~ /command not found/
+      return false
+    else
+      return true
+    end
   end
 
 end

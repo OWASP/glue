@@ -2,7 +2,7 @@ require 'pipeline/tasks/base_task'
 
 class Pipeline::ScanJS < Pipeline::BaseTask
   
-  Pipeline::Tasks.add self
+#  Pipeline::Tasks.add self
   
   def initialize(trigger)
   	super(trigger)
@@ -19,7 +19,7 @@ class Pipeline::ScanJS < Pipeline::BaseTask
   end
 
   def analyze
-    # TODO:  Process JSON
+    puts @result
   end
 
   def supported?

@@ -1,7 +1,9 @@
 require 'pipeline/mounters/base_mounter'
 
 class Pipeline::ISOMounter < Pipeline::BaseMounter
-  Pipeline::Mounters.add self
+  
+  # THIS DOESN'T WORK SO DON'T REGISTER FOR NOW
+  # Pipeline::Mounters.add self
   
   def initialize trigger, options
     super(trigger)
@@ -17,7 +19,7 @@ class Pipeline::ISOMounter < Pipeline::BaseMounter
 
     Pipeline.notify "This doesn't work on MAC for some reason."
     # TODO:  COME BACK AND TEST ON LINUX AND FIX FOR MAC
-    
+
     if ! working_target.match(/\A\/var\/redsky\/.*/)
       Pipeline.notify "Bailing in case #{working_target} is malicious."      
     else
