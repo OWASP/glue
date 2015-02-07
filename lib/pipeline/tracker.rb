@@ -1,3 +1,5 @@
+require 'json'
+
 class Pipeline::Tracker
   attr_reader :options
   attr_reader :warnings
@@ -30,4 +32,16 @@ class Pipeline::Tracker
   def report finding
     @findings << finding
   end  
+
+  def to_json
+    s = "{ \"findings\": [ "
+    @findings.each do |finding|
+      s << finding.to_json
+      s << ","
+    end
+    s = s.slice(0,s.length-1) # One easy way to remove the last ,
+    s << "] }"
+    s
+
+  end
 end

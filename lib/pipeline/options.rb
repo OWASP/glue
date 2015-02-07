@@ -90,13 +90,11 @@ module Pipeline::Options
         end
 
         opts.on "-f",
-          "--format TYPE",
-          [:pdf, :text, :html, :csv, :tabs, :json, :markdown],
-          "Specify output formats. Default is text" do |type|
-
-          type = "s" if type == :text
-          options[:output_format] = ("to_" << type.to_s).to_sym
-          end
+                "--format TYPE",
+                [:text, :html, :csv, :tabs, :json, :markdown],
+                "Specify output formats. Default is text" do |type|
+          options[:output_format] = type
+        end
 
         opts.on "--css-file CSSFile", "Specify CSS to use for HTML output" do |file|
           options[:html_style] = File.expand_path file

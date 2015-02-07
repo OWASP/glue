@@ -11,7 +11,9 @@ module Pipeline::Util
       exit  = wait_thr.value
 
       if wait_thr.value != 0 && report
-        puts res
+        # Weird. wait_thr value is non-0 for bundler-audit 
+        # but not brakeman. Comment to keep output cleaner...
+        # puts res
         puts error
         #puts *splat
       end

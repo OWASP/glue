@@ -1,3 +1,5 @@
+require 'json'
+
 class Pipeline::Finding
   attr_reader :timestamp
   attr_reader :severity
@@ -17,6 +19,16 @@ class Pipeline::Finding
   	s = "Finding: #{@description}\t#{@timestamp}\t#{@source}\t#{@severity}\n"
   	s << "\t#{@detail}\n"
   	s
+  end
+
+  def to_json
+    json = {'description' => @description,
+     'detail' => @detail, 
+     'source' => @source, 
+     'severity' => @severity, 
+     'timestamp' => @timestamp 
+    }.to_json
+    json
   end
 
 end

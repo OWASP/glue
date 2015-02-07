@@ -95,8 +95,9 @@ module Pipeline
     { 
       :parallel_tasks => true, 
       :skip_tasks => Set.new(),
-      :working_dir => "/var/redsky/tmp/",
-      :labels => Set.new() << "filesystem"     # Defaults to run.
+      :output_format => :text,
+      :working_dir => "/var/pipeline/tmp/",
+      :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
   end
 
@@ -220,8 +221,10 @@ module Pipeline
     begin
       require 'pipeline/scanner'
       require 'pipeline/tracker'
-      require 'pipeline/reporter'
       require 'pipeline/mounters'
+#      require 'pipeline/filters'
+      require 'pipeline/reporters'
+      
     rescue LoadError => e
       $stderr.puts e.message
       raise NoPipelineError, "Cannot find lib/ directory."
@@ -232,16 +235,16 @@ module Pipeline
     tracker = Tracker.new options
     debug "Mounting ... #{options[:target]}"
     # Make the target accessible.    
-    target = Pipeline::Mounters.mount tracker
+    target = Pipeline::Mounters.mount(tracker)
 
     #Start scanning
     scanner = Scanner.new
-    reporter = Reporter.new
-
     notify "Processing target...#{options[:target]}"
     scanner.process target, tracker
-
-    reporter.report tracker 
+    
+    # Generate Report
+    notify "Generating report...#{options[:output_format]}"
+    Pipeline::Reporters.run_report(tracker)
 
     tracker
   end
