@@ -1,22 +1,24 @@
 require 'pipeline/tasks/base_task'
 require 'json'
+require 'pipeline/util'
 
 class Pipeline::Brakeman < Pipeline::BaseTask
   
   Pipeline::Tasks.add self
+  include Pipeline::Util
   
   def initialize(trigger)
     super(trigger)
     @name = "Brakeman"
     @description = "Source analysis for Ruby"
     @stage = :code
-    @labels << "code" << "rails"
+    @labels << "code" << "ruby" << "rails"
   end
   
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    @result=`brakeman -q -f json "#{rootpath}"`
+    @result=runsystem(true, "brakeman", "-q", "-f", "json", "#{rootpath}")
   end
 
   def analyze
@@ -34,8 +36,9 @@ class Pipeline::Brakeman < Pipeline::BaseTask
   end
 
   def supported?
-    supported=`brakeman -v`
+    supported=runsystem(true, "brakeman", "-v")
     if supported =~ /command not found/
+      Pipeline.notify "Run: gem install brakeman"
       return false
     else
       return true
