@@ -13,13 +13,23 @@ class Pipeline::DepCheckListener
     @count = 0
     @sw = ""
     @url = ""
+    @desc = ""
+    @cwe = ""
+    @cvss = ""
+    @name = ""
   end
   
   def tag_start(name, attrs)
     case name
     when "vulnerability"
       @count = @count + 1 
-      puts "Grabbed #{@count} vulns."
+      Pipeline.debug "Grabbed #{@count} vulns."
+      @sw = ""
+      @url = ""
+      @desc = ""
+      @cwe = ""
+      @cvss = ""
+      @name = ""
     end
   end
   
@@ -38,13 +48,13 @@ class Pipeline::DepCheckListener
     when "vulnerableSoftware"
       @sw = ""
     when "software"
-      @sw << @text
+      @sw << ", " << @text
     when "url"
-      @url << @text
+      @url << ", " << @text
     when "vulnerability"
-      detail = @sw + @url
-      description = @desc + @cwe
-      puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
+      detail = @sw + "\n"+ @url
+      description = @desc + "\n" + @cwe
+#      puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
       @task.report @name, description, detail, @cvss 
     end
   end

@@ -11,9 +11,9 @@ class Pipeline::DockerMounter < Pipeline::BaseMounter
   end
 
   def mount target
-  	base = @options[:working_dir]
-  	target = target.slice(0, target.length - 7)
-  	working_target = base + "/docker/" + target + "/"
+    base = @options[:working_dir]
+    target = target.slice(0, target.length - 7)
+    working_target = base + "/docker/" + target + "/"
     Pipeline.notify "Cleaning directory: #{working_target}"
     if ! working_target.match(/\A\/var\/redsky\/.*/)
       Pipeline.notify "Bailing in case #{working_target} is malicious."      
@@ -31,10 +31,10 @@ class Pipeline::DockerMounter < Pipeline::BaseMounter
     end
     return working_target
   end
-
+  
   def supports? target
-  	last = target.slice(-7,target.length)
-  	Pipeline.debug "Target: #{target} became: #{last}"
+    last = target.slice(-7,target.length)
+    Pipeline.debug "Target: #{target} became: #{last}"
     if last === ".docker"
       return true
     else

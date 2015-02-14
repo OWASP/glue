@@ -249,8 +249,16 @@ module Pipeline
     tracker
   end
 
-  def self.notify message
+  def self.error message
+    $stderr.puts message
+  end
+
+  def self.warn message
     $stderr.puts message unless @quiet
+  end
+
+  def self.notify message
+    $stderr.puts message unless @debug
   end
 
   def self.debug message
