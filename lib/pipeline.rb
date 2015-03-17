@@ -258,7 +258,7 @@ module Pipeline
   end
 
   def self.notify message
-    $stderr.puts message unless @debug
+    $stderr.puts message #unless @debug
   end
 
   def self.debug message

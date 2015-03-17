@@ -17,8 +17,13 @@ class Pipeline::Scanner
     @stages.each do |stage|
       Pipeline.notify "Running tasks in stage: #{stage}"
       @stage = stage
-      # Do work.
-      Pipeline::Tasks.run_tasks(target, stage, tracker)
+      begin
+        # Do work.
+        Pipeline::Tasks.run_tasks(target, stage, tracker)
+      rescue Exception => e
+        Pipeline.warn e.message
+        raise e
+      end
     end
   end
 end

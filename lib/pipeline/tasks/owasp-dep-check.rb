@@ -17,6 +17,7 @@ class Pipeline::DepCheckListener
     @cwe = ""
     @cvss = ""
     @name = ""
+    @fingerprint = ""
   end
   
   def tag_start(name, attrs)
@@ -30,6 +31,7 @@ class Pipeline::DepCheckListener
       @cwe = ""
       @cvss = ""
       @name = ""
+      @fingerprint = ""
     end
   end
   
@@ -54,8 +56,9 @@ class Pipeline::DepCheckListener
     when "vulnerability"
       detail = @sw + "\n"+ @url
       description = @desc + "\n" + @cwe
-#      puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
-      @task.report @name, description, detail, @cvss 
+      @fingerprint = @sw+"-"+@name
+      puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
+      @task.report @name, description, detail, @cvss, @fingerprint
     end
   end
   
@@ -85,13 +88,15 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
 
   def analyze
     path = @trigger.path + "/dependency-check-report.xml"
-#    @result = File.open(path, "rb").read
+    @result = File.open(path, "rb").read
 #    puts @result
     begin
+      Pipeline.debug "Parsing report #{path}"
+      Pipeline.debug "#{@result}"
       get_warnings(path)
     rescue Exception => e
       Pipeline.notify "Problem running OWASP Dep Check ... skipped."
-      Pipeline.notify e
+      Pipeline.notify e.message
       raise e
     end
   end
@@ -101,7 +106,7 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
     if supported =~ /command not found/
       Pipeline.notify "Install dependency-check."
       return false
-pi    else
+    else
       return true
     end
   end

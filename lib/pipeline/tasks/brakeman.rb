@@ -28,9 +28,10 @@ class Pipeline::Brakeman < Pipeline::BaseTask
       parsed["warnings"].each do |warning|
         detail = "Message: #{warning['message']} Link: #{warning['link']}"
         source = "File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
-        report warning["warning_type"], detail, source, warning["confidence"] 
+        report warning["warning_type"], detail, source, warning["confidence"], warning['fingerprint']
       end
-    rescue
+    rescue Exception => e
+      Pipeline.warn e.message
       Pipeline.notify "Appears not to be a rails project ... brakeman skipped."
     end
   end

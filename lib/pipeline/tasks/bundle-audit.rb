@@ -27,7 +27,8 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
 #    puts @result
     begin
       get_warnings
-    rescue
+    rescue Exception => e
+      Pipeline.warn e.message
       Pipeline.notify "Appears not to be a project with Gemfile.lock ... bundle-audit skipped."
     end
   end
@@ -44,17 +45,18 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
 
   private 
   def get_warnings
-    detail, gem, source, severity = '','','',''
+    detail, gem, source, severity, fingerprint = '','','','',''
     @result.each_line do | line |
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
-          report "Gem #{gem} has known security issues.", detail, source, severity  
+          report "Gem #{gem} has known security issues.", detail, source, severity, fingerprint  
         end
-        detail, gem, source, severity = '','','',''
+        detail, gem, source, severity, fingerprint = '','','','', ''
       end
 
       name, value = line.chomp.split(':')
+      value.chomp!
       case name
       when 'Name'
         gem << value
@@ -62,6 +64,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
         gem << value
       when 'Advisory'
         source << value
+        fingerprint = value
       when 'Criticality'
         severity << value
       when 'URL'
@@ -71,7 +74,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
       when 'Solution'
         detail << value
       when 'Insecure Source URI found'
-        report "Insecure GEM Source", "#{line} - use git or https", "BundlerAudit", "High"
+        report "Insecure GEM Source", "#{line} - use git or https", "BundlerAudit", "High", "bundlerauditgemsource"
       else
         if line =~ /\S/ and line !~ /Unpatched versions found/
           Pipeline.notify "Not sure how to handle line: #{line}"

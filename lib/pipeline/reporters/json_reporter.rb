@@ -15,7 +15,9 @@ class Pipeline::JSONReporter < Pipeline::BaseReporter
   end
 
   def run_report(tracker)
-    puts tracker.to_json
+    tracker.findings.each do |finding|
+    	puts finding.to_json
+   	end
   end
 
 end
