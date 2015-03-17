@@ -2,6 +2,7 @@ require 'pipeline/tasks/base_task'
 
 class Pipeline::ScanJS < Pipeline::BaseTask
   
+#  WIP  
 #  Pipeline::Tasks.add self
   
   def initialize(trigger)

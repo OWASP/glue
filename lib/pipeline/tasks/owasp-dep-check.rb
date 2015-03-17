@@ -57,7 +57,7 @@ class Pipeline::DepCheckListener
       detail = @sw + "\n"+ @url
       description = @desc + "\n" + @cwe
       @fingerprint = @sw+"-"+@name
-      puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
+      # puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
       @task.report @name, description, detail, @cvss, @fingerprint
     end
   end
@@ -88,11 +88,10 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
 
   def analyze
     path = @trigger.path + "/dependency-check-report.xml"
-    @result = File.open(path, "rb").read
-#    puts @result
+    #@result = File.open(path, "rb").read
+    #Pipeline.debug "#{@result}"
     begin
       Pipeline.debug "Parsing report #{path}"
-      Pipeline.debug "#{@result}"
       get_warnings(path)
     rescue Exception => e
       Pipeline.notify "Problem running OWASP Dep Check ... skipped."

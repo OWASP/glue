@@ -18,7 +18,6 @@ class Pipeline::Scanner
       Pipeline.notify "Running tasks in stage: #{stage}"
       @stage = stage
       begin
-        # Do work.
         Pipeline::Tasks.run_tasks(target, stage, tracker)
       rescue Exception => e
         Pipeline.warn e.message

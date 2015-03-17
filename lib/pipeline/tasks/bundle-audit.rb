@@ -56,7 +56,6 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
       end
 
       name, value = line.chomp.split(':')
-      value.chomp!
       case name
       when 'Name'
         gem << value

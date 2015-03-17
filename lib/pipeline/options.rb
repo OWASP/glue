@@ -23,6 +23,18 @@ module Pipeline::Options
       parser = OptionParser.new do |opts|
         opts.banner = "Usage: pipeline [options] image/root/path"
 
+        opts.separator ""
+        opts.separator "Pipeline is a swiss army knife of security analysis tools."
+        opts.separator "It has built in support for static analysis, AV, fim, and "
+        opts.separator "is being extended to be used for analyzing all kinds of "
+        opts.separator "images or file systems."
+        opts.separator ""
+        opts.separator "Pipeline also features deduplication and the abilty to handle "
+        opts.separator "false positives."
+        opts.separator ""
+
+        opts.separator "Control options:"
+
         opts.on "-n", "--no-threads", "Run checks sequentially" do
           options[:parallel_checks] = false
         end
