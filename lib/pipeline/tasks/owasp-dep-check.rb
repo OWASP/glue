@@ -24,7 +24,7 @@ class Pipeline::DepCheckListener
     case name
     when "vulnerability"
       @count = @count + 1 
-      Pipeline.debug "Grabbed #{@count} vulns."
+      # Pipeline.debug "Grabbed #{@count} vulns."
       @sw = ""
       @url = ""
       @desc = ""
@@ -57,7 +57,8 @@ class Pipeline::DepCheckListener
       detail = @sw + "\n"+ @url
       description = @desc + "\n" + @cwe
       @fingerprint = @sw+"-"+@name
-      # puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
+      puts "Fingerprint: #{@fingerprint}"
+      puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
       @task.report @name, description, detail, @cvss, @fingerprint
     end
   end

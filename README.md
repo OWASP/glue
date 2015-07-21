@@ -1,12 +1,18 @@
-![Pipeline Logo](http://redksy.com/images/pipeline.png)
+![Pipeline Logo](https://upload.wikimedia.org/wikipedia/commons/3/37/The_Great_Wave_of_Kanagava.jpg)
 
 # Pipeline
 
-Pipeline is a framework for running a series of tools.
+Pipeline is a framework for running a series of tools.  Generally, it is intended as a backbone 
+for automating a security analysis pipeline of tools.
 
 # Installation
 
 gem install pipeline
+
+# Extending Pipeline
+
+Pipeline is intended to be extended through added "tasks".  To add a new tool, 
+copy an existing task and tweak to make it work for the tool in question.
 
 # Usage
 
@@ -40,4 +46,4 @@ For advanced usage scenarios, you can save your configuration and use it at runt
 
 # License
 
-Copyright Rsky, LLC & Jemurai, LLC.
+Apache 2:  http://www.apache.org/licenses/LICENSE-2.0
