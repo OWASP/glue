@@ -70,7 +70,7 @@ end
 
 class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
   
-  Pipeline::Tasks.add self
+  #Pipeline::Tasks.add self
   include Pipeline::Util
 
   def initialize(trigger)
