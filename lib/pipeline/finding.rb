@@ -24,6 +24,11 @@ class Pipeline::Finding
   	s
   end
 
+  def to_csv
+    s = "#{@description},#{@timestamp},#{@source},#{@severity},#{@fingerprint},#{@detail}\n"
+    s
+  end
+
   def to_json
     json = {'description' => @description,
      'fingerprint' => @fingerprint, 

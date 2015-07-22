@@ -120,9 +120,8 @@ module Pipeline::Options
           options[:interactive_ignore] = true
         end
 
-        opts.on "-o", "--output FILE", "Specify files for output. Defaults to stdout. Multiple '-o's allowed" do |file|
-          options[:output_files] ||= []
-          options[:output_files].push(file)
+        opts.on "-o", "--output FILE", "Specify file for output. Defaults to stdout." do |file|
+          options[:output_file] = file
         end
 
         opts.on "--summary", "Only output summary of warnings" do
