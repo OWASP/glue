@@ -11,13 +11,10 @@ class Pipeline::JSONReporter < Pipeline::BaseReporter
  
   def initialize()
     @name = "JSONReporter"    
-    @format = :json
+    @format = :to_json
   end
 
-  def run_report(tracker)
-    tracker.findings.each do |finding|
-    	puts finding.to_json
-   	end
+  def out(finding)
+    finding.to_json
   end
-
 end

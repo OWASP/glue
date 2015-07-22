@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'yaml'
 require 'set'
+require 'tempfile' 
 
 module Pipeline
 
@@ -53,7 +54,7 @@ module Pipeline
       options[:quiet] = true
     end
 
-    options[:output_formats] = get_output_formats options
+    options[:output_format] = get_output_format options
   
     options
   end
@@ -96,6 +97,7 @@ module Pipeline
       :parallel_tasks => true, 
       :skip_tasks => Set.new(),
       :output_format => :text,
+
       :working_dir => "/var/pipeline/tmp/",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
@@ -103,15 +105,11 @@ module Pipeline
 
   #Determine output formats based on options[:output_formats]
   #or options[:output_files]
-  def self.get_output_formats options
-    #Set output format
-    if options[:output_format] && options[:output_files] && options[:output_files].size > 1
-      raise ArgumentError, "Cannot specify output format if multiple output files specified"
-    end
-    if options[:output_format]
-      get_formats_from_output_format options[:output_format]
-    elsif options[:output_files]
-      get_formats_from_output_files options[:output_files]
+  def self.get_output_format options
+    if options[:output_file]
+      get_format_from_output_file options[:output_file]
+    elsif options[:output_format]
+      get_format_from_output_format options[:output_format]
     else
       begin
         require 'terminal-table'
@@ -122,7 +120,7 @@ module Pipeline
     end
   end
 
-  def self.get_formats_from_output_format output_format
+  def self.get_format_from_output_format output_format
     case output_format
     when :html, :to_html
       [:to_html]
@@ -140,10 +138,9 @@ module Pipeline
       [:to_s]
     end
   end
-  private_class_method :get_formats_from_output_format
+  private_class_method :get_format_from_output_format
 
-  def self.get_formats_from_output_files output_files
-    output_files.map do |output_file|
+  def self.get_format_from_output_file output_file
       case output_file
       when /\.html$/i
         :to_html
@@ -160,9 +157,8 @@ module Pipeline
       else
         :to_s
       end
-    end
   end
-  private_class_method :get_formats_from_output_files
+  private_class_method :get_format_from_output_file
 
   #Output list of tasks (for `-k` option)
   def self.list_tasks options

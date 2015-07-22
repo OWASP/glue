@@ -9,13 +9,11 @@ class Pipeline::TextReporter < Pipeline::BaseReporter
  
   def initialize()
     @name = "TextReporter"  
-    @format = :text
+    @format = :to_s
   end
-
-  def run_report(tracker)
-    tracker.findings.each do |finding|
-      puts finding.to_string
-    end
+  
+  def out(finding)
+    finding.to_string
   end
 
 end

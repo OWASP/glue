@@ -29,7 +29,12 @@ class Pipeline::Reporters
       Pipeline.debug "Reporting for #{tracker.options[:output_format]}"
       if tracker.options[:output_format] == reporter.format
         begin
-          reporter.run_report(tracker)
+          output = reporter.run_report(tracker)
+          if tracker.options[:output_file]
+            file = File.open(tracker.options[:output_file], 'w'){ |f| f.write(output)}
+          else
+            puts output
+          end
         rescue => e
           Pipeline.notify e.message
           tracker.error e
