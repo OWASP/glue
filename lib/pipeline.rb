@@ -97,7 +97,6 @@ module Pipeline
       :parallel_tasks => true, 
       :skip_tasks => Set.new(),
       :output_format => :text,
-
       :working_dir => "/var/pipeline/tmp/",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
@@ -132,6 +131,8 @@ module Pipeline
       [:to_tabs]
     when :json, :to_json
       [:to_json]
+    when :jira, :to_jira
+      [:to_jira]
     when :markdown, :to_markdown
       [:to_markdown]
     else
@@ -225,6 +226,10 @@ module Pipeline
       $stderr.puts e.message
       raise NoPipelineError, "Cannot find lib/ directory."
     end
+
+    debug "API: #{options[:jira_api_url.to_s]}"
+    debug "Project: #{options[:jira_project.to_s]}"
+    debug "Cookie: #{options[:jira_cookie.to_s]}"
 
     add_external_tasks options
 

@@ -103,7 +103,7 @@ module Pipeline::Options
 
         opts.on "-f",
                 "--format TYPE",
-                [:text, :html, :csv, :tabs, :json, :markdown],
+                [:text, :html, :csv, :tabs, :json, :jira, :markdown],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
         end
