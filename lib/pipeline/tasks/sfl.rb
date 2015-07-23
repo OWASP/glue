@@ -31,11 +31,11 @@ class Pipeline::SFL < Pipeline::BaseTask
           case pattern['part']
             when 'filename'
               if foo(File.basename(file), pattern)
-                report 'filename', pattern['description'], file, 'unknown', 'TBD'
+                report pattern['caption'], pattern['description'], file, 'unknown', 'TBD'
               end
             when 'extension'
               if foo(File.extname(file), pattern)
-                report 'extension', pattern['description'], file, 'unknown', 'TBD'
+                report pattern['caption'], pattern['description'], file, 'unknown', 'TBD'
               end
           end
         end
