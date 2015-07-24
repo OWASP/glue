@@ -27,7 +27,7 @@ class Pipeline::Brakeman < Pipeline::BaseTask
       parsed = JSON.parse(@result)
       parsed["warnings"].each do |warning|
         detail = "Message: #{warning['message']} Link: #{warning['link']}"
-        source = "File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
+        source = "#{@name} File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
         report warning["warning_type"], detail, source, warning["confidence"], warning['fingerprint']
       end
     rescue Exception => e

@@ -6,6 +6,7 @@ class Pipeline::BaseTask
   attr_accessor :name
   attr_accessor :description
   attr_accessor :stage
+  attr_accessor :appname
 
   def initialize(trigger)
     @findings = []
@@ -15,7 +16,7 @@ class Pipeline::BaseTask
   end
 
   def report description, detail, source, severity, fingerprint
-    finding = Pipeline::Finding.new( description, detail, source, severity, fingerprint )
+    finding = Pipeline::Finding.new( @trigger.appname, description, detail, source, severity, fingerprint )
     @findings << finding
   end
 

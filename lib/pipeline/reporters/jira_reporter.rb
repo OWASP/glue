@@ -18,6 +18,8 @@ class Pipeline::JiraReporter < Pipeline::BaseReporter
     @project = tracker.options[:jira_project.to_s]
     @api = tracker.options[:jira_api_url.to_s]
     @cookie = tracker.options[:jira_cookie.to_s]
+    @component = tracker.options[:jira_component.to_s]
+
     tracker.findings.each do |finding|
     	report finding
     end
@@ -43,13 +45,18 @@ class Pipeline::JiraReporter < Pipeline::BaseReporter
        		{
           		"key": "#{@project}"
        		},
-       		"summary": "#{finding.description}",
+       		"summary": "#{finding.appname} - #{finding.description}",
        		"description": "#{finding.to_string}\n\nFINGERPRINT: #{finding.fingerprint}",
        		"issuetype": {
-          		"id": "3"
-       		}
-   		}
+          		"name": "Task"
+       		},
+       		"labels":["Pipeline","#{finding.appname}"],
+       		"components": [ { "name": "#{@component}" } ]
+       	}
 	}.to_json
 	json
   end
 end
+
+
+# curl -X DELETE -H "Cookie: cookie" https://jira.groupondev.com/rest/api/2/issue/APPS-133

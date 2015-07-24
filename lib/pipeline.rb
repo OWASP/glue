@@ -56,6 +56,13 @@ module Pipeline
 
     options[:output_format] = get_output_format options
   
+    if options[:appname].nil? 
+      path = options[:target]
+      options[:appname] = File.split(path).last
+    end
+
+ 
+
     options
   end
 
@@ -227,9 +234,9 @@ module Pipeline
       raise NoPipelineError, "Cannot find lib/ directory."
     end
 
-    debug "API: #{options[:jira_api_url.to_s]}"
-    debug "Project: #{options[:jira_project.to_s]}"
-    debug "Cookie: #{options[:jira_cookie.to_s]}"
+#    debug "API: #{options[:jira_api_url.to_s]}"
+#    debug "Project: #{options[:jira_project.to_s]}"
+#    debug "Cookie: #{options[:jira_cookie.to_s]}"
 
     add_external_tasks options
 
@@ -287,4 +294,5 @@ module Pipeline
   class DependencyError < RuntimeError; end
   class NoPipelineError < RuntimeError; end
   class NoTargetError < RuntimeError; end
+  class JiraConfigError < RuntimeError; end
 end
