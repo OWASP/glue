@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://jemurai.com"
   s.files = ["bin/pipeline", "CHANGES", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["pipeline"]
-  s.license = "Apache 2."
+  s.license = "Apache 2"
   s.add_dependency "terminal-table", "~>1.4"
   s.add_dependency "fastercsv", "~>1.5"
   s.add_dependency "highline", "~>1.6.20"

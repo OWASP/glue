@@ -226,7 +226,7 @@ module Pipeline
       require 'pipeline/scanner'
       require 'pipeline/tracker'
       require 'pipeline/mounters'
-#      require 'pipeline/filters'
+      require 'pipeline/filters'
       require 'pipeline/reporters'
       
     rescue LoadError => e
@@ -250,6 +250,9 @@ module Pipeline
     notify "Processing target...#{options[:target]}"
     scanner.process target, tracker
     
+    # Filter the results (Don't report anything that has been reported before)
+    Pipeline::Filters.filter(tracker)
+
     # Generate Report
     notify "Generating report...#{options[:output_format]}"
     Pipeline::Reporters.run_report(tracker)
