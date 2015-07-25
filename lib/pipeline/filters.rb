@@ -26,7 +26,7 @@ class Pipeline::Filters
     @filters.each do |c|
       filter = c.new() 
       begin
-        filter.filter(tracker)
+        filter.filter tracker 
       rescue => e
         Pipeline.error e.message
         tracker.error e
