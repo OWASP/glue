@@ -27,7 +27,7 @@ class Pipeline::Mounters
   def self.mount tracker
   	target = tracker.options[:target]
   	Pipeline.debug "Mounting target: #{target}"
-  	trigger = Pipeline::Event.new()
+  	trigger = Pipeline::Event.new(tracker.options[:appname])
   	@mounters.each do | c |
   	  mounter = c.new trigger, tracker.options
  	  begin 

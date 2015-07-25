@@ -52,7 +52,7 @@ class Pipeline::Tasks
   def self.run_tasks(target, stage, tracker)
     task_runner = self.new
 
-    trigger = Pipeline::Event.new()
+    trigger = Pipeline::Event.new(tracker.options[:appname])
     trigger.path = target
 
     self.tasks_to_run(tracker).each do |c|

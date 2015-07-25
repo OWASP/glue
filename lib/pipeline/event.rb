@@ -3,8 +3,10 @@
 class Pipeline::Event
   attr_reader :parent
   attr_accessor :path
+  attr_accessor :appname
 
-  def initialize parent = nil
+  def initialize appname, parent = nil
+  	@appname = appname
    	@parent = parent
    	@timestamp = Time.now
   end

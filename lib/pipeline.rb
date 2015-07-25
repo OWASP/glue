@@ -56,6 +56,13 @@ module Pipeline
 
     options[:output_format] = get_output_format options
   
+    if options[:appname].nil? 
+      path = options[:target]
+      options[:appname] = File.split(path).last
+    end
+
+ 
+
     options
   end
 
@@ -97,7 +104,6 @@ module Pipeline
       :parallel_tasks => true, 
       :skip_tasks => Set.new(),
       :output_format => :text,
-
       :working_dir => "/var/pipeline/tmp/",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
@@ -132,6 +138,8 @@ module Pipeline
       [:to_tabs]
     when :json, :to_json
       [:to_json]
+    when :jira, :to_jira
+      [:to_jira]
     when :markdown, :to_markdown
       [:to_markdown]
     else
@@ -218,7 +226,7 @@ module Pipeline
       require 'pipeline/scanner'
       require 'pipeline/tracker'
       require 'pipeline/mounters'
-#      require 'pipeline/filters'
+      require 'pipeline/filters'
       require 'pipeline/reporters'
       
     rescue LoadError => e
@@ -226,21 +234,28 @@ module Pipeline
       raise NoPipelineError, "Cannot find lib/ directory."
     end
 
+#    debug "API: #{options[:jira_api_url.to_s]}"
+#    debug "Project: #{options[:jira_project.to_s]}"
+#    debug "Cookie: #{options[:jira_cookie.to_s]}"
+
     add_external_tasks options
 
     tracker = Tracker.new options
     debug "Mounting ... #{options[:target]}"
     # Make the target accessible.    
-    target = Pipeline::Mounters.mount(tracker)
+    target = Pipeline::Mounters.mount tracker
 
     #Start scanning
     scanner = Scanner.new
     notify "Processing target...#{options[:target]}"
     scanner.process target, tracker
     
+    # Filter the results (Don't report anything that has been reported before)
+    Pipeline::Filters.filter tracker
+
     # Generate Report
     notify "Generating report...#{options[:output_format]}"
-    Pipeline::Reporters.run_report(tracker)
+    Pipeline::Reporters.run_report tracker
 
     tracker
   end
@@ -282,4 +297,5 @@ module Pipeline
   class DependencyError < RuntimeError; end
   class NoPipelineError < RuntimeError; end
   class NoTargetError < RuntimeError; end
+  class JiraConfigError < RuntimeError; end
 end

@@ -5,7 +5,7 @@ class Pipeline::TextReporter < Pipeline::BaseReporter
 
   Pipeline::Reporters.add self
 
-  attr_accessor :name
+  attr_accessor :name, :format
  
   def initialize()
     @name = "TextReporter"  
