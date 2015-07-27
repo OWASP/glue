@@ -30,11 +30,11 @@ class Pipeline::SFL < Pipeline::BaseTask
         @patterns.each do |pattern|
           case pattern['part']
             when 'filename'
-              if foo(File.basename(file), pattern)
+              if pattern_matched?(File.basename(file), pattern)
                 report pattern['caption'], pattern['description'], file, 'unknown', 'TBD'
               end
             when 'extension'
-              if foo(File.extname(file), pattern)
+              if pattern_matched?(File.extname(file), pattern)
                 report pattern['caption'], pattern['description'], file, 'unknown', 'TBD'
               end
           end
@@ -49,7 +49,7 @@ class Pipeline::SFL < Pipeline::BaseTask
     true
   end
 
-  def foo(txt, pattrn)
+  def pattern_matched?(txt, pattrn)
     case pattrn['type']
       when 'match'
         return txt == pattrn['pattern']
