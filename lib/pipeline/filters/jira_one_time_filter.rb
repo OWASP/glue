@@ -4,7 +4,7 @@ require 'curb'
 
 class Pipeline::JiraOneTimeFilter < Pipeline::BaseFilter
   
-  Pipeline::Filters.add self
+  # Pipeline::Filters.add self
   
   def initialize
     @name = "Jira One Time Filter"
