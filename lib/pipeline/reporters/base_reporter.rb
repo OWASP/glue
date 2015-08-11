@@ -7,6 +7,15 @@ class Pipeline::BaseReporter
   end
 
   def run_report(tracker)
+  	Pipeline.notify "Running base reoprt..."
+  	output = ""
+    tracker.findings.each do |finding|
+    	output += out(finding)
+    end
+    output
+  end
+
+  def out(finding)
   end
 
 end

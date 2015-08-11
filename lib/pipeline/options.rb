@@ -27,10 +27,10 @@ module Pipeline::Options
         opts.separator "Pipeline is a swiss army knife of security analysis tools."
         opts.separator "It has built in support for static analysis, AV, fim, and "
         opts.separator "is being extended to be used for analyzing all kinds of "
-        opts.separator "images or file systems."
+        opts.separator "projects, images or file systems."
         opts.separator ""
-        opts.separator "Pipeline also features deduplication and the abilty to handle "
-        opts.separator "false positives."
+        opts.separator "Pipeline also features filters to perform deduplication "
+        opts.separator "and the abilty to handle false positives."
         opts.separator ""
 
         opts.separator "Control options:"
@@ -84,6 +84,10 @@ module Pipeline::Options
           end
         end
 
+        opts.on "-a", "--appname NAME", "Override the inferred application name." do |appname|
+          options[:appname] = appname
+        end
+
         opts.on "-l", "--labels Label1,Label2,etc", Array, "Run the checks with the supplied labels" do |labels|
           options[:labels] ||= Set.new
           options[:labels].merge labels
@@ -103,7 +107,7 @@ module Pipeline::Options
 
         opts.on "-f",
                 "--format TYPE",
-                [:text, :html, :csv, :tabs, :json, :markdown],
+                [:text, :html, :csv, :tabs, :json, :jira, :markdown],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
         end
@@ -120,18 +124,33 @@ module Pipeline::Options
           options[:interactive_ignore] = true
         end
 
-        opts.on "-o", "--output FILE", "Specify files for output. Defaults to stdout. Multiple '-o's allowed" do |file|
-          options[:output_files] ||= []
-          options[:output_files].push(file)
+        opts.on "-o", "--output FILE", "Specify file for output. Defaults to stdout." do |file|
+          options[:output_file] = file
         end
 
         opts.on "--summary", "Only output summary of warnings" do
           options[:summary_only] = true
         end
 
-        opts.on "--compare FILE", "Compare the results of a previous brakeman scan (only JSON is supported)" do |file|
-          options[:previous_results_json] = File.expand_path(file)
+        opts.separator ""
+        opts.separator "JIRA options:"
+
+        opts.on "--jira-project PROJECT", "Specify the jira project to create issues in. If issue looks like APPS-13, this should be APPS." do |project|
+          options[:jira_project] = project
         end
+
+        opts.on "--jira-api-url URL", "Specify the jira rest api endpoint. Eg. domain.com/jira/jira/rest/api/2/." do |url|
+          options[:jira_api_url] = url
+        end
+
+        opts.on "--jira-cookie COOKIE", "Specify the session cookie to get to Jira." do |cookie|
+          options[:jira_cookie] = cookie
+        end
+
+        opts.on "--jira-component COMPONENT", "Specify the JIRA component to use." do |component|
+          options[:jira_component] = component
+        end
+
 
         opts.separator ""
         opts.separator "Configuration files:"

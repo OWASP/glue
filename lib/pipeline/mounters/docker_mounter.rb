@@ -34,7 +34,7 @@ class Pipeline::DockerMounter < Pipeline::BaseMounter
   
   def supports? target
     last = target.slice(-7,target.length)
-    Pipeline.debug "Target: #{target} became: #{last}"
+    Pipeline.debug "In Docker mounter, target: #{target} became: #{last} ... wondering if it matched .docker"
     if last === ".docker"
       return true
     else

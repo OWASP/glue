@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'yaml'
 require 'set'
+require 'tempfile' 
 
 module Pipeline
 
@@ -53,8 +54,15 @@ module Pipeline
       options[:quiet] = true
     end
 
-    options[:output_formats] = get_output_formats options
+    options[:output_format] = get_output_format options
   
+    if options[:appname].nil? 
+      path = options[:target]
+      options[:appname] = File.split(path).last
+    end
+
+ 
+
     options
   end
 
@@ -103,15 +111,11 @@ module Pipeline
 
   #Determine output formats based on options[:output_formats]
   #or options[:output_files]
-  def self.get_output_formats options
-    #Set output format
-    if options[:output_format] && options[:output_files] && options[:output_files].size > 1
-      raise ArgumentError, "Cannot specify output format if multiple output files specified"
-    end
-    if options[:output_format]
-      get_formats_from_output_format options[:output_format]
-    elsif options[:output_files]
-      get_formats_from_output_files options[:output_files]
+  def self.get_output_format options
+    if options[:output_file]
+      get_format_from_output_file options[:output_file]
+    elsif options[:output_format]
+      get_format_from_output_format options[:output_format]
     else
       begin
         require 'terminal-table'
@@ -122,7 +126,7 @@ module Pipeline
     end
   end
 
-  def self.get_formats_from_output_format output_format
+  def self.get_format_from_output_format output_format
     case output_format
     when :html, :to_html
       [:to_html]
@@ -134,16 +138,17 @@ module Pipeline
       [:to_tabs]
     when :json, :to_json
       [:to_json]
+    when :jira, :to_jira
+      [:to_jira]
     when :markdown, :to_markdown
       [:to_markdown]
     else
       [:to_s]
     end
   end
-  private_class_method :get_formats_from_output_format
+  private_class_method :get_format_from_output_format
 
-  def self.get_formats_from_output_files output_files
-    output_files.map do |output_file|
+  def self.get_format_from_output_file output_file
       case output_file
       when /\.html$/i
         :to_html
@@ -160,9 +165,8 @@ module Pipeline
       else
         :to_s
       end
-    end
   end
-  private_class_method :get_formats_from_output_files
+  private_class_method :get_format_from_output_file
 
   #Output list of tasks (for `-k` option)
   def self.list_tasks options
@@ -222,7 +226,7 @@ module Pipeline
       require 'pipeline/scanner'
       require 'pipeline/tracker'
       require 'pipeline/mounters'
-#      require 'pipeline/filters'
+      require 'pipeline/filters'
       require 'pipeline/reporters'
       
     rescue LoadError => e
@@ -230,21 +234,28 @@ module Pipeline
       raise NoPipelineError, "Cannot find lib/ directory."
     end
 
+#    debug "API: #{options[:jira_api_url.to_s]}"
+#    debug "Project: #{options[:jira_project.to_s]}"
+#    debug "Cookie: #{options[:jira_cookie.to_s]}"
+
     add_external_tasks options
 
     tracker = Tracker.new options
     debug "Mounting ... #{options[:target]}"
     # Make the target accessible.    
-    target = Pipeline::Mounters.mount(tracker)
+    target = Pipeline::Mounters.mount tracker
 
     #Start scanning
     scanner = Scanner.new
     notify "Processing target...#{options[:target]}"
     scanner.process target, tracker
     
+    # Filter the results (Don't report anything that has been reported before)
+    Pipeline::Filters.filter tracker
+
     # Generate Report
     notify "Generating report...#{options[:output_format]}"
-    Pipeline::Reporters.run_report(tracker)
+    Pipeline::Reporters.run_report tracker
 
     tracker
   end
@@ -286,4 +297,5 @@ module Pipeline
   class DependencyError < RuntimeError; end
   class NoPipelineError < RuntimeError; end
   class NoTargetError < RuntimeError; end
+  class JiraConfigError < RuntimeError; end
 end
