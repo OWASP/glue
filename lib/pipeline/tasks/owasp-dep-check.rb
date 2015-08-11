@@ -89,8 +89,6 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
 
   def analyze
     path = @trigger.path + "/dependency-check-report.xml"
-    #@result = File.open(path, "rb").read
-    #Pipeline.debug "#{@result}"
     begin
       Pipeline.debug "Parsing report #{path}"
       get_warnings(path)

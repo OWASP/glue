@@ -20,9 +20,13 @@ class Pipeline::Finding
   end
 
   def to_string
-  	s = "Finding: #{@appname}\t#{@description}\t#{@timestamp}\t#{@source}\t#{@severity}\n"
-  	s << "\tFingerprint:  #{@fingerprint}\n"
-    s << "\tDetail:  #{@detail}\n"
+  	s = "Finding: #{@appname}"
+    s << "\n\tDescription: #{@description}"
+    s << "\n\tTimestamp: #{@timestamp}"
+    s << "\n\tSource: #{@source}"
+    s << "\n\tSeverity: #{@severity}"
+  	s << "\n\tFingerprint:  #{@fingerprint}"
+    s << "\n\tDetail:  #{@detail}"
   	s
   end
 

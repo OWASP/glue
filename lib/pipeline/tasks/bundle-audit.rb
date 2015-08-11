@@ -45,12 +45,12 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
 
   private 
   def get_warnings
-    detail, gem, source, severity, fingerprint = '','','','',''
+    detail, jem, source, severity, fingerprint = '','','','',''
     @result.each_line do | line |
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
-          report "Gem #{gem} has known security issues.", detail, source, severity, fingerprint  
+          report "Gem #{jem} has known security issues.", detail, source, severity, fingerprint  
         end
         detail, gem, source, severity, fingerprint = '','','','', ''
       end

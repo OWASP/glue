@@ -13,7 +13,7 @@ class Pipeline::TextReporter < Pipeline::BaseReporter
   end
   
   def out(finding)
-    finding.to_string
+    finding.to_string << "\n"
   end
 
 end
