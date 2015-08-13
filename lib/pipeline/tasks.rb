@@ -68,7 +68,7 @@ class Pipeline::Tasks
             Pipeline.notify "#{stage} - #{task_name} - #{task.labels}"
             task.run
             task.analyze
-            task.findings.each do | finding | 
+            task.findings.each do | finding |
               tracker.report finding
             end
           end
@@ -100,6 +100,14 @@ class Pipeline::Tasks
   def self.tasks_to_run tracker
     if tracker.options[:run_all_tasks] or tracker.options[:run_tasks]
       @tasks + @optional_tasks
+    elsif tracker.options[:language]
+      tasks_for = { 'Ruby' => [Pipeline::BundleAudit, Pipeline::Brakeman], 'Java' => [], 'JavaScript' => [], 'CoffeeScript' => [] }
+      return @tasks unless tracker.options.has_key?(:language) and not tasks_for[tracker.options[:language]].nil?
+      @tasks = []
+      tasks_for[tracker.options[:language]].each do |task|
+        self.add(task)
+      end
+      @tasks
     else
       @tasks
     end

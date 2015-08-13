@@ -98,6 +98,10 @@ module Pipeline::Options
           options[:additional_checks_path].merge paths.map {|p| File.expand_path p}
         end
 
+        opts.on "-g", "--language LANG", "Choose tasks based on a specified language" do |lang|
+          options[:language] = lang
+        end
+
         opts.separator ""
         opts.separator "Output options:"
 

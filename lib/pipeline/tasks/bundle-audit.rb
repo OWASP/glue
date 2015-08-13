@@ -3,7 +3,6 @@ require 'json'
 require 'pipeline/util'
 
 class Pipeline::BundleAudit < Pipeline::BaseTask
-  
   Pipeline::Tasks.add self
   include Pipeline::Util
 
@@ -14,11 +13,11 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
     @stage = :code
     @labels << "code" << "ruby"
   end
-  
+
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    Dir.chdir("#{rootpath}") do 
+    Dir.chdir("#{rootpath}") do
       @result= runsystem(true, "bundle-audit", "check")
     end
   end
@@ -43,14 +42,14 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
     end
   end
 
-  private 
+  private
   def get_warnings
-    detail, jem, source, severity, fingerprint = '','','','',''
+    detail, gem, source, severity, fingerprint = '','','','',''
     @result.each_line do | line |
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
-          report "Gem #{jem} has known security issues.", detail, source, severity, fingerprint  
+          report "Gem #{gem} has known security issues.", detail, source, severity, fingerprint
         end
         detail, gem, source, severity, fingerprint = '','','','', ''
       end
@@ -81,7 +80,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
       end
     end
   end
-  
+
 
 end
 
