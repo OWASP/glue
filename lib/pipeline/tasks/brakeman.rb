@@ -3,10 +3,10 @@ require 'json'
 require 'pipeline/util'
 
 class Pipeline::Brakeman < Pipeline::BaseTask
-  
+
   Pipeline::Tasks.add self
   include Pipeline::Util
-  
+
   def initialize(trigger)
     super(trigger)
     @name = "Brakeman"
@@ -14,7 +14,7 @@ class Pipeline::Brakeman < Pipeline::BaseTask
     @stage = :code
     @labels << "code" << "ruby" << "rails"
   end
-  
+
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
@@ -28,7 +28,18 @@ class Pipeline::Brakeman < Pipeline::BaseTask
       parsed["warnings"].each do |warning|
         detail = "Message: #{warning['message']} Link: #{warning['link']}"
         source = "#{@name} File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
-        report warning["warning_type"], detail, source, warning["confidence"], warning['fingerprint']
+        confidence = 'unknown'
+        case warning["confidence"]
+        when 'Weak'
+          confidence = 'low'
+        when 'Medium'
+          confidence = 'medium'
+        when 'High'
+          confidence = 'high'
+        else
+          confidence = 'unknown'
+        end
+        report warning["warning_type"], detail, source, confidence, warning['fingerprint']
       end
     rescue Exception => e
       Pipeline.warn e.message

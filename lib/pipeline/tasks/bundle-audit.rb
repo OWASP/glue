@@ -1,6 +1,7 @@
 require 'pipeline/tasks/base_task'
 require 'json'
 require 'pipeline/util'
+require 'digest'
 
 class Pipeline::BundleAudit < Pipeline::BaseTask
   Pipeline::Tasks.add self
@@ -44,40 +45,53 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
 
   private
   def get_warnings
-    detail, gem, source, severity, fingerprint = '','','','',''
+    detail, jem, source, severity, hash, fingerprint = '','','','','',''
     @result.each_line do | line |
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
-          report "Gem #{gem} has known security issues.", detail, source, severity, fingerprint
+          report "Gem #{jem} has known security issues.", detail, source, severity, fingerprint
         end
-        detail, gem, source, severity, fingerprint = '','','','', ''
+        detail, jem, source, severity, hash, fingerprint = '','','','','',''
       end
 
       name, value = line.chomp.split(':')
       case name
       when 'Name'
-        gem << value
+        jem << value
+        hash << value
       when 'Version'
-        gem << value
+        jem << value
+        hash << value
       when 'Advisory'
         source << value
-        fingerprint = value
+        hash << value
       when 'Criticality'
-        severity << value
+        case value.chomp
+        when ' Low'
+          severity << 'low'
+        when ' Medium'
+          severity << 'medium'
+        when ' High'
+          severity << 'high'
+        else
+          severity << 'unknown'
+        end
+        hash << severity
       when 'URL'
-        detail << value
+        detail += line.chomp.split('URL:').last
       when 'Title'
-        detail << value
+        detail += ",#{value}"
       when 'Solution'
-        detail << value
+        detail += ": #{value}"
       when 'Insecure Source URI found'
-        report "Insecure GEM Source", "#{line} - use git or https", "BundlerAudit", "High", "bundlerauditgemsource"
+        report "Insecure GEM Source", "#{line.chomp} - use git or https", "BundlerAudit", "high", Digest::SHA2.new(256).update("bundlerauditgemsource#{line.chomp}").to_s
       else
         if line =~ /\S/ and line !~ /Unpatched versions found/
           Pipeline.notify "Not sure how to handle line: #{line}"
         end
       end
+      fingerprint = Digest::SHA2.new(256).update("#{hash}").to_s
     end
   end
 
