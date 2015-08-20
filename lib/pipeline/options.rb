@@ -63,21 +63,12 @@ module Pipeline::Options
         end
 
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
-          checks.each_with_index do |s, index|
-            if s[0,5] != "Check"
-              checks[index] = "Check" << s
-            end
-          end
-
-          options[:run_checks] ||= Set.new
-          options[:run_checks].merge checks
+          options[:run_tasks] ||= Set.new
+          options[:run_tasks].merge checks
         end
 
         opts.on "-x", "--except Check1,Check2,etc", Array, "Skip the specified checks" do |skip|
           skip.each do |s|
-            if s[0,5] != "Check"
-              s = "Check" << s
-            end
 
             options[:skip_checks] ||= Set.new
             options[:skip_checks] << s
@@ -96,10 +87,6 @@ module Pipeline::Options
         opts.on "--add-checks-path path1,path2,etc", Array, "A directory containing additional out-of-tree checks to run" do |paths|
           options[:additional_checks_path] ||= Set.new
           options[:additional_checks_path].merge paths.map {|p| File.expand_path p}
-        end
-
-        opts.on "-g", "--language LANG", "Choose tasks based on a specified language" do |lang|
-          options[:language] = lang
         end
 
         opts.separator ""

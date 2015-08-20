@@ -100,14 +100,6 @@ class Pipeline::Tasks
   def self.tasks_to_run tracker
     if tracker.options[:run_all_tasks] or tracker.options[:run_tasks]
       @tasks + @optional_tasks
-    elsif tracker.options[:language]
-      tasks_for = { 'Ruby' => [Pipeline::BundleAudit, Pipeline::Brakeman], 'Java' => [], 'JavaScript' => [ Pipeline::RetireJS ], 'CoffeeScript' => [ Pipeline::RetireJS ] }
-      return @tasks unless tracker.options.has_key?(:language) and not tasks_for[tracker.options[:language]].nil?
-      @tasks = []
-      tasks_for[tracker.options[:language]].each do |task|
-        self.add(task)
-      end
-      @tasks
     else
       @tasks
     end

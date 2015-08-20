@@ -45,14 +45,14 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
 
   private
   def get_warnings
-    detail, jem, source, severity, hash, fingerprint = '','','','','',''
+    detail, jem, source, sev, hash = '','','','',''
     @result.each_line do | line |
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
-          report "Gem #{jem} has known security issues.", detail, source, severity, fingerprint
+          report "Gem #{jem} has known security issues.", detail, source, sev, fingerprint(hash)
         end
-        detail, jem, source, severity, hash, fingerprint = '','','','','',''
+        detail, jem, source, sev, hash = '','','','',''
       end
 
       name, value = line.chomp.split(':')
@@ -67,17 +67,8 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
         source << value
         hash << value
       when 'Criticality'
-        case value.chomp
-        when ' Low'
-          severity << 'low'
-        when ' Medium'
-          severity << 'medium'
-        when ' High'
-          severity << 'high'
-        else
-          severity << 'unknown'
-        end
-        hash << severity
+        sev = severity(value.strip)
+        hash << sev
       when 'URL'
         detail += line.chomp.split('URL:').last
       when 'Title'
@@ -85,13 +76,12 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
       when 'Solution'
         detail += ": #{value}"
       when 'Insecure Source URI found'
-        report "Insecure GEM Source", "#{line.chomp} - use git or https", "BundlerAudit", "high", Digest::SHA2.new(256).update("bundlerauditgemsource#{line.chomp}").to_s
+        report "Insecure GEM Source", "#{line.chomp} - use git or https", "BundlerAudit", "high", fingerprint("bundlerauditgemsource#{line.chomp}")
       else
         if line =~ /\S/ and line !~ /Unpatched versions found/
           Pipeline.notify "Not sure how to handle line: #{line}"
         end
       end
-      fingerprint = Digest::SHA2.new(256).update("#{hash}").to_s
     end
   end
 

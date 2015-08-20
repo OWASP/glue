@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'yaml'
 require 'set'
-require 'tempfile' 
+require 'tempfile'
 
 module Pipeline
 
@@ -55,13 +55,13 @@ module Pipeline
     end
 
     options[:output_format] = get_output_format options
-  
-    if options[:appname].nil? 
+
+    if options[:appname].nil?
       path = options[:target]
       options[:appname] = File.split(path).last
     end
 
- 
+
 
     options
   end
@@ -100,8 +100,8 @@ module Pipeline
 
   #Default set of options
   def self.default_options
-    { 
-      :parallel_tasks => true, 
+    {
+      :parallel_tasks => true,
       :skip_tasks => Set.new(),
       :output_format => :text,
       :working_dir => "/var/pipeline/tmp/",
@@ -169,7 +169,7 @@ module Pipeline
   private_class_method :get_format_from_output_file
 
   #Output list of tasks (for `-k` option)
-  def self.list_tasks options
+  def self.list_checks options
     require 'pipeline/scanner'
 
     add_external_tasks options
@@ -186,7 +186,7 @@ module Pipeline
 
     $stderr.puts "-" * format_length
     tasks.each do |task|
-      $stderr.printf("%-#{format_length}s%s\n", task.name, task.description)
+      $stderr.printf("%-#{format_length}s\n", task.name)
     end
   end
 
@@ -228,7 +228,7 @@ module Pipeline
       require 'pipeline/mounters'
       require 'pipeline/filters'
       require 'pipeline/reporters'
-      
+
     rescue LoadError => e
       $stderr.puts e.message
       raise NoPipelineError, "Cannot find lib/ directory."
@@ -242,14 +242,14 @@ module Pipeline
 
     tracker = Tracker.new options
     debug "Mounting ... #{options[:target]}"
-    # Make the target accessible.    
+    # Make the target accessible.
     target = Pipeline::Mounters.mount tracker
 
     #Start scanning
     scanner = Scanner.new
     notify "Processing target...#{options[:target]}"
     scanner.process target, tracker
-    
+
     # Filter the results (Don't report anything that has been reported before)
     Pipeline::Filters.filter tracker
 

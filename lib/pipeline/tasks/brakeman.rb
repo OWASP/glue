@@ -1,6 +1,7 @@
 require 'pipeline/tasks/base_task'
 require 'json'
 require 'pipeline/util'
+require 'pathname'
 
 class Pipeline::Brakeman < Pipeline::BaseTask
 
@@ -26,24 +27,17 @@ class Pipeline::Brakeman < Pipeline::BaseTask
     begin
       parsed = JSON.parse(@result)
       parsed["warnings"].each do |warning|
-        detail = "Message: #{warning['message']} Link: #{warning['link']}"
-        source = "#{@name} File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
-        confidence = 'unknown'
-        case warning["confidence"]
-        when 'Weak'
-          confidence = 'low'
-        when 'Medium'
-          confidence = 'medium'
-        when 'High'
-          confidence = 'high'
-        else
-          confidence = 'unknown'
-        end
-        report warning["warning_type"], detail, source, confidence, warning['fingerprint']
+        file = relative_path(warning['file'], @trigger.path)
+
+        detail = "#{warning['message']} Link: #{warning['link']}"
+        source = "#{file} Line: #{warning['line']}"
+        source += " Code: #{warning['code']}" unless warning['code'].nil?
+
+        report warning["warning_type"], detail, source, severity(warning["confidence"]), fingerprint("#{warning['message']}#{warning['link']}#{severity(warning["confidence"])}#{source}")
       end
     rescue Exception => e
       Pipeline.warn e.message
-      Pipeline.notify "Appears not to be a rails project ... brakeman skipped."
+      Pipeline.warn e.backtrace
     end
   end
 
