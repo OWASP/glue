@@ -13,18 +13,12 @@ class Pipeline::ESLint < Pipeline::BaseTask
     @description = "Source analysis for JavaScript"
     @stage = :code
     @labels << "code" << "javascript"
-    @severity_filter = {
-      :low => [ '1' ],
-      :medium => [ '2' ],
-      :high => [ '3' ]
-    }
   end
 
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    #@result=runsystem(true, "eslint", "-c", "/Users/alock/.scanjs-eslintrc", "--format", "json", "#{rootpath}")
-    @result = `cd #{rootpath} && eslint -c /Users/alock/.scanjs-eslintrc --no-color --quiet --format json .`
+    @result = `cd #{rootpath} && eslint -c #{rootpath}/.scanjs-eslintrc --no-color --quiet --format json .`
   end
 
   def analyze
