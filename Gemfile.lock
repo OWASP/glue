@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pipeline (0.3.2)
+    pipeline (0.4.1)
       brakeman (~> 3.0.5)
       bundler-audit (= 0.3.1)
       curb (~> 0.8.8)
@@ -32,6 +32,8 @@ GEM
     haml (4.0.7)
       tilt
     highline (1.6.21)
+    jsonpath (0.5.7)
+      multi_json
     multi_json (1.11.2)
     rake (10.4.2)
     ruby2ruby (2.1.4)
@@ -39,16 +41,17 @@ GEM
       sexp_processor (~> 4.0)
     ruby_parser (3.7.1)
       sexp_processor (~> 4.1)
-    sass (3.4.16)
+    sass (3.4.18)
     sexp_processor (4.6.0)
     terminal-table (1.5.2)
     thor (0.19.1)
-    tilt (1.4.1)
+    tilt (2.0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  jsonpath
   pipeline!
   rake
 
