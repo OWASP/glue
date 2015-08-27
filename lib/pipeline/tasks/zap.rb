@@ -172,7 +172,10 @@ class Pipeline::Zap < Pipeline::BaseTask
     Pipeline.debug "Remove old ZAP file."
 
     # ZAP CLI can be a little dicey on a Mac.  Rework to use an API!
-    @result=runsystem(true, "java", "-Xmx512m","-jar","/area52/ZAP_2.4.1/zap-2.4.1.jar","-installdir", "/area52/ZAP_2.4.1","-quickurl","#{rootpath}","-quickout","/tmp/zap.xml","-cmd")
+    #@result=runsystem(true, "java", "-Xmx512m","-jar","/area52/ZAP_2.4.1/zap-2.4.1.jar","-installdir", "/area52/ZAP_2.4.1","-quickurl","#{rootpath}","-quickout","/tmp/zap.xml","-cmd")
+    #@result=runsystem(true, "/area52/ZAP_2.4.1/zap.sh","-installdir", "/area52/ZAP_2.4.1","-quickurl","#{rootpath}","-quickout","/tmp/zap.xml","-cmd")
+    @result=runsystem(true, "zapr","#{rootpath}")
+  
   end
 
   def analyze
