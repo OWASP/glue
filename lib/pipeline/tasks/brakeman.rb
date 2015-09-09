@@ -8,8 +8,8 @@ class Pipeline::Brakeman < Pipeline::BaseTask
   Pipeline::Tasks.add self
   include Pipeline::Util
 
-  def initialize(trigger)
-    super(trigger)
+  def initialize(trigger, tracker)
+    super(trigger, tracker)
     @name = "Brakeman"
     @description = "Source analysis for Ruby"
     @stage = :code
@@ -30,8 +30,7 @@ class Pipeline::Brakeman < Pipeline::BaseTask
         file = relative_path(warning['file'], @trigger.path)
 
         detail = "#{warning['message']} Link: #{warning['link']}"
-        source = "#{file} Line: #{warning['line']}"
-        source += " Code: #{warning['code']}" unless warning['code'].nil?
+        source = { :scanner => @name, :file => file, :line => warning['line'], :code => warning['code'] }
 
         report warning["warning_type"], detail, source, severity(warning["confidence"]), fingerprint("#{warning['message']}#{warning['link']}#{severity(warning["confidence"])}#{source}")
       end

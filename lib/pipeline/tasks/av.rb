@@ -3,10 +3,10 @@
 require 'pipeline/tasks/base_task'
 
 class Pipeline::AV < Pipeline::BaseTask
-  
+
   Pipeline::Tasks.add self
-  
-  def initialize(trigger)
+
+  def initialize(trigger, tracker)
   	super(trigger)
     @name = "AV"
     @description = "Test for virus/malware"
@@ -23,7 +23,7 @@ class Pipeline::AV < Pipeline::BaseTask
   def analyze
 	  list = @result.split(/\n/)
 	  list.each do |v|
-	     # v.slice! installdir 
+	     # v.slice! installdir
 	     Pipeline.notify v
        report "Malicious file identified.", v, @name, :medium
     end
@@ -31,7 +31,7 @@ class Pipeline::AV < Pipeline::BaseTask
 
   def supported?
   	# In future, verify tool is available.
-  	return true 
+  	return true
   end
 
 end

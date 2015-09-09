@@ -1,14 +1,15 @@
 PATH
   remote: .
   specs:
-    pipeline (0.4.1)
-      brakeman (~> 3.0.5)
-      bundler-audit (= 0.3.1)
-      curb (~> 0.8.8)
-      fastercsv (~> 1.5)
-      highline (~> 1.6.20)
-      multi_json (~> 1.2)
-      terminal-table (~> 1.4)
+    pipeline (0.4.2)
+      brakeman (>= 3.0.5)
+      bundler-audit (>= 0.3.1)
+      curb (>= 0.8.8)
+      fastercsv (>= 1.5)
+      highline (>= 1.6.20)
+      jsonpath (>= 0.5.7)
+      multi_json (>= 1.2)
+      terminal-table (>= 1.4)
 
 GEM
   remote: https://rubygems.org/
@@ -23,7 +24,7 @@ GEM
       ruby_parser (~> 3.7.0)
       sass (~> 3.0)
       terminal-table (~> 1.4)
-    bundler-audit (0.3.1)
+    bundler-audit (0.4.0)
       bundler (~> 1.2)
       thor (~> 0.18)
     curb (0.8.8)

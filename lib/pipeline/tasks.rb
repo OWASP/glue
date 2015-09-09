@@ -62,7 +62,7 @@ class Pipeline::Tasks
       unless tracker.options[:skip_tasks].include? task_name or
         (tracker.options[:run_tasks] and not tracker.options[:run_tasks].include? task_name)
 
-        task = c.new(trigger)
+        task = c.new(trigger, tracker)
         begin
           if (task.supported? && ( task.stage === stage ) && ( task.labels.intersect? tracker.options[:labels] ) )  # Only run tasks with lables.
             Pipeline.notify "#{stage} - #{task_name} - #{task.labels}"

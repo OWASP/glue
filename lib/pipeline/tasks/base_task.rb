@@ -9,11 +9,12 @@ class Pipeline::BaseTask
   attr_accessor :stage
   attr_accessor :appname
 
-  def initialize(trigger)
+  def initialize(trigger, tracker)
     @findings = []
     @warnings = []
     @labels = Set.new
     @trigger = trigger
+    @tracker = tracker
     @severity_filter = {
       :low => ['low','weak'],
       :medium => ['medium','med','average'],
@@ -54,10 +55,10 @@ class Pipeline::BaseTask
 
   def severity sev
     sev = '' if sev.nil?
-    return 'low' if @severity_filter[:low].include?(sev.strip.chomp.downcase)
-    return 'medium' if @severity_filter[:medium].include?(sev.strip.chomp.downcase)
-    return 'high' if @severity_filter[:high].include?(sev.strip.chomp.downcase)
-    return 'unknown'
+    return 1 if @severity_filter[:low].include?(sev.strip.chomp.downcase)
+    return 2 if @severity_filter[:medium].include?(sev.strip.chomp.downcase)
+    return 3 if @severity_filter[:high].include?(sev.strip.chomp.downcase)
+    return 0
   end
 
 end

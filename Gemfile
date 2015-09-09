@@ -4,3 +4,4 @@ gemspec :name => "pipeline"
 
 gem "rake"
 gem "jsonpath"
+gem "nokogiri"

@@ -4,10 +4,10 @@ require 'pipeline/tasks/base_task'
 require 'open3'
 
 class Pipeline::FIM < Pipeline::BaseTask
-  
+
   Pipeline::Tasks.add self
-  
-  def initialize(trigger)
+
+  def initialize(trigger, tracker)
     super(trigger)
     @name = "FIM"
     @description = "File integrity monitor"
@@ -31,7 +31,7 @@ class Pipeline::FIM < Pipeline::BaseTask
             @result << line
           end
         end
-      end      
+      end
     else
       Pipeline.notify "No existing baseline - generating initial hashes"
       cmd="mkdir -p /area81/tmp/#{rootpath}; hashdeep -j99 -r #{rootpath} > /area81/tmp/#{rootpath}/filehash"
@@ -47,7 +47,7 @@ class Pipeline::FIM < Pipeline::BaseTask
   def analyze
     list = @result.split(/\n/)
     list.each do |v|
-       # v.slice! installdir 
+       # v.slice! installdir
        Pipeline.notify v
        report "File changed.", v, @name, :low
     end
@@ -55,7 +55,7 @@ class Pipeline::FIM < Pipeline::BaseTask
 
   def supported?
     # In future, verify tool is available.
-    return true 
+    return true
   end
 
 end

@@ -7,7 +7,7 @@ class Pipeline::ESLint < Pipeline::BaseTask
   Pipeline::Tasks.add self
   include Pipeline::Util
 
-  def initialize(trigger)
+  def initialize(trigger, tracker)
     super(trigger)
     @name = "ESLint/ScanJS"
     @description = "Source analysis for JavaScript"

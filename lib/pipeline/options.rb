@@ -79,6 +79,10 @@ module Pipeline::Options
           options[:appname] = appname
         end
 
+        opts.on "-r", "--revision REV", "Specify a revision of software to pass on to checkmarx" do |revision|
+          options[:revision] = revision
+        end
+
         opts.on "-l", "--labels Label1,Label2,etc", Array, "Run the checks with the supplied labels" do |labels|
           options[:labels] ||= Set.new
           options[:labels].merge labels
@@ -142,6 +146,20 @@ module Pipeline::Options
           options[:jira_component] = component
         end
 
+        opts.separator ""
+        opts.separator "Checkmarx options:"
+
+        opts.on "--checkmarx-user USER", "Specify the Checkmarx user to use when connecting to the API" do |user|
+          options[:checkmarx_user] = user
+        end
+
+        opts.on "--checkmarx-password PASSWORD", "Specify password for the Checkmarx API user" do |password|
+          options[:checkmarx_password] = password
+        end
+
+        opts.on "--checkmarx-server server", "Specify the API server to use for Checkmarx scans" do |server|
+          options[:checkmarx_server] = server
+        end
 
         opts.separator ""
         opts.separator "Configuration files:"

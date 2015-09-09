@@ -9,7 +9,7 @@ include REXML
 # SAX Like Parser for OWASP ZAP XML.
 class Pipeline::ZAPListener
   include StreamListener
-  
+
   def initialize(task)
     @task = task
     @count = 0
@@ -28,11 +28,11 @@ class Pipeline::ZAPListener
     @cwe = ""
     @fingerprint = ""
   end
-  
+
   def tag_start(name, attrs)
     case name
     when "alertitem"
-      @count = @count + 1 
+      @count = @count + 1
       # Pipeline.debug "Grabbed #{@count} vulns."
       @pluginid = ""
       @alert = ""
@@ -50,7 +50,7 @@ class Pipeline::ZAPListener
       @fingerprint = ""
     end
   end
-  
+
   def tag_end(name)
     case name
     when "pluginid"
@@ -68,7 +68,7 @@ class Pipeline::ZAPListener
     when "param"
       @param = @text.strip
     when "attack"
-      @attack = @text.strip 
+      @attack = @text.strip
     when "otherinfo"
       @otherinfo = @text.chomp
     when "solution"
@@ -86,13 +86,13 @@ class Pipeline::ZAPListener
       get_fingerprint
       risk = "Risk: #{@riskdesc} / Confidence (of 1-3 Low, Medium, High): #{@confidence}"
 
-      # puts "Vuln: #{@alert} Severity: #{risk}\n\tDescription: #{description}\n\tDetail: #{detail}"     
+      # puts "Vuln: #{@alert} Severity: #{risk}\n\tDescription: #{description}\n\tDetail: #{detail}"
       # puts "\tFingerprint: #{@fingerprint}"
       @task.report description, detail, source, risk, @fingerprint
     end
   end
 
-  def get_fingerprint 
+  def get_fingerprint
     @fingerprint = "ZAP-#{@pluginid}-#{@url}-#{@alert}"
     if @param != ""
       @fingerprint << "-#{@param}"
@@ -123,12 +123,12 @@ class Pipeline::ZAPListener
       if @otherinfo != "" and @otherinfo.strip != ""
         detail << "Background: #{@otherinfo}\n\t"
       end
-      if @reference != "" 
+      if @reference != ""
         detail << "Reference: #{@reference}\n\t"
       end
       if @solution != ""
         detail << "Solution: #{@solution}"
-      end 
+      end
       detail
   end
 
@@ -151,10 +151,10 @@ class Pipeline::ZAPListener
 end
 
 class Pipeline::Zap < Pipeline::BaseTask
-  
+
   Pipeline::Tasks.add self
   include Pipeline::Util
-  
+
   def initialize(trigger)
     super(trigger)
     @name = "ZAP"
@@ -162,7 +162,7 @@ class Pipeline::Zap < Pipeline::BaseTask
     @stage = :live
     @labels << "live"
   end
-  
+
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
@@ -189,7 +189,7 @@ class Pipeline::Zap < Pipeline::BaseTask
 
   def supported?
     supported=runsystem(true, "java","-Xmx512m","-jar", "/area52/ZAP_2.4.1/zap-2.4.1.jar", "-version")
-    if supported =~ /2.4.1/ 
+    if supported =~ /2.4.1/
       return true
     else
       Pipeline.notify "Install ZAP from owasp.org"

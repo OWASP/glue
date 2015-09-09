@@ -9,8 +9,8 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   Pipeline::Tasks.add self
   include Pipeline::Util
 
-  def initialize(trigger)
-    super(trigger)
+  def initialize(trigger, tracker)
+    super(trigger, tracker)
     @name = "RetireJS"
     @description = "Dependency analysis for JavaScript"
     @stage = :code
@@ -58,8 +58,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
           obj = obj['parent']
         end
         if deps.length > 0
-          vuln_hash[:source] = deps.reverse.join('->')
-          vuln_hash[:source] << "->#{comp}-#{version}"
+          vuln_hash[:source] = { :scanner => @name, :file => "#{deps.reverse.join('->')}->#{comp}-#{version}", :line => nil, :code => nil }
         end
 
         vuln_hash[:severity] = 'unknown'
@@ -67,7 +66,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
         version_results.each do |version_result|
           JsonPath.on(version_result, '$..vulnerabilities').uniq.each do |vuln|
             vuln_hash[:severity] = severity(vuln[0]['severity'])
-            vuln_hash[:detail] = vuln[0]['info'].join(',')
+            vuln_hash[:detail] = vuln[0]['info'].join('\n')
           end
         end
 
@@ -79,8 +78,8 @@ class Pipeline::RetireJS < Pipeline::BaseTask
     result.select { |r| !r['file'].nil? }.each do |file_result|
       JsonPath.on(file_result, '$..component').uniq.each do |comp|
         JsonPath.on(file_result, "$..results[?(@.component == \'#{comp}\')].version").uniq.each do |version|
-          source_path = relative_path(file_result['file'], @trigger.path)
-          vulnerabilities.select { |v| v[:package] == "#{comp}-#{version}" }.first[:source] = source_path
+          source_path = Pathname.new(file_result['file']).relative_path_from Pathname.new(@trigger.path)
+          vulnerabilities.select { |v| v[:package] == "#{comp}-#{version}" }.first[:source] = { :scanner => @name, :file => source_path.to_s, :line => nil, :code => nil }
         end
       end
     end
