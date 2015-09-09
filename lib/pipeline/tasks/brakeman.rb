@@ -29,7 +29,7 @@ class Pipeline::Brakeman < Pipeline::BaseTask
       parsed["warnings"].each do |warning|
         file = relative_path(warning['file'], @trigger.path)
 
-        detail = "#{warning['message']} Link: #{warning['link']}"
+        detail = "#{warning['message']}\n#{warning['link']}"
         source = { :scanner => @name, :file => file, :line => warning['line'], :code => warning['code'] }
 
         report warning["warning_type"], detail, source, severity(warning["confidence"]), fingerprint("#{warning['message']}#{warning['link']}#{severity(warning["confidence"])}#{source}")
