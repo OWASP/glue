@@ -25,7 +25,8 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
       "-LocationType", "folder",
       "-LocationPath", "#{rootpath}",
       "-ProjectName", "\"CxServer\\SP\\Groupon\\Users\\#{@tracker.options[:appname]}\"",
-      "-ReportXML", "#{rootpath}checkmarx_results.xml"
+      "-ReportXML", "#{rootpath}checkmarx_results.xml",
+      "-Log", "#{@tracker.options[:checkmarx_log]}"
     )
     @results = Nokogiri::XML(File.read("#{rootpath}checkmarx_results.xml")).xpath '//Result'
   end

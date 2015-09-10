@@ -161,6 +161,10 @@ module Pipeline::Options
           options[:checkmarx_server] = server
         end
 
+        opts.on "--checkmarx-log logfile", "Specify the log file to use for Checkmarx scans" do |logfile|
+          options[:checkmarx_log] = logfile
+        end
+
         opts.separator ""
         opts.separator "Configuration files:"
 
