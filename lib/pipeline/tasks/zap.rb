@@ -168,14 +168,13 @@ class Pipeline::Zap < Pipeline::BaseTask
     rootpath = @trigger.path
 
     Pipeline.debug "Running ZAP on: #{rootpath}"
-    @result = runsystem(true, "rm", "/tmp/zap.xml")
-    Pipeline.debug "Remove old ZAP file."
-
-    # ZAP CLI can be a little dicey on a Mac.  Rework to use an API!
-    #@result=runsystem(true, "java", "-Xmx512m","-jar","/area52/ZAP_2.4.1/zap-2.4.1.jar","-installdir", "/area52/ZAP_2.4.1","-quickurl","#{rootpath}","-quickout","/tmp/zap.xml","-cmd")
-    #@result=runsystem(true, "/area52/ZAP_2.4.1/zap.sh","-installdir", "/area52/ZAP_2.4.1","-quickurl","#{rootpath}","-quickout","/tmp/zap.xml","-cmd")
-    @result=runsystem(true, "zapr","#{rootpath}")
+    #@result = runsystem(true, "rm", "/tmp/zap.xml")
+    #Pipeline.debug "Remove old ZAP file."
   
+    # See /docker/zap for details on how this is going to work: 
+    @result=runsystem(true, "docker","run","-u","zap","-i","pipeline/zap:v1","zap-cli","--api-key","123","quick-scan","--spider","-l","Medium","-sc","-r","-o","'-config api.key=123'","#{rootpath}")
+    
+
   end
 
   def analyze
