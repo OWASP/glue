@@ -52,15 +52,15 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
         if detail != ''
           report "Gem #{jem} has known security issues.", detail, source, severity, fingerprint  
         end
-        detail, gem, source, severity, fingerprint = '','','','', ''
+        detail, jem, source, severity, fingerprint = '','','','', ''
       end
 
       name, value = line.chomp.split(':')
       case name
       when 'Name'
-        gem << value
+        jem << value
       when 'Version'
-        gem << value
+        jem << value
       when 'Advisory'
         source << value
         fingerprint = value
