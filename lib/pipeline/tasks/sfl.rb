@@ -14,7 +14,7 @@ class Pipeline::SFL < Pipeline::BaseTask
     @description = "Sentive Files Lookup"
     @stage = :code
     @labels << "code"
-    Pipeline.debug "initialized SFL"
+    # Pipeline.debug "initialized SFL"
     @patterns = read_patterns_file!
   end
 

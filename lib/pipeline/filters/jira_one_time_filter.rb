@@ -49,7 +49,7 @@ class Pipeline::JiraOneTimeFilter < Pipeline::BaseFilter
 
   def get_jira_query_json finding
 	json = 
-{"jql": "project=#{@project} AND component='#{@component}' AND labels='#{@appname}' AND description ~ 'FINGERPRINT: #{finding.fingerprint}'"}.to_json
+{"jql"=>"project=#{@project} AND component='#{@component}' AND labels='#{@appname}' AND description ~ 'FINGERPRINT: #{finding.fingerprint}'"}.to_json
 	json
   end
 end

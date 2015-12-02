@@ -1,0 +1,14 @@
+# Pipeline config.
+#
+# Generally this file wants to be in ~/.pipeline/
+# 	or at the root of the files.
+#
+#
+# Configuration for local JIRA.
+jira_project: "APPS"
+jira_component: "Automated Findings"
+jira_api_url: "https://jira.yourdomain.com/rest/api/2"
+# This is auth for some environments ... need to find alternative.
+jira_cookie: ""
+
+

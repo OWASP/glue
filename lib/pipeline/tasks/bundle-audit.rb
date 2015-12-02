@@ -52,6 +52,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
         if detail != ''
           report "Gem #{jem} has known security issues.", detail, source, sev, fingerprint(hash)
         end
+
         detail, jem, source, sev, hash = '','', {},'',''
       end
 
