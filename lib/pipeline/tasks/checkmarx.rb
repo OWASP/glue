@@ -18,13 +18,13 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    runsystem(true, "/usr/local/bin/runCxConsole.sh", "scan", "-v",
+    runsystem(true, "runCxConsole.sh", "scan", "-v",
       "-CxUser", "#{@tracker.options[:checkmarx_user]}",
       "-CxPassword", "#{@tracker.options[:checkmarx_password]}",
       "-CxServer", "#{@tracker.options[:checkmarx_server]}",
       "-LocationType", "folder",
       "-LocationPath", "#{rootpath}",
-      "-ProjectName", "\"CxServer\\SP\\Groupon\\Users\\#{@tracker.options[:appname]}\"",
+      "-ProjectName", "#{@tracker.options[:checkmarx_project]}",
       "-ReportXML", "#{rootpath}checkmarx_results.xml",
       "-Log", "#{@tracker.options[:checkmarx_log]}"
     )

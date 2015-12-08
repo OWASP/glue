@@ -165,6 +165,10 @@ module Pipeline::Options
           options[:checkmarx_log] = logfile
         end
 
+        opts.on "--checkmarx-project project", "Specify the full path of the Checkmarx project for this scan" do |project|
+          options[:checkmarx_project] = project
+        end
+
         opts.separator ""
         opts.separator "Configuration files:"
 
