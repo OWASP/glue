@@ -1,24 +1,25 @@
 require 'pipeline/tasks/base_task'
 require 'json'
 require 'pipeline/util'
+require 'pathname'
 
 class Pipeline::Brakeman < Pipeline::BaseTask
-  
+
   Pipeline::Tasks.add self
   include Pipeline::Util
-  
-  def initialize(trigger)
-    super(trigger)
+
+  def initialize(trigger, tracker)
+    super(trigger, tracker)
     @name = "Brakeman"
     @description = "Source analysis for Ruby"
     @stage = :code
     @labels << "code" << "ruby" << "rails"
   end
-  
+
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    @result=runsystem(true, "brakeman", "-q", "-f", "json", "#{rootpath}")
+    @result=runsystem(true, "brakeman", "-A", "-q", "-f", "json", "#{rootpath}")
   end
 
   def analyze
@@ -26,13 +27,16 @@ class Pipeline::Brakeman < Pipeline::BaseTask
     begin
       parsed = JSON.parse(@result)
       parsed["warnings"].each do |warning|
-        detail = "Message: #{warning['message']} Link: #{warning['link']}"
-        source = "#{@name} File: #{warning['file']} Line: #{warning['line']} Code: #{warning['code']}"
-        report warning["warning_type"], detail, source, warning["confidence"], warning['fingerprint']
+        file = relative_path(warning['file'], @trigger.path)
+
+        detail = "#{warning['message']}\n#{warning['link']}"
+        source = { :scanner => @name, :file => file, :line => warning['line'], :code => warning['code'].lstrip }
+
+        report warning["warning_type"], detail, source, severity(warning["confidence"]), fingerprint("#{warning['message']}#{warning['link']}#{severity(warning["confidence"])}#{source}")
       end
     rescue Exception => e
       Pipeline.warn e.message
-      Pipeline.notify "Appears not to be a rails project ... brakeman skipped."
+      Pipeline.warn e.backtrace
     end
   end
 

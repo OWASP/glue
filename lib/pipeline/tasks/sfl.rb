@@ -4,11 +4,11 @@ require 'pipeline/util'
 require 'find'
 
 class Pipeline::SFL < Pipeline::BaseTask
-  
+
   Pipeline::Tasks.add self
   include Pipeline::Util
-  
-  def initialize(trigger)
+
+  def initialize(trigger, tracker)
     super(trigger)
     @name = "SFL"
     @description = "Sentive Files Lookup"
@@ -17,7 +17,7 @@ class Pipeline::SFL < Pipeline::BaseTask
     # Pipeline.debug "initialized SFL"
     @patterns = read_patterns_file!
   end
-  
+
   def run
     Pipeline.notify "#{@name}"
     @files = Find.find(@trigger.path)
@@ -56,7 +56,7 @@ class Pipeline::SFL < Pipeline::BaseTask
       when 'regex'
         regex = Regexp.new(pattrn['pattern'], Regexp::IGNORECASE)
         return !regex.match(txt).nil?
-    end  
+    end
   end
 
   def read_patterns_file!

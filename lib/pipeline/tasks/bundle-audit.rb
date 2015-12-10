@@ -1,24 +1,24 @@
 require 'pipeline/tasks/base_task'
 require 'json'
 require 'pipeline/util'
+require 'digest'
 
 class Pipeline::BundleAudit < Pipeline::BaseTask
-  
   Pipeline::Tasks.add self
   include Pipeline::Util
 
-  def initialize(trigger)
-    super(trigger)
-    @name = "Bundle Audit"
+  def initialize(trigger, tracker)
+    super(trigger, tracker)
+    @name = "BundleAudit"
     @description = "Dependency Checker analysis for Ruby"
     @stage = :code
     @labels << "code" << "ruby"
   end
-  
+
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    Dir.chdir("#{rootpath}") do 
+    Dir.chdir("#{rootpath}") do
       @result= runsystem(true, "bundle-audit", "check")
     end
   end
@@ -43,37 +43,41 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
     end
   end
 
-  private 
+  private
   def get_warnings
-    detail, jem, source, severity, fingerprint = '','','','',''
+    detail, jem, source, sev, hash = '','','','',''
     @result.each_line do | line |
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
-          report "Gem #{jem} has known security issues.", detail, source, severity, fingerprint  
+          report "Gem #{jem} has known security issues.", detail, source, sev, fingerprint(hash)
         end
-        detail, jem, source, severity, fingerprint = '','','','', ''
+
+        detail, jem, source, sev, hash = '','', {},'',''
       end
 
       name, value = line.chomp.split(':')
       case name
       when 'Name'
         jem << value
+        hash << value
       when 'Version'
         jem << value
+        hash << value
       when 'Advisory'
-        source << value
-        fingerprint = value
+        source << { :scanner => @name, :file => 'Gemfile.lock', :line => nil, :code => nil }
+        hash << value
       when 'Criticality'
-        severity << value
+        sev = severity(value)
+        hash << sev
       when 'URL'
-        detail << value
+        detail += line.chomp.split('URL:').last
       when 'Title'
-        detail << value
+        detail += ",#{value}"
       when 'Solution'
-        detail << value
+        detail += ": #{value}"
       when 'Insecure Source URI found'
-        report "Insecure GEM Source", "#{line} - use git or https", "BundlerAudit", "High", "bundlerauditgemsource"
+        report "Insecure GEM Source", "#{line.chomp} - use git or https", {:scanner => @name, :file => 'Gemfile.lock', :line => nil, :code =>  nil}, severity('high'), fingerprint("bundlerauditgemsource#{line.chomp}")
       else
         if line =~ /\S/ and line !~ /Unpatched versions found/
           Pipeline.notify "Not sure how to handle line: #{line}"
@@ -81,7 +85,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
       end
     end
   end
-  
+
 
 end
 

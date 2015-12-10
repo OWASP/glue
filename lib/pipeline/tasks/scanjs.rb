@@ -1,11 +1,11 @@
 require 'pipeline/tasks/base_task'
 
 class Pipeline::ScanJS < Pipeline::BaseTask
-  
-#  WIP  
+
+#  WIP
 #  Pipeline::Tasks.add self
-  
-  def initialize(trigger)
+
+  def initialize(trigger, tracker)
   	super(trigger)
     @name = "ScanJS"
     @description = "Source analysis for JavaScript"
@@ -25,7 +25,7 @@ class Pipeline::ScanJS < Pipeline::BaseTask
 
   def supported?
   	# In future, verify tool is available.
-  	return true 
+  	return true
   end
 
 end

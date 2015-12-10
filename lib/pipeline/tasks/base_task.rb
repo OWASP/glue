@@ -1,5 +1,6 @@
 require 'pipeline/finding'
 require 'set'
+require 'digest'
 
 class Pipeline::BaseTask
   attr_reader :findings, :warnings, :trigger, :labels
@@ -8,11 +9,17 @@ class Pipeline::BaseTask
   attr_accessor :stage
   attr_accessor :appname
 
-  def initialize(trigger)
+  def initialize(trigger, tracker)
     @findings = []
     @warnings = []
     @labels = Set.new
     @trigger = trigger
+    @tracker = tracker
+    @severity_filter = {
+      :low => ['low','weak'],
+      :medium => ['medium','med','average'],
+      :high => ['high','severe','critical']
+    }
   end
 
   def report description, detail, source, severity, fingerprint
@@ -44,6 +51,14 @@ class Pipeline::BaseTask
   end
 
   def supported?
+  end
+
+  def severity sev
+    sev = '' if sev.nil?
+    return 1 if @severity_filter[:low].include?(sev.strip.chomp.downcase)
+    return 2 if @severity_filter[:medium].include?(sev.strip.chomp.downcase)
+    return 3 if @severity_filter[:high].include?(sev.strip.chomp.downcase)
+    return 0
   end
 
 end

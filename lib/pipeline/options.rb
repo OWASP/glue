@@ -63,21 +63,12 @@ module Pipeline::Options
         end
 
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
-          checks.each_with_index do |s, index|
-            if s[0,5] != "Check"
-              checks[index] = "Check" << s
-            end
-          end
-
-          options[:run_checks] ||= Set.new
-          options[:run_checks].merge checks
+          options[:run_tasks] ||= Set.new
+          options[:run_tasks].merge checks
         end
 
         opts.on "-x", "--except Check1,Check2,etc", Array, "Skip the specified checks" do |skip|
           skip.each do |s|
-            if s[0,5] != "Check"
-              s = "Check" << s
-            end
 
             options[:skip_checks] ||= Set.new
             options[:skip_checks] << s
@@ -86,6 +77,10 @@ module Pipeline::Options
 
         opts.on "-a", "--appname NAME", "Override the inferred application name." do |appname|
           options[:appname] = appname
+        end
+
+        opts.on "-r", "--revision REV", "Specify a revision of software to pass on to checkmarx" do |revision|
+          options[:revision] = revision
         end
 
         opts.on "-l", "--labels Label1,Label2,etc", Array, "Run the checks with the supplied labels" do |labels|
@@ -151,6 +146,28 @@ module Pipeline::Options
           options[:jira_component] = component
         end
 
+        opts.separator ""
+        opts.separator "Checkmarx options:"
+
+        opts.on "--checkmarx-user USER", "Specify the Checkmarx user to use when connecting to the API" do |user|
+          options[:checkmarx_user] = user
+        end
+
+        opts.on "--checkmarx-password PASSWORD", "Specify password for the Checkmarx API user" do |password|
+          options[:checkmarx_password] = password
+        end
+
+        opts.on "--checkmarx-server server", "Specify the API server to use for Checkmarx scans" do |server|
+          options[:checkmarx_server] = server
+        end
+
+        opts.on "--checkmarx-log logfile", "Specify the log file to use for Checkmarx scans" do |logfile|
+          options[:checkmarx_log] = logfile
+        end
+
+        opts.on "--checkmarx-project project", "Specify the full path of the Checkmarx project for this scan" do |project|
+          options[:checkmarx_project] = project
+        end
 
         opts.separator ""
         opts.separator "Configuration files:"
