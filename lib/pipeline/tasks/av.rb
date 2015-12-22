@@ -7,7 +7,7 @@ class Pipeline::AV < Pipeline::BaseTask
   Pipeline::Tasks.add self
 
   def initialize(trigger, tracker)
-  	super(trigger)
+    super(trigger,tracker)
     @name = "AV"
     @description = "Test for virus/malware"
     @stage = :file

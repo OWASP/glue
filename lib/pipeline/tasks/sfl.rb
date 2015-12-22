@@ -9,7 +9,7 @@ class Pipeline::SFL < Pipeline::BaseTask
   include Pipeline::Util
 
   def initialize(trigger, tracker)
-    super(trigger)
+    super(trigger,tracker)
     @name = "SFL"
     @description = "Sentive Files Lookup"
     @stage = :code

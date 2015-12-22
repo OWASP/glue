@@ -8,7 +8,7 @@ class Pipeline::FIM < Pipeline::BaseTask
   Pipeline::Tasks.add self
 
   def initialize(trigger, tracker)
-    super(trigger)
+    super(trigger,tracker)
     @name = "FIM"
     @description = "File integrity monitor"
     @stage = :file

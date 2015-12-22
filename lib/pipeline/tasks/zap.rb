@@ -155,8 +155,8 @@ class Pipeline::Zap < Pipeline::BaseTask
   Pipeline::Tasks.add self
   include Pipeline::Util
 
-  def initialize(trigger)
-    super(trigger)
+  def initialize(trigger,tracker)
+    super(trigger,tracker)
     @name = "ZAP"
     @description = "App Scanning"
     @stage = :live

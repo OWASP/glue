@@ -4,10 +4,10 @@ Gem::Specification.new do |s|
   s.name = %q{pipeline}
   s.version = Pipeline::Version
   s.authors = ["Matt Konda"]
-  s.email = "mkonda@jemurai.com"
-  s.summary = "Security scanner for the cloud."
+  s.email = "matt.konda@owasp.org"
+  s.summary = "Security toolchain for software build automation."
   s.description = "Pipeline detects security vulnerabilities in code."
-  s.homepage = "http://jemurai.com"
+  s.homepage = "http://github.com/OWASP/pipeline"
   s.files = ["bin/pipeline", "CHANGES", "FEATURES", "README.md"] + Dir["lib/**/*"]
   s.executables = ["pipeline"]
   s.license = "Apache 2"

@@ -74,7 +74,7 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
   include Pipeline::Util
 
   def initialize(trigger)
-    super(trigger)
+    super(trigger,tracker)
     @name = "OWASP Dependency Check"
     @description = "Dependency analysis for Java and .NET"
     @stage = :code
