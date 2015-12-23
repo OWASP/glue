@@ -1,10 +1,10 @@
 require 'pipeline/tasks/base_task'
 require 'pipeline/util'
-require 'nokogiri'
+# require 'nokogiri'
 
 class Pipeline::Checkmarx < Pipeline::BaseTask
 
-  Pipeline::Tasks.add self
+  # Pipeline::Tasks.add self
   include Pipeline::Util
 
   def initialize(trigger, tracker)
@@ -28,7 +28,7 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
       "-ReportXML", "#{rootpath}checkmarx_results.xml",
       "-Log", "#{@tracker.options[:checkmarx_log]}"
     )
-    @results = Nokogiri::XML(File.read("#{rootpath}checkmarx_results.xml")).xpath '//Result'
+    # @results = Nokogiri::XML(File.read("#{rootpath}checkmarx_results.xml")).xpath '//Result'
   end
 
   def analyze

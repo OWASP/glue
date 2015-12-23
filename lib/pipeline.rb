@@ -231,7 +231,7 @@ module Pipeline
 
     rescue LoadError => e
       $stderr.puts e.message
-      raise NoPipelineError, "Cannot find lib/ directory."
+      raise NoPipelineError, "Cannot find lib/ directory or load the key pipeline."
     end
 
 #    debug "API: #{options[:jira_api_url.to_s]}"

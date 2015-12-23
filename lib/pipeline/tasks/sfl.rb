@@ -60,7 +60,7 @@ class Pipeline::SFL < Pipeline::BaseTask
   end
 
   def read_patterns_file!
-    JSON.parse(File.read("#{File.dirname(__FILE__)}/../../../patterns.json"))
+    JSON.parse(File.read("#{File.dirname(__FILE__)}/patterns.json"))
   rescue JSON::ParserError => e
     Pipeline.warn "Cannot parse pattern file: #{e.message}"
   end
