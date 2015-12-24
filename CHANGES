@@ -1,3 +1,12 @@
+## 0.6.0
+  * Docker image.
+  * JavaScript tools (retire.js, nodesecurity, eslint)
+  * Java tools (SonarCube, Findbugs)
+## 0.5.3
+  * Checkmarx
+  * JIRA Integration
+  * Search for secrets (a la gitrob) 
+  * OWASP dependency-check
 ## 0.1.0
   * Structure for pipeline and initial tool series.
   * gem packaging
@@ -5,7 +14,10 @@
   * docker mounting
   * Support for task labels.  Run with 'pipeline -l label' and only tasks that identify with that label will run. 
   * Move to only keep options in tracker.
+
+## FUTURE
   * TODO:  add scap
   * TODO:  Devtools:  pmd, brakeman, dependency checker, codescan, scanjs, bandit, etc.
   * TODO:  Misc OS checks
-
+  * TODO:  Active:  ZAP, gauntlt
+  * TODO:  .NET

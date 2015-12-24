@@ -17,10 +17,7 @@ class Pipeline::ISOMounter < Pipeline::BaseMounter
     working_target = base + "/" + target + "/"    
     Pipeline.notify "Cleaning directory: #{working_target}"
 
-    Pipeline.notify "This doesn't work on MAC for some reason."
-    # TODO:  COME BACK AND TEST ON LINUX AND FIX FOR MAC
-
-    if ! working_target.match(/\A\/var\/redsky\/.*/)
+    if ! working_target.match(/\A.*\/line\/tmp\/.*/)
       Pipeline.notify "Bailing in case #{working_target} is malicious."      
     else
       result = `rm -rf #{working_target}`

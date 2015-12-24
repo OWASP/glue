@@ -15,6 +15,10 @@ class Pipeline::AV < Pipeline::BaseTask
   end
 
   def run
+    # Update AV
+    `freshclam`
+    # Run AV
+    # TODO:  Circle back and use runsystem.
     Pipeline.notify "Malware/Virus Check"
   	rootpath = @trigger.path
 	  @result=`clamscan --no-summary -i -r "#{rootpath}"`
@@ -30,6 +34,7 @@ class Pipeline::AV < Pipeline::BaseTask
   end
 
   def supported?
+        # TODO verify.
   	# In future, verify tool is available.
   	return true
   end

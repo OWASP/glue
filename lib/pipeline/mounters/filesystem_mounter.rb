@@ -16,7 +16,7 @@ class Pipeline::FileSystemMounter < Pipeline::BaseMounter
 
   def supports? target
     last = target.slice(-1)
-    if last === "/"
+    if last === "/" or last === "."
       return true
     else
       return false

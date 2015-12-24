@@ -7,7 +7,7 @@ class Pipeline::URLMounter < Pipeline::BaseMounter
     super(trigger)
     @options = options
     @name = "URL"
-    @description = "Mount a url."
+    @description = "Mount a url - typically for a live attack."
   end
 
   def mount target
@@ -16,7 +16,10 @@ class Pipeline::URLMounter < Pipeline::BaseMounter
 
   def supports? target
     start = target.slice(0,4)
-    if start === "http"
+    last = target.slice(-4,target.length)
+    if last === ".git"
+      return false
+    else if start === "http"
       return true
     else
       return false

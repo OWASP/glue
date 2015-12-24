@@ -15,7 +15,7 @@ class Pipeline::DockerMounter < Pipeline::BaseMounter
     target = target.slice(0, target.length - 7)
     working_target = base + "/docker/" + target + "/"
     Pipeline.notify "Cleaning directory: #{working_target}"
-    if ! working_target.match(/\A\/var\/redsky\/.*/)
+    if ! working_target.match(/\A.*\/line\/tmp\/.*/)
       Pipeline.notify "Bailing in case #{working_target} is malicious."      
     else
       result = `rm -rf #{working_target}`
