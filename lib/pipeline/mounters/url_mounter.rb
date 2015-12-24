@@ -19,7 +19,7 @@ class Pipeline::URLMounter < Pipeline::BaseMounter
     last = target.slice(-4,target.length)
     if last === ".git"
       return false
-    else if start === "http"
+    elsif start === "http"
       return true
     else
       return false
