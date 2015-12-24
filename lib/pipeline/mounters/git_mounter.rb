@@ -17,7 +17,7 @@ class Pipeline::GitMounter < Pipeline::BaseMounter
     protocol, path, suffix = target.match(/\A(.*\/\/)(.*)(.git)\z/i).captures
     working_target = base + "/" + path + "/"
     Pipeline.notify "Cleaning directory: #{working_target}"
-    if ! working_target.match(/\A\/var\/pipeline\/.*/)
+    if ! working_target.match(/\A.*\/line\/tmp\/.*/)
       Pipeline.notify "Bailing in case #{working_target} is malicious."      
     else
       result = `rm -rf #{working_target}`
