@@ -11,27 +11,28 @@ class Pipeline::Finding
 
   def initialize appname, description, detail, source, severity, fingerprint
   	@appname = appname
-    @timestamp = Time.now
+        @timestamp = Time.now
   	@description = description
   	@detail = detail
   	@source = source
+        @stringsrc = source.to_s
   	@severity = severity
-    @fingerprint = fingerprint
+        @fingerprint = fingerprint
   end
 
   def to_string
   	s = "Finding: #{@appname}"
-    s << "\n\tDescription: #{@description}"
-    s << "\n\tTimestamp: #{@timestamp}"
-    s << "\n\tSource: #{@source}"
-    s << "\n\tSeverity: #{@severity}"
+        s << "\n\tDescription: #{@description}"
+        s << "\n\tTimestamp: #{@timestamp}"
+        s << "\n\tSource: #{@stringsrc}"
+        s << "\n\tSeverity: #{@severity}"
   	s << "\n\tFingerprint:  #{@fingerprint}"
-    s << "\n\tDetail:  #{@detail}"
+        s << "\n\tDetail:  #{@detail}"
   	s
   end
 
   def to_csv
-    s = "#{@appname},#{@description},#{@timestamp},#{@source},#{@severity},#{@fingerprint},#{@detail}\n"
+    s = "#{@appname},#{@description},#{@timestamp},#{@source.to_s},#{@severity},#{@fingerprint},#{@detail}\n"
     s
   end
 

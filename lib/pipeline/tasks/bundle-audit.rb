@@ -18,6 +18,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
+    Pipeline.debug "Rootpath: #{rootpath}"
     Dir.chdir("#{rootpath}") do
       @result= runsystem(true, "bundle-audit", "check")
     end
@@ -29,7 +30,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
       get_warnings
     rescue Exception => e
       Pipeline.warn e.message
-      Pipeline.notify "Appears not to be a project with Gemfile.lock ... bundle-audit skipped."
+      Pipeline.notify "Appears not to be a project with Gemfile.lock or there was another problem ... bundle-audit skipped."
     end
   end
 
@@ -45,8 +46,9 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
 
   private
   def get_warnings
-    detail, jem, source, sev, hash = '','','','',''
+    detail, jem, source, sev, hash = '','',{},'',''
     @result.each_line do | line |
+
       if /\S/ !~ line
         # Signal section is over.  Reset variables and report.
         if detail != ''
@@ -65,7 +67,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
         jem << value
         hash << value
       when 'Advisory'
-        source << { :scanner => @name, :file => 'Gemfile.lock', :line => nil, :code => nil }
+        source = { :scanner => @name, :file => 'Gemfile.lock', :line => nil, :code => nil }
         hash << value
       when 'Criticality'
         sev = severity(value)
