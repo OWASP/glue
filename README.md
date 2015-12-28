@@ -21,11 +21,23 @@ copy an existing task and tweak to make it work for the tool in question.
 
 # Usage
 
-pipeline <image>
+pipeline <options> <target>
 
-# Basic Options
+## Options
 
-For a full list of options, use `pipeline --help` or see the OPTIONS.md file.
+Common options include: 
+-d for debug
+-f for format (takes "json", "csv", "jira")
+
+For a full list of options, use `pipeline --help` or see the [OPTIONS.md](./OPTIONS.md) file.
+
+## Target
+
+The target can be: 
+* Filesystem (which is analyzed in place)
+* Git repo (which is cloned for analysis)
+* Other types of images (.iso, docker, etc. are experimental)
+
 
 # Dependencies
 
@@ -47,7 +59,6 @@ gem build pipeline.gemspec
 # Configuration files
 
 For advanced usage scenarios, you can save your configuration and use it at runtime.
-
 
 # License
 
