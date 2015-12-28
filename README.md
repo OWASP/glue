@@ -5,6 +5,11 @@
 Pipeline is a framework for running a series of tools.  Generally, it is intended as a backbone 
 for automating a security analysis pipeline of tools.
 
+# Recommended Usage
+
+For those wishing to run pipeline, we recommend using the docker image.
+See the documentation for more info.  [Pipeline Docker Documentation](./DOCKER.html)
+
 # Installation
 
 gem install pipeline
