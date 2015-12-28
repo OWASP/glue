@@ -1,4 +1,5 @@
 require 'pipeline/mounters/base_mounter'
+require 'fileutils'
 
 class Pipeline::GitMounter < Pipeline::BaseMounter
   
@@ -13,20 +14,29 @@ class Pipeline::GitMounter < Pipeline::BaseMounter
 
   def mount target
     base = @options[:working_dir]
+
+    Pipeline.debug "Making base."
+    FileUtils.mkdir_p base
+
     # Grap the path part of the git url.
     protocol, path, suffix = target.match(/\A(.*\/\/)(.*)(.git)\z/i).captures
     working_target = File.expand_path(base + "" + path + "/")
+    
     Pipeline.notify "Cleaning directory: #{working_target}"
-    if ! File.directory? working_target or ! File.exists? working_target
-      Pipeline.notify "#{working_target} is not a directory."      
+    if ! Dir.exists? working_target      
+      Pipeline.notify "#{working_target} is not a directory."              
+      FileUtils.mkdir_p working_target
     else
-      Pipeline.debug "Removing : #{working_target}"
-      result = `rm -rf #{working_target}`
-      # puts result
-      Pipeline.debug "Cloning into: #{working_target}"
-      result = `git clone -q #{target} #{working_target}`
-      # puts result
+      Pipeline.debug "Removing : #{working_target}"  
+      FileUtils.rm_rf working_target 
+      FileUtils.mkdir_p working_target
     end
+      # result = `rm -rf #{working_target}`
+      # puts result
+    Pipeline.debug "Cloning into: #{working_target}"
+    result = `git clone -q #{target} #{working_target}`
+    # puts result
+    #end
     return working_target
   end
 
