@@ -16,7 +16,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
+    # Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     Pipeline.debug "Rootpath: #{rootpath}"
     Dir.chdir("#{rootpath}") do
@@ -25,7 +25,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
   end
 
   def analyze
-#    puts @result
+    # puts @result
     begin
       get_warnings
     rescue Exception => e
@@ -82,7 +82,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
         report "Insecure GEM Source", "#{line.chomp} - use git or https", {:scanner => @name, :file => 'Gemfile.lock', :line => nil, :code =>  nil}, severity('high'), fingerprint("bundlerauditgemsource#{line.chomp}")
       else
         if line =~ /\S/ and line !~ /Unpatched versions found/
-          Pipeline.notify "Not sure how to handle line: #{line}"
+          Pipeline.debug "Not sure how to handle line: #{line}"
         end
       end
     end

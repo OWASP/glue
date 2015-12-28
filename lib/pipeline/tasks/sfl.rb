@@ -19,9 +19,9 @@ class Pipeline::SFL < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
+    # Pipeline.notify "#{@name}"
     @files = Find.find(@trigger.path)
-    Pipeline.debug "Found #{@files.size} files"
+    Pipeline.debug "Found #{@files.count} files"
   end
 
   def analyze

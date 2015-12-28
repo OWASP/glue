@@ -17,7 +17,7 @@ class Pipeline::Brakeman < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
+    # Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     @result=runsystem(true, "brakeman", "-A", "-q", "-f", "json", "#{rootpath}")
   end
@@ -30,6 +30,12 @@ class Pipeline::Brakeman < Pipeline::BaseTask
         file = relative_path(warning['file'], @trigger.path)
 
         detail = "#{warning['message']}\n#{warning['link']}"
+        if ! warning['line']
+          warning['line'] = "0"
+        end
+        if ! warning['code']
+          warning['code'] = ""
+        end
         source = { :scanner => @name, :file => file, :line => warning['line'], :code => warning['code'].lstrip }
 
         report warning["warning_type"], detail, source, severity(warning["confidence"]), fingerprint("#{warning['message']}#{warning['link']}#{severity(warning["confidence"])}#{source}")
