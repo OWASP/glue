@@ -32,6 +32,8 @@ module Pipeline::Options
         opts.separator "Pipeline also features filters to perform deduplication "
         opts.separator "and the abilty to handle false positives."
         opts.separator ""
+        opts.separator "See also the docker image."
+        opts.separator ""
 
         opts.separator "Control options:"
 

@@ -16,6 +16,14 @@ docker run jemurai/pipeline:0.6 --help
 ## Typical Usage
 docker run jemurai/pipeline:0.6 
 
+docker run jemurai/pipeline:0.6 https://github.com/YourOrg/YourProject.git
+
+docker run jemurai/pipeline:0.6 -l code -f json https://github.com/YourOrg/YourProject.git
+
+Example: 
+docker run jemurai/pipeline:0.6 -l code -f json https://github.com/Jemurai/triage.git
+
+
 # Dependencies
 
 * Docker:  https://get.docker.com/
