@@ -8,7 +8,7 @@ for automating a security analysis pipeline of tools.
 # Recommended Usage
 
 For those wishing to run pipeline, we recommend using the docker image.
-See the documentation for more info.  [Pipeline Docker Documentation](./DOCKER.html)
+See the documentation for more info.  [Pipeline Docker Documentation](./DOCKER.md)
 
 # Installation
 
