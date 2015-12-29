@@ -19,6 +19,7 @@ class Pipeline::ESLint < Pipeline::BaseTask
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     currentpath = File.expand_path File.dirname(__FILE__)
+    Pipeline.debug "ESLint Config Path: #{currentpath}"
     @result = `cd #{rootpath} && eslint -c #{currentpath}/scanjs-eslintrc --no-color --quiet --format json .`
   end
 
