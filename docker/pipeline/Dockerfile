@@ -32,9 +32,9 @@ RUN /bin/bash -l -c "rvm use 2.2.2 --default"
 RUN /bin/bash -l -c "gem install curb"
 ENV PATH $PATH:/home/pipe/.rvm/rubies/ruby-2.2.2/bin
 
-
 #################################################################################################
 # Pipeline App
+#
 
 ## Working Dir
 RUN /bin/bash -l -c "mkdir -p /home/pipe/line/tmp"

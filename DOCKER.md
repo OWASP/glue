@@ -57,6 +57,22 @@ Note that the folder sharing on Windows and Mac is constrained by [Docker Volume
 To summarize those for Mac, it is easy to share directories in the Users home directory but if you want to share 
 a different directory you have to make it shared through VirtualBox or whatever container controls your base image.
 
+## Running Specific Tools
+
+Pipeline supports running specific tools using the -t flag.  For example the following command only runs retire.js on the project. 
+```
+meditation:pipeline mk$ docker run -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat jemurai/pipeline:0.7 -t retirejs -f csv /tmp/nodegoat/
+```
+
+The tools include: 
+- brakeman
+- bundler-audit
+- retirejs
+- nodesecurityproject
+- eslint
+- sfl (Sensitive file lookup - part of pipeline)
+
+
 # Dependencies
 
 - Docker:  https://get.docker.com/
