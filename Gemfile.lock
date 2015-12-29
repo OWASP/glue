@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pipeline (0.6.0)
+    pipeline (0.7.0)
       brakeman (>= 3.0.5)
       bundler-audit (>= 0.3.1)
       curb (>= 0.8.8)
