@@ -39,7 +39,9 @@ docker run jemurai/pipeline:0.6 -l code -f json https://github.com/YourOrg/YourP
 ```
 
 Example: 
+```
 docker run jemurai/pipeline:0.6 -l code -f json https://github.com/Jemurai/triage.git
+```
 
 ## On the File System 
 
@@ -61,7 +63,7 @@ a different directory you have to make it shared through VirtualBox or whatever 
 
 Pipeline supports running specific tools using the -t flag.  For example the following command only runs retire.js on the project. 
 ```
-meditation:pipeline mk$ docker run -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat jemurai/pipeline:0.7 -t retirejs -f csv /tmp/nodegoat/
+docker run -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat jemurai/pipeline:0.7 -t retirejs -f csv /tmp/nodegoat/
 ```
 
 The tools include: 
@@ -82,7 +84,7 @@ The tools include:
 
 # Development
 
-To run the code from the docker image, run the following: 
+To run the code from the docker image by hand or debug issues there, run the following: 
 
 ```
 docker run -i -t --entrypoint=/bin/bash jemurai/pipeline:0.6
@@ -90,7 +92,11 @@ docker run -i -t --entrypoint=/bin/bash jemurai/pipeline:0.6
 
 Then, you can run the tool as though you were developing it.
 
-cd ~/line/pipeline and you will be in the root of the project.
+Change to the code directory and you will be in the root of the project.
+
+```
+cd ~/line/pipeline
+```
 
 # Configuration files
 
@@ -99,4 +105,4 @@ and use it at runtime.
 
 # License
 
-Apache 2:  http://www.apache.org/licenses/LICENSE-2.0
+[Apache 2](http://www.apache.org/licenses/LICENSE-2.0)
