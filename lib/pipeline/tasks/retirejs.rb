@@ -40,6 +40,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
   def parse_retire_json result
+    Pipeline.debug "Retire JSON Raw Result:  #{result}"
     vulnerabilities = []
     # This is very ugly, but so is the json retire.js spits out
     # Loop through each component/version combo and pull all results for it
