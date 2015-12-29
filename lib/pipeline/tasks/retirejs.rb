@@ -26,7 +26,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
   def analyze
-    # puts @result
+    puts @result
     begin
       vulnerabilities = parse_retire_json(JSON.parse(@result))
 
