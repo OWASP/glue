@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y git-core curl zlib1g-dev build-essentia
 #       Node Security
 #            Early because it needs to run as root.
 #
-RUN npm install -g nsp retire eslint scanjs eslint-plugin-scanjs-rules eslint-plugin-no-unsafe-innerhtml
+RUN npm install -g nsp retire eslint eslint-plugin-scanjs-rules eslint-plugin-no-unsafe-innerhtml
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 #################################################################################################
