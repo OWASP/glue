@@ -18,7 +18,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
+    # Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     # runsystem() doesn't work with redirected stderr
     #@result=runsystem(true, "retire", "-c", "--outputformat", "json", "--path", "#{rootpath}", "2>&1")

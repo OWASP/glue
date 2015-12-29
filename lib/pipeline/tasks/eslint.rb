@@ -18,7 +18,8 @@ class Pipeline::ESLint < Pipeline::BaseTask
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    @result = `cd #{rootpath} && eslint -c #{rootpath}/.scanjs-eslintrc --no-color --quiet --format json .`
+    currentpath = File.expand_path File.dirname(__FILE__)
+    @result = `cd #{rootpath} && eslint -c #{currentpath}/scanjs-eslintrc --no-color --quiet --format json .`
   end
 
   def analyze
