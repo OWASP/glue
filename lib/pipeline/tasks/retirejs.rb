@@ -18,20 +18,15 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
   def run
-    # Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    # runsystem() doesn't work with redirected stderr
-    #@result=runsystem(true, "retire", "-c", "--outputformat", "json", "--path", "#{rootpath}", "2>&1")
     Pipeline.debug "Retire rootpath: #{rootpath}"
     Dir.chdir("#{rootpath}") do
-      @result = `npm install`
-      Pipeline.debug "npm install result: #{@result}"
+      @result = `npm install`  # Need this even though it is slow to get full dependency analysis.
     end
     @result = `retire -c --outputformat json --path #{rootpath} 2>&1`
   end
 
   def analyze
-    puts @result
     begin
       vulnerabilities = parse_retire_json(JSON.parse(@result))
 
