@@ -56,6 +56,33 @@ To run the code, run the following from the root directory:
 To build a gem, just run: 
 gem build pipeline.gemspec
 
+
+# Integration
+
+## Git Hooks
+
+First, grab the hook from the code.
+```
+meditation:hooks mk$ cp /area53/owasp/pipeline/hooks/pre-commit .
+```
+
+Then make it executable.
+```
+meditation:hooks mk$ chmod +x pre-commit
+```
+
+Make sure the shell you are committing in can see docker.
+```
+meditation:hooks mk$ eval "$(docker-machine env default)"
+```
+
+Now go test and make a change and commit a file.
+The result should be that pipeline runs against your 
+code and will not allow commits unless the results 
+are clean. (Which is not necessarily a reasonable 
+expectation)
+
+
 # Configuration files
 
 For advanced usage scenarios, you can save your configuration and use it at runtime.

@@ -1,0 +1,14 @@
+#!/bin/sh
+echo "Pre-commit: Testing for security issues ..."
+
+docker run -v /Users/mk/line/tmp/triage/:/tmp/triage/ jemurai/pipeline:0.6 -z -l code /tmp/triage/ 
+RESULT=$?
+if [$RESULT -eq 0]
+then
+    echo "pre-commit: No detected security errors \o/"
+    exit 0
+else
+    echo "pre-commit: Aborting commit due to security errors"
+    echo "3 suggests security warning. 127 suggests failure to run."
+    exit $RESULT
+fi

@@ -60,9 +60,6 @@ module Pipeline
       path = options[:target]
       options[:appname] = File.split(path).last
     end
-
-
-
     options
   end
 
@@ -103,6 +100,7 @@ module Pipeline
     {
       :parallel_tasks => true,
       :skip_tasks => Set.new(),
+      :exit_on_warn => true,
       :output_format => :text,
       :working_dir => "~/line/tmp/",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
