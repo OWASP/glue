@@ -23,6 +23,10 @@ class Pipeline::RetireJS < Pipeline::BaseTask
     # runsystem() doesn't work with redirected stderr
     #@result=runsystem(true, "retire", "-c", "--outputformat", "json", "--path", "#{rootpath}", "2>&1")
     Pipeline.debug "Retire rootpath: #{rootpath}"
+    Dir.chdir("#{rootpath}") do
+      @result = `npm install`
+      Pipeline.debug "npm install result: #{@result}"
+    end
     @result = `retire -c --outputformat json --path #{rootpath} 2>&1`
   end
 
