@@ -10,6 +10,9 @@ for automating a security analysis pipeline of tools.
 For those wishing to run pipeline, we recommend using the docker image.
 See the documentation for more info.  [Pipeline Docker Documentation](./DOCKER.md)
 
+For those interested in how to use Pipeline in a DevOps context, see
+[Pipeline DevOps Integration Options](./DEVOPS.md)
+
 # Installation
 
 gem install pipeline
