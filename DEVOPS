@@ -1,0 +1,85 @@
+# DevOps with Pipeline
+
+The whole reason for building pipeline was to try to make it easier to integrate security
+tools into continuous delivery.
+
+We don't believe there is *one true way to do DevOps*.  Rather, we believe that at best
+there may be one true way each organization or team can do DevOps.  
+
+For that reason, Pipeline was built to take away the security complexity and provide 
+very flexible integration strategies.  We aim to provide *options* for integrating 
+security into build and delivery processs.
+
+The rest of this guide presents _options_ for adding security to your build process.
+
+# Developer Desktop Centric
+
+Pipeline includes a sample git hook that shows how the tools can be run pre-commit to 
+check for certain conditions and only allow the commit to go through if the 
+
+See:  /hooks/pre-commit
+
+To install this git hook as is, simply copy that to your .git/hooks directory and 
+make sure it is executable within your project.  This approach requires docker on
+the developers machine.
+
+Note that by altering the packaged git hook, we can easily: 
+- Choose to only run certain tools
+- Make this informational
+
+Of course, there is no reason docker is required.  If developers set up the tools 
+they need they can install the pipeline gem directly and this git hook can be 
+modified to invoke that directly.
+
+# Build Server Centric
+
+
+# Fit into Current Process 
+
+
+# Ad Hoc by App Security Team
+
+
+# Reality
+
+
+
+
+Here is an example that runs on a github repo.
+```
+docker run jemurai/pipeline:0.6 https://github.com/YourOrg/YourProject.git
+```
+
+This example only runs code analysis tools and outputs JSON.
+```
+docker run jemurai/pipeline:0.6 -l code -f json https://github.com/YourOrg/YourProject.git
+```
+
+Example: 
+```
+docker run jemurai/pipeline:0.6 -l code -f json https://github.com/Jemurai/triage.git
+```
+
+## On the File System 
+
+Running against a local file system: 
+```
+docker run -v /code/location:/tmp/directory jemurai/pipeline:0.6 -d -f json /tmp/directory/
+```
+
+Example: 
+```
+docker run -v /Users/mk/line/tmp/triage:/tmp/triage jemurai/pipeline:0.6 -l code -f json /tmp/triage/
+```
+
+Note that the folder sharing on Windows and Mac is constrained by [Docker Volumes](https://docs.docker.com/engine/userguide/dockervolumes/).
+To summarize those for Mac, it is easy to share directories in the Users home directory but if you want to share 
+a different directory you have to make it shared through VirtualBox or whatever container controls your base image.
+
+## Running Specific Tools
+
+Pipeline supports running specific tools using the -t flag.  For example the following command only runs retire.js on the project. 
+```
+docker run -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat jemurai/pipeline:0.7 -t retirejs -f csv /tmp/nodegoat/
+```
+
