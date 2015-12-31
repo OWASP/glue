@@ -18,7 +18,8 @@ The rest of this guide presents _options_ for adding security to your build proc
 ## Developer Desktop Centric
 
 Pipeline includes a sample git hook that shows how the tools can be run pre-commit to 
-check for certain conditions and only allow the commit to go through if the 
+check for certain conditions and only allow the commit to go through if the tools 
+don't produce warnings.
 
 See:  /hooks/pre-commit
 
@@ -39,7 +40,7 @@ modified to invoke that directly.
 For teams that are using Jenkins or Travis, Pipeline can be set up to run when 
 the CI server builds artifacts or runs tests.
 
-TOOD:  Complete this doc.
+We're working on a more detailed example of how to make this work.
 
 This has the advantage of not requiring local developer attention or setup.
 
@@ -50,13 +51,15 @@ across their environment.  In some cases, it can be useful to integrate the
 security capabilities into this system because it has all of the information
 about the inventory already.
 
-In this kind of case, an exisiting web application can trigger 
-
-
-
+In this kind of case, an exisiting web application can trigger security 
+analysis and review.
 
 ## Rich Custom Application for Inventory and Triage
 
+One organization built an entire front end for Pipeline (called CodeBurner)
+that makes it easy for folks to self service the findings and selectively
+push them to JIRA or filter them in the future.  Once this application is 
+fully open source, we will present a link to that codebase. 
 
 
 ## Process Your Images
@@ -81,7 +84,20 @@ is necessary.  This step can only take a few seconds.
 
 As a secondary step, having feedback in CI is essential.  That ensures that a 
 developer that disables git hooks can't submit that won't be found.  It is also
-a spot in the process that can tolerate a longer wait (up to minutes).
+a spot in the process that can tolerate a longer wait (up to minutes).  So we 
+might choose to run all of the code analysis tools then.
+
+There may be an integration testing step where it may be adventageous to run 
+ZAP or other "live" tools against the running test system.
+
+As a background process, it can be helpful to check an inventory of applications
+over time as part of a security function.  
+
+Being able to examine artifacts such as VM's, docker images, etc. can be part 
+of an overall hygeine program.
+
+Having these tools assembled and easy to run might even be useful to 
+developers and app security folks that want to run them on demand.
 
 # Touch Points
 
@@ -102,3 +118,8 @@ things that matter.
 
 Ideally these will be shared with the community.
 
+## More Tools
+
+Pipeline was designed to make it easy to add additional tools.  Commercial
+tools have been integrated and that is intended.  Find us if you have 
+questions about how to integrate a new tool.
