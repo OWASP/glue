@@ -84,7 +84,7 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
   def run
     Pipeline.notify "#{@name}"
     rootpath = @trigger.path
-    @result= runsystem(true, "/area52/dependency-check/bin/dependency-check.sh", "-a", "pipeline", "-f", "XML", "-out", "#{rootpath}", "-s", "#{rootpath}")
+    @result= runsystem(true, "/home/pipe/line/tools/dependency-check/bin/dependency-check.sh", "-a", "pipeline", "-f", "XML", "-out", "#{rootpath}", "-s", "#{rootpath}")
   end
 
   def analyze
@@ -100,7 +100,7 @@ class Pipeline::OWASPDependencyCheck < Pipeline::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "/area52/dependency-check/bin/dependency-check.sh", "-v")
+    supported=runsystem(true, "/home/pipe/line/tools//dependency-check/bin/dependency-check.sh", "-v")
     if supported =~ /command not found/
       Pipeline.notify "Install dependency-check."
       return false

@@ -4,7 +4,7 @@ MAINTAINER Matt Konda <mkonda@jemurai.com>
 ################################################################################################
 #       Environment
 #
-RUN apt-get update && apt-get install -y git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libffi-dev libgdbm-dev libncurses5-dev automake libtool bison libffi-dev gnupg patch gawk g++ gcc make libc6-dev libcurl3-dev autoconf libtool ncurses-dev zlib1g libreadline6-dev libreadline6 openssl libcurl4-openssl-dev libgmp-dev clamav md5deep nodejs npm
+RUN apt-get update && apt-get install -y git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libffi-dev libgdbm-dev libncurses5-dev automake libtool bison libffi-dev gnupg patch gawk g++ gcc make libc6-dev libcurl3-dev autoconf libtool ncurses-dev zlib1g libreadline6-dev libreadline6 openssl libcurl4-openssl-dev libgmp-dev clamav md5deep nodejs npm default-jre unzip
 
 
 #################################################################################################
@@ -33,7 +33,23 @@ RUN /bin/bash -l -c "gem install curb"
 ENV PATH $PATH:/home/pipe/.rvm/rubies/ruby-2.2.2/bin
 
 #################################################################################################
-# Pipeline App
+#       Java 
+#
+#RUN apt-get install -y software-properties-common
+#RUN add-apt-repository -y ppa:webupd8team/java
+#RUN apt-get update
+## Auto-accept the Oracle JDK license
+#RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+#RUN apt-get install -y oracle-java8-installer
+
+RUN /bin/bash -l -c "mkdir -p /home/pipe/line/tools"
+WORKDIR /home/pipe/line/tools/
+RUN curl -L https://dl.bintray.com/jeremy-long/owasp/dependency-check-1.3.3-release.zip --output owasp-dep-check.zip
+RUN unzip owasp-dep-check.zip
+
+
+#################################################################################################
+#       Pipeline App
 #
 
 ## Working Dir
