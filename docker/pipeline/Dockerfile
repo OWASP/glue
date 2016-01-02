@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y git-core curl zlib1g-dev build-essentia
 #################################################################################################
 #       Node Security
 #            Early because it needs to run as root.
+#            Requires nodejs npm
 #
 RUN npm install -g nsp retire eslint eslint-plugin-scanjs-rules eslint-plugin-no-unsafe-innerhtml
 RUN ln -s /usr/bin/nodejs /usr/bin/node
@@ -22,6 +23,7 @@ USER pipe
 
 #################################################################################################
 #       RVM / Ruby
+#       
 #
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 RUN /bin/bash -l -c "curl -L https://get.rvm.io | bash -s stable"
@@ -44,8 +46,15 @@ ENV PATH $PATH:/home/pipe/.rvm/rubies/ruby-2.2.2/bin
 
 RUN /bin/bash -l -c "mkdir -p /home/pipe/line/tools"
 WORKDIR /home/pipe/line/tools/
+
+# OWASP DEPENDENCY CHECK (needs unzip and default-jre)
 RUN curl -L https://dl.bintray.com/jeremy-long/owasp/dependency-check-1.3.3-release.zip --output owasp-dep-check.zip
 RUN unzip owasp-dep-check.zip
+
+# FINDBUGS (Experimental)
+#RUN curl -L http://downloads.sourceforge.net/project/findbugs/findbugs/3.0.1/findbugs-3.0.1.zip --output findbugs.zip
+#RUN unzip findbugs.zip
+#RUN curl -L http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.4/findsecbugs-plugin-1.4.4.jar > findbugs-3.0.1/plugin/findsecbugs.jar
 
 
 #################################################################################################
