@@ -18,9 +18,7 @@ class Pipeline::Zap < Pipeline::BaseTask
 
   def run
     rootpath = @trigger.path
-    host = @tracker.options[:zap_host]
-    port = @tracker.options[:zap_port]
-    base = "#{host}:#{port}"
+    base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     Pipeline.debug "Running ZAP on: #{rootpath} from #{base}"
 
     # TODO:  Add API Key
@@ -55,7 +53,7 @@ class Pipeline::Zap < Pipeline::BaseTask
       alerts = json["alerts"]
       count = 0
       alerts.each do |alert|
-        # def report description, detail, source, severity, fingerprint
+        count = count + 1
         description = alert["description"]
         detail = "Url: #{alert["url"]} Param: #{alert["param"]} \nReference: #{alert["reference"]}\n"+
                  "Solution: #{alert["solution"]}\nCWE: #{alert["cweid"]}\tWASCID: #{alert["wascid"]}"
@@ -63,7 +61,6 @@ class Pipeline::Zap < Pipeline::BaseTask
         sev = severity alert["risk"]
         fingerprint = @name + alert["url"] + alert["alert"] + alert["param"]
         report description, detail, source, sev, fingerprint
-        count = count + 1
       end
       Pipeline.debug "ZAP Identified #{count} issues."
     rescue Exception => e
@@ -73,10 +70,8 @@ class Pipeline::Zap < Pipeline::BaseTask
   end
 
   def supported?
-    host = @tracker.options[:zap_host]
-    port = @tracker.options[:zap_port]
-    base = "#{host}:#{port}"
-    supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/?zapapiformat=JSON").body_str)
+    base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
+    supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/").body_str)
     if supported["version"] == "2.4.3"
       return true
     else
