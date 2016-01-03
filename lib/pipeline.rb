@@ -103,6 +103,8 @@ module Pipeline
       :exit_on_warn => true,
       :output_format => :text,
       :working_dir => "~/line/tmp/",
+      :zap_host => "http://localhost",
+      :zap_port => "9999",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
   end

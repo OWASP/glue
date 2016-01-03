@@ -73,13 +73,16 @@ class Pipeline::Tasks
 
         task = c.new(trigger, tracker)
         begin
-          if (task.supported? && ( task.stage === stage ) && ( task.labels.intersect? tracker.options[:labels] ) )  # Only run tasks with lables.
-            Pipeline.notify "#{stage} - #{task_name} - #{task.labels}"
-            task.run
-            task.analyze
-            task.findings.each do | finding |
-              tracker.report finding
-            end
+          if task.supported? and task.stage == stage  
+            if task.labels.intersect? tracker.options[:labels] or          # Only run tasks with labels 
+                 ( run_tasks and run_tasks.include? task_name.downcase )   # or that are explicitly requested. 
+              Pipeline.notify "#{stage} - #{task_name} - #{task.labels}"
+              task.run
+              task.analyze
+              task.findings.each do | finding |
+                tracker.report finding
+              end
+           end
           end
         rescue => e
           Pipeline.notify e.message

@@ -1,154 +1,7 @@
 require 'pipeline/tasks/base_task'
-require 'json'
 require 'pipeline/util'
-
-require 'rexml/document'
-require 'rexml/streamlistener'
-include REXML
-
-# SAX Like Parser for OWASP ZAP XML.
-class Pipeline::ZAPListener
-  include StreamListener
-
-  def initialize(task)
-    @task = task
-    @count = 0
-    @pluginid = ""
-    @alert = ""
-    @confidence = ""
-    @riskdesc = ""
-    @desc = ""
-    @url = ""
-    @param = ""
-    @attack = ""
-    @otherinfo = ""
-    @solution = ""
-    @reference = ""
-    @wascid = ""
-    @cwe = ""
-    @fingerprint = ""
-  end
-
-  def tag_start(name, attrs)
-    case name
-    when "alertitem"
-      @count = @count + 1
-      # Pipeline.debug "Grabbed #{@count} vulns."
-      @pluginid = ""
-      @alert = ""
-      @confidence = ""
-      @riskdesc = ""
-      @desc = ""
-      @url = ""
-      @param = ""
-      @attack = ""
-      @otherinfo = ""
-      @solution = ""
-      @reference = ""
-      @wascid = ""
-      @cwe = ""
-      @fingerprint = ""
-    end
-  end
-
-  def tag_end(name)
-    case name
-    when "pluginid"
-      @pluginid = @text
-    when "alert"
-      @alert = @text
-    when "confidence"
-      @confidence = @text
-    when "riskdesc"
-      @riskdesc = @text
-    when "desc"
-      @desc = @text
-    when "uri"
-      @url = @text
-    when "param"
-      @param = @text.strip
-    when "attack"
-      @attack = @text.strip
-    when "otherinfo"
-      @otherinfo = @text.chomp
-    when "solution"
-      @solution = @text
-    when "reference"
-      @reference = @text
-    when "wascid"
-      @wascid = @text
-    when "cwe"
-      @cwe = @text
-    when "alertitem"
-      detail = get_detail
-      description = get_description
-      source = get_source
-      get_fingerprint
-      risk = "Risk: #{@riskdesc} / Confidence (of 1-3 Low, Medium, High): #{@confidence}"
-
-      # puts "Vuln: #{@alert} Severity: #{risk}\n\tDescription: #{description}\n\tDetail: #{detail}"
-      # puts "\tFingerprint: #{@fingerprint}"
-      @task.report description, detail, source, risk, @fingerprint
-    end
-  end
-
-  def get_fingerprint
-    @fingerprint = "ZAP-#{@pluginid}-#{@url}-#{@alert}"
-    if @param != ""
-      @fingerprint << "-#{@param}"
-    end
-    if @cwe != ""
-      @fingerprint << "-#{@cwe}"
-    end
-    if @wascid != ""
-      @fingerprint << "-#{@wascid}"
-    end
-    @fingerprint = @fingerprint.strip.gsub("\n", "")
-  end
-
-  def get_source
-      source = "ZAP Plugin: #{@pluginid} URL: #{@url}"
-      source
-  end
-
-
-  def get_detail
-      detail = "URL: #{@url}\n\t"
-      if @param != ""
-        detail << "Param: #{@param}\t"
-      end
-      if @attack != ""
-        detail << "Attack: #{@attack}\n\t"
-      end
-      if @otherinfo != "" and @otherinfo.strip != ""
-        detail << "Background: #{@otherinfo}\n\t"
-      end
-      if @reference != ""
-        detail << "Reference: #{@reference}\n\t"
-      end
-      if @solution != ""
-        detail << "Solution: #{@solution}"
-      end
-      detail
-  end
-
-  def get_description
-      # Format description.
-      description = ""
-      if @cwe != ""
-        description = "CWE: #{@cwe}\t"
-      end
-      if @wascid != ""
-        description << "WASC ID: #{@wascid}\t"
-      end
-      description << "\n\tDesc: #{@desc}"
-      description
-  end
-
-  def text(text)
-    @text = text.chomp
-  end
-end
+require 'json'
+require 'curb'
 
 class Pipeline::Zap < Pipeline::BaseTask
 
@@ -164,25 +17,55 @@ class Pipeline::Zap < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
     rootpath = @trigger.path
+    host = @tracker.options[:zap_host]
+    port = @tracker.options[:zap_port]
+    base = "#{host}:#{port}"
+    Pipeline.debug "Running ZAP on: #{rootpath} from #{base}"
 
-    Pipeline.debug "Running ZAP on: #{rootpath}"
-    #@result = runsystem(true, "rm", "/tmp/zap.xml")
-    #Pipeline.debug "Remove old ZAP file."
-  
-    # See /docker/zap for details on how this is going to work: 
-    @result=runsystem(true, "docker","run","-u","zap","-i","pipeline/zap:v1","zap-cli","--api-key","123","quick-scan","--spider","-l","Medium","-sc","-r","-o","'-config api.key=123'","#{rootpath}")
-    
+    # TODO:  Add API Key
+    # TODO:  Find out if we need to worry about "contexts" stepping on each other.
 
+    # Spider
+    Curl.get("#{base}/JSON/spider/action/scan/?#{rootpath}")
+    poll_until_100("#{base}/JSON/spider/view/status")
+
+    # Active Scan
+    Curl.get("#{base}/JSON/ascan/action/scan/?recurse=true&inScopeOnly=true&url=#{rootpath}")
+    poll_until_100("#{base}/JSON/ascan/view/status/")
+      
+    # Result
+    @result = Curl.get("#{base}/JSON/core/view/alerts/").body_str
+  end
+
+  def poll_until_100(url)
+    count = 0
+    loop do
+      sleep 5
+      status = JSON.parse(Curl.get(url).body_str)
+      count = count + 1      
+      Pipeline.notify "Count ... #{count}"
+      break if status["status"] == "100" or count > 100
+    end
   end
 
   def analyze
-    puts @result
-    begin
-      #path = @trigger.path + "/tmp/zap.xml"
-      path = "/tmp/zap.xml"
-      get_warnings(path)
+    begin   
+      json = JSON.parse @result
+      alerts = json["alerts"]
+      count = 0
+      alerts.each do |alert|
+        # def report description, detail, source, severity, fingerprint
+        description = alert["description"]
+        detail = "Url: #{alert["url"]} Param: #{alert["param"]} \nReference: #{alert["reference"]}\n"+
+                 "Solution: #{alert["solution"]}\nCWE: #{alert["cweid"]}\tWASCID: #{alert["wascid"]}"
+        source = @name + alert["url"]
+        sev = severity alert["risk"]
+        fingerprint = @name + alert["url"] + alert["alert"] + alert["param"]
+        report description, detail, source, sev, fingerprint
+        count = count + 1
+      end
+      Pipeline.debug "ZAP Identified #{count} issues."
     rescue Exception => e
       Pipeline.warn e.message
       Pipeline.notify "Problem running ZAP."
@@ -190,19 +73,16 @@ class Pipeline::Zap < Pipeline::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "java","-Xmx512m","-jar", "/area52/ZAP_2.4.1/zap-2.4.1.jar", "-version")
-    if supported =~ /2.4.1/
+    host = @tracker.options[:zap_host]
+    port = @tracker.options[:zap_port]
+    base = "#{host}:#{port}"
+    supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/?zapapiformat=JSON").body_str)
+    if supported["version"] == "2.4.3"
       return true
     else
-      Pipeline.notify "Install ZAP from owasp.org"
+      Pipeline.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct."
       return false
     end
-  end
-
-  def get_warnings(path)
-    listener = Pipeline::ZAPListener.new(self)
-    parser = Parsers::StreamParser.new(File.new(path), listener)
-    parser.parse
   end
 
 end
