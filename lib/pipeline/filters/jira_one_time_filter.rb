@@ -12,7 +12,7 @@ class Pipeline::JiraOneTimeFilter < Pipeline::BaseFilter
   end
 
   def filter tracker
-  	@project = tracker.options[:jira_project.to_s]
+    @project = tracker.options[:jira_project.to_s]
     @api = tracker.options[:jira_api_url.to_s]
     @cookie = tracker.options[:jira_cookie.to_s]
     @component = tracker.options[:jira_component.to_s]
@@ -48,9 +48,9 @@ class Pipeline::JiraOneTimeFilter < Pipeline::BaseFilter
   end
 
   def get_jira_query_json finding
-	json = 
-{"jql"=>"project=#{@project} AND component='#{@component}' AND labels='#{@appname}' AND description ~ 'FINGERPRINT: #{finding.fingerprint}'"}.to_json
-	json
+    json = 
+      {"jql"=>"project=#{@project} AND component='#{@component}' AND labels='#{@appname}' AND description ~ 'FINGERPRINT: #{finding.fingerprint}'"}.to_json
+    json
   end
 end
 

@@ -59,4 +59,3 @@ class Pipeline::JiraReporter < Pipeline::BaseReporter
 end
 
 
-# curl -X DELETE -H "Cookie: cookie" https://jira.groupondev.com/rest/api/2/issue/APPS-133
