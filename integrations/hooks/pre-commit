@@ -1,7 +1,10 @@
 #!/bin/sh
 echo "Pre-commit: Testing for security issues ..."
 
-docker run -v /Users/mk/line/tmp/triage/:/tmp/triage/ jemurai/pipeline:0.8 -z -l code /tmp/triage/ 
+# -z tells pipeline to emit error on warnings
+# -v mount volumes
+# -l code stage
+docker run -v /Users/mk/line/tmp/triage/:/tmp/triage/ owasp/pipeline:0.8 -z -l code /tmp/triage/ 
 RESULT=$?
 if [$RESULT -eq 0]
 then
