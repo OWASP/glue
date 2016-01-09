@@ -6,4 +6,4 @@ echo "Script executed from: ${PWD}"
 
 eval $(docker-machine env patched)
 GUID="$RANDOM"
-docker run -v ${PWD}:/tmp/$GUID/ owasp/pipeline:0.8 -z -l code -d /tmp/$GUID/
+docker run --rm=true --name=pipeline_ci_code -v ${PWD}:/tmp/$GUID/ owasp/pipeline:0.8 -z -l code -d /tmp/$GUID/

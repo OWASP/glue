@@ -4,7 +4,7 @@ echo "Pre-commit: Testing for security issues ..."
 # -z tells pipeline to emit error on warnings
 # -v mount volumes
 # -l code stage
-docker run -v /Users/mk/line/tmp/triage/:/tmp/triage/ owasp/pipeline:0.8 -z -l code /tmp/triage/ 
+docker run --name="pipeline-precommit" --rm=true -v /Users/mk/line/tmp/triage/:/tmp/triage/ owasp/pipeline:0.8 -z -l code /tmp/triage/ 
 RESULT=$?
 if [$RESULT -eq 0]
 then

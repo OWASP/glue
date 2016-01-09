@@ -7,7 +7,7 @@ configured and ready to go.
 # Installation
 
 ```
-owasp/pipeline:0.6
+docker pull owasp/pipeline:0.8
 ```
 
 # Usage
@@ -16,41 +16,41 @@ owasp/pipeline:0.6
 
 This is one way to get help.
 ```
-docker run owasp/pipeline:0.6 --help
+docker run --rm owasp/pipeline:0.8 --help
 ```
 
 ## Typical Usage
 
 Most basic starting point.  Will analyze a predetermined codebase.
 ```
-docker run owasp/pipeline:0.6 
+docker run --rm --name=pipeline owasp/pipeline:0.8 
 ```
 
 Here is an example that runs on a github repo.
 ```
-docker run owasp/pipeline:0.6 https://github.com/YourOrg/YourProject.git
+docker run --rm --name=pipeline owasp/pipeline:0.8 https://github.com/YourOrg/YourProject.git
 ```
 
 This example only runs code analysis tools and outputs JSON.
 ```
-docker run owasp/pipeline:0.6 -l code -f json https://github.com/YourOrg/YourProject.git
+docker run --rm --name=pipeline owasp/pipeline:0.8 -l code -f json https://github.com/YourOrg/YourProject.git
 ```
 
 Example: 
 ```
-docker run owasp/pipeline:0.6 -l code -f json https://github.com/Owasp/triage.git
+docker run --rm --name=pipeline owasp/pipeline:0.8 -l code -f json https://github.com/Owasp/triage.git
 ```
 
 ## On the File System 
 
 Running against a local file system: 
 ```
-docker run -v /code/location:/tmp/directory owasp/pipeline:0.6 -d -f json /tmp/directory/
+docker run --rm --name=pipeline -v /code/location:/tmp/directory owasp/pipeline:0.8 -d -f json /tmp/directory/
 ```
 
 Example: 
 ```
-docker run -v /Users/mk/line/tmp/triage:/tmp/triage owasp/pipeline:0.6 -l code -f json /tmp/triage/
+docker run --rm --name=pipeline -v /Users/mk/line/tmp/triage:/tmp/triage owasp/pipeline:0.8 -l code -f json /tmp/triage/
 ```
 
 Note that the folder sharing on Windows and Mac is constrained by [Docker Volumes](https://docs.docker.com/engine/userguide/dockervolumes/).
@@ -61,7 +61,7 @@ a different directory you have to make it shared through VirtualBox or whatever 
 
 Pipeline supports running specific tools using the -t flag.  For example the following command only runs retire.js on the project. 
 ```
-docker run -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat owasp/pipeline:0.7 -t retirejs -f csv /tmp/nodegoat/
+docker run --rm --name=pipeline -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat owasp/pipeline:0.7 -t retirejs -f csv /tmp/nodegoat/
 ```
 
 The tools include: 
@@ -85,7 +85,7 @@ The tools include:
 To run the code from the docker image by hand or debug issues there, run the following: 
 
 ```
-docker run -i -t --entrypoint=/bin/bash owasp/pipeline:0.6
+docker run --name=pipeline --rm -i -t --entrypoint=bash owasp/pipeline:0.8
 ```
 
 Then, you can run the tool as though you were developing it.
