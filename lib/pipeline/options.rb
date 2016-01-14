@@ -95,6 +95,10 @@ module Pipeline::Options
           options[:additional_checks_path].merge paths.map {|p| File.expand_path p}
         end
 
+        opts.on "--npm-registry URL", "Use a custom npm registry when installing dependencies for javascript scanners" do |url|
+          options[:npm_registry] = url
+        end
+
         opts.separator ""
         opts.separator "Output options:"
 
@@ -161,6 +165,29 @@ module Pipeline::Options
 
         opts.on "--zap-port PORT", "Specify the port ZAP is running on." do |port|
           options[:zap_port] = port
+        end
+
+        opts.separator ""
+        opts.separator "Checkmarx options:"
+
+        opts.on "--checkmarx-user USER", "Specify the Checkmarx user to use when connecting to the API" do |user|
+          options[:checkmarx_user] = user
+        end
+
+        opts.on "--checkmarx-password PASSWORD", "Specify password for the Checkmarx API user" do |password|
+          options[:checkmarx_password] = password
+        end
+
+        opts.on "--checkmarx-server server", "Specify the API server to use for Checkmarx scans" do |server|
+          options[:checkmarx_server] = server
+        end
+
+        opts.on "--checkmarx-log logfile", "Specify the log file to use for Checkmarx scans" do |logfile|
+          options[:checkmarx_log] = logfile
+        end
+
+        opts.on "--checkmarx-project project", "Specify the full path of the Checkmarx project for this scan" do |project|
+          options[:checkmarx_project] = project
         end
 
         opts.separator ""

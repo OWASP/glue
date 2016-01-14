@@ -21,7 +21,12 @@ class Pipeline::RetireJS < Pipeline::BaseTask
     rootpath = @trigger.path
     Pipeline.debug "Retire rootpath: #{rootpath}"
     Dir.chdir("#{rootpath}") do
-      @result = `npm install`  # Need this even though it is slow to get full dependency analysis.
+      if @tracker.options.has_key?(:npm_registry)
+        registry = "--registry #{@tracker.options[:npm_registry]}"
+      else
+        registry = nil
+      end
+      @result = `npm install --ignore-scripts #{registry}`  # Need this even though it is slow to get full dependency analysis.
     end
     @result = `retire -c --outputformat json --path #{rootpath} 2>&1`
   end
