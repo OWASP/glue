@@ -90,6 +90,12 @@ expectation)
 
 For advanced usage scenarios, you can save your configuration and use it at runtime.
 
+# Authors
+
+Matt Konda
+Alex Lock
+Rafa Perez
+
 # License
 
 Apache 2:  http://www.apache.org/licenses/LICENSE-2.0

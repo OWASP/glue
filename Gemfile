@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gemspec :name => "pipeline"
+gemspec :name => "owasp-pipeline"
 
 gem "rake"
 gem "jsonpath"

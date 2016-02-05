@@ -1,9 +1,9 @@
 require './lib/pipeline/version'
 
 Gem::Specification.new do |s|
-  s.name = %q{pipeline}
+  s.name = %q{owasp-pipeline}
   s.version = Pipeline::Version
-  s.authors = ["Matt Konda"]
+  s.authors = ["Matt Konda", "Alex Lock", "Rafa Perez"]
   s.email = "matt.konda@owasp.org"
   s.summary = "Security toolchain for software build automation."
   s.description = "Pipeline detects security vulnerabilities in code."
