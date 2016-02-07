@@ -16,33 +16,26 @@ class Pipeline::BaseTask
     @trigger = trigger
     @tracker = tracker
     @severity_filter = {
-      :low => ['low','weak'],
-      :medium => ['medium','med','average'],
-      :high => ['high','severe','critical']
+      low: %w(low weak),
+      medium: %w(medium med average),
+      high: %w(high severe critical)
     }
   end
 
-  def report description, detail, source, severity, fingerprint
-    finding = Pipeline::Finding.new( @trigger.appname, description, detail, source, severity, fingerprint )
+  def report(description, detail, source, severity, fingerprint)
+    finding = Pipeline::Finding.new(@trigger.appname, description, detail, source, severity, fingerprint)
     @findings << finding
   end
 
-  def warn warning
+  def warn(warning)
     @warnings << warning
   end
 
-  def name
-    @name
-  end
+  attr_reader :name
 
-  def description
-    @description
-  end
+  attr_reader :description
 
-  def stage
-    @stage
-  end
-
+  attr_reader :stage
 
   def run
   end
@@ -53,12 +46,11 @@ class Pipeline::BaseTask
   def supported?
   end
 
-  def severity sev
+  def severity(sev)
     sev = '' if sev.nil?
     return 1 if @severity_filter[:low].include?(sev.strip.chomp.downcase)
     return 2 if @severity_filter[:medium].include?(sev.strip.chomp.downcase)
     return 3 if @severity_filter[:high].include?(sev.strip.chomp.downcase)
-    return 0
+    0
   end
-
 end

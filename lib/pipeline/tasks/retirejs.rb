@@ -5,46 +5,41 @@ require 'jsonpath'
 require 'pathname'
 
 class Pipeline::RetireJS < Pipeline::BaseTask
-
   Pipeline::Tasks.add self
   include Pipeline::Util
 
   def initialize(trigger, tracker)
     super(trigger, tracker)
-    @name = "RetireJS"
-    @description = "Dependency analysis for JavaScript"
+    @name = 'RetireJS'
+    @description = 'Dependency analysis for JavaScript'
     @stage = :code
-    @labels << "code" << "javascript"
+    @labels << 'code' << 'javascript'
   end
 
   def run
     rootpath = @trigger.path
     Pipeline.debug "Retire rootpath: #{rootpath}"
-    Dir.chdir("#{rootpath}") do
-      if @tracker.options.has_key?(:npm_registry)
-        registry = "--registry #{@tracker.options[:npm_registry]}"
-      else
-        registry = nil
-      end
-      @result = `npm install --ignore-scripts #{registry}`  # Need this even though it is slow to get full dependency analysis.
+    Dir.chdir(rootpath.to_s) do
+      registry = if @tracker.options.key?(:npm_registry)
+                   "--registry #{@tracker.options[:npm_registry]}"
+                 end
+      @result = `npm install --ignore-scripts #{registry}` # Need this even though it is slow to get full dependency analysis.
     end
     @result = `retire -c --outputformat json --path #{rootpath} 2>&1`
   end
 
   def analyze
-    begin
-      vulnerabilities = parse_retire_json(JSON.parse(@result))
+    vulnerabilities = parse_retire_json(JSON.parse(@result))
 
-      vulnerabilities.each do |vuln|
-        report "Package #{vuln[:package]} has known security issues", vuln[:detail], vuln[:source], vuln[:severity], fingerprint("#{vuln[:package]}#{vuln[:source]}#{vuln[:severity]}")
-      end
-    rescue Exception => e
-      Pipeline.warn e.message
-      Pipeline.warn e.backtrace
+    vulnerabilities.each do |vuln|
+      report "Package #{vuln[:package]} has known security issues", vuln[:detail], vuln[:source], vuln[:severity], fingerprint("#{vuln[:package]}#{vuln[:source]}#{vuln[:severity]}")
     end
+  rescue Exception => e
+    Pipeline.warn e.message
+    Pipeline.warn e.backtrace
   end
 
-  def parse_retire_json result
+  def parse_retire_json(result)
     Pipeline.debug "Retire JSON Raw Result:  #{result}"
     vulnerabilities = []
     # This is very ugly, but so is the json retire.js spits out
@@ -59,12 +54,12 @@ class Pipeline::RetireJS < Pipeline::BaseTask
         # If we see the parent-->component relationship, dig through the dependency tree to try and make a dep map
         deps = []
         obj = version_results[0]
-        while !obj['parent'].nil?
+        until obj['parent'].nil?
           deps << obj['parent']['component']
           obj = obj['parent']
         end
         if deps.length > 0
-          vuln_hash[:source] = { :scanner => @name, :file => "#{deps.reverse.join('->')}->#{comp}-#{version}", :line => nil, :code => nil }
+          vuln_hash[:source] = { scanner: @name, file: "#{deps.reverse.join('->')}->#{comp}-#{version}", line: nil, code: nil }
         end
 
         vuln_hash[:severity] = 'unknown'
@@ -85,22 +80,20 @@ class Pipeline::RetireJS < Pipeline::BaseTask
       JsonPath.on(file_result, '$..component').uniq.each do |comp|
         JsonPath.on(file_result, "$..results[?(@.component == \'#{comp}\')].version").uniq.each do |version|
           source_path = Pathname.new(file_result['file']).relative_path_from Pathname.new(@trigger.path)
-          vulnerabilities.select { |v| v[:package] == "#{comp}-#{version}" }.first[:source] = { :scanner => @name, :file => source_path.to_s, :line => nil, :code => nil }
+          vulnerabilities.find { |v| v[:package] == "#{comp}-#{version}" }[:source] = { scanner: @name, file: source_path.to_s, line: nil, code: nil }
         end
       end
     end
-    return vulnerabilities
+    vulnerabilities
   end
 
   def supported?
-    supported=runsystem(true, "retire", "--help")
+    supported = runsystem(true, 'retire', '--help')
     if supported =~ /command not found/
-      Pipeline.notify "Install RetireJS"
+      Pipeline.notify 'Install RetireJS'
       return false
     else
       return true
     end
   end
-
 end
-

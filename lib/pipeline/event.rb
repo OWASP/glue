@@ -5,10 +5,9 @@ class Pipeline::Event
   attr_accessor :path
   attr_accessor :appname
 
-  def initialize appname, parent = nil
-  	@appname = appname
-   	@parent = parent
-   	@timestamp = Time.now
+  def initialize(appname, parent = nil)
+    @appname = appname
+    @parent = parent
+    @timestamp = Time.now
   end
-
 end

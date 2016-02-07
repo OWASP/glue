@@ -3,15 +3,14 @@
 require 'pipeline/tasks/base_task'
 
 class Pipeline::AV < Pipeline::BaseTask
-
   Pipeline::Tasks.add self
 
   def initialize(trigger, tracker)
-    super(trigger,tracker)
-    @name = "AV"
-    @description = "Test for virus/malware"
+    super(trigger, tracker)
+    @name = 'AV'
+    @description = 'Test for virus/malware'
     @stage = :file
-    @labels << "filesystem"
+    @labels << 'filesystem'
   end
 
   def run
@@ -19,25 +18,23 @@ class Pipeline::AV < Pipeline::BaseTask
     `freshclam`
     # Run AV
     # TODO:  Circle back and use runsystem.
-    Pipeline.notify "Malware/Virus Check"
-  	rootpath = @trigger.path
-	  @result=`clamscan --no-summary -i -r "#{rootpath}"`
+    Pipeline.notify 'Malware/Virus Check'
+    rootpath = @trigger.path
+    @result = `clamscan --no-summary -i -r "#{rootpath}"`
   end
 
   def analyze
-	  list = @result.split(/\n/)
-	  list.each do |v|
-	     # v.slice! installdir
-	     Pipeline.notify v
-       report "Malicious file identified.", v, @name, :medium
+    list = @result.split(/\n/)
+    list.each do |v|
+      # v.slice! installdir
+      Pipeline.notify v
+      report 'Malicious file identified.', v, @name, :medium
     end
   end
 
   def supported?
-        # TODO verify.
-  	# In future, verify tool is available.
-  	return true
+    # TODO: verify.
+    # In future, verify tool is available.
+    true
   end
-
 end
-

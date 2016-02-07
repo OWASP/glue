@@ -2,18 +2,13 @@ class Pipeline::BaseFilter
   attr_accessor :name
   attr_accessor :description
 
-  def initialize()
+  def initialize
   end
 
-  def name
-    @name
-  end
+  attr_reader :name
 
-  def description
-    @description
-  end
+  attr_reader :description
 
   def filter
   end
-
 end

@@ -1,22 +1,22 @@
 #!/usr/bin/env ruby
-#Adjust path in case called directly and not through gem
-$:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
+# Adjust path in case called directly and not through gem
+$LOAD_PATH.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
 
 require 'pipeline'
 require 'pipeline/options'
 require 'pipeline/version'
 
-#Parse options
+# Parse options
 begin
   options, parser = Pipeline::Options.parse! ARGV
 rescue OptionParser::ParseError => e
   $stderr.puts e.message.capitalize
-  $stderr.puts "Please see `pipeline --help` for valid options"
+  $stderr.puts 'Please see `pipeline --help` for valid options'
   exit -1
 end
 
-#Exit early for these options
-if options[:list_checks] or options[:list_optional_checks]
+# Exit early for these options
+if options[:list_checks] || options[:list_optional_checks]
   Pipeline.list_checks options
   exit
 elsif options[:create_config]
@@ -30,37 +30,33 @@ elsif options[:show_version]
   exit
 end
 
-#Set application path according to the commandline arguments
+# Set application path according to the commandline arguments
 unless options[:target]
-  if ARGV[-1].nil?
-    options[:target] = "."
-  else
-    options[:target] = ARGV[-1]
+  options[:target] = if ARGV[-1].nil?
+                       '.'
+                     else
+                       ARGV[-1]
   end
 end
 
-trap("INT") do
+trap('INT') do
   $stderr.puts "\nInterrupted - exiting."
 
-  if options[:debug]
-    $stderr.puts caller
-  end
+  $stderr.puts caller if options[:debug]
 
   exit!
 end
 
-if options[:quiet].nil?
-  options[:quiet] = :command_line
-end
+options[:quiet] = :command_line if options[:quiet].nil?
 
 begin
-    #Run scan and output a report
-    tracker = Pipeline.run options.merge(:print_report => true, :quiet => options[:quiet])
+  # Run scan and output a report
+  tracker = Pipeline.run options.merge(print_report: true, quiet: options[:quiet])
 
-    #Return error code if --exit-on-warn is used and warnings were found
-    if options[:exit_on_warn] and not tracker.findings.empty?
-      exit Pipeline::Warnings_Found_Exit_Code
-    end
+  # Return error code if --exit-on-warn is used and warnings were found
+  if options[:exit_on_warn] && !tracker.findings.empty?
+    exit Pipeline::Warnings_Found_Exit_Code
+  end
 rescue Pipeline::NoTargetError => e
   $stderr.puts e.message
   exit 1
