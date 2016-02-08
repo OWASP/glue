@@ -1,6 +1,6 @@
 require 'pipeline/tasks/base_task'
 require 'pipeline/util'
-# require 'nokogiri'
+require 'nokogiri'
 
 class Pipeline::Checkmarx < Pipeline::BaseTask
 
@@ -28,7 +28,7 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
       "-ReportXML", "#{rootpath}checkmarx_results.xml",
       "-Log", "#{@tracker.options[:checkmarx_log]}"
     )
-    # @results = Nokogiri::XML(File.read("#{rootpath}checkmarx_results.xml")).xpath '//Result'
+    @results = Nokogiri::XML(File.read("#{rootpath}checkmarx_results.xml")).xpath '//Result'
   end
 
   def analyze
@@ -38,9 +38,9 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
         detail = result.attributes['DeepLink'].value
         source = { :scanner => @name, :file => result.attributes['FileName'].value, :line =>  result.attributes['Line'].value.to_i, :code => result.at_xpath('Path/PathNode/Snippet/Line/Code').text }
         sev = severity(result.parent.attributes['Severity'].value)
-        print = fingerprint("#{description}#{source}#{sev}")
+        fprint = fingerprint("#{description}#{source}#{sev}")
 
-        report description, detail, source, sev, print
+        report description, detail, source, sev, fprint
       end
     rescue Exception => e
       Pipeline.warn e.message
@@ -59,4 +59,3 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
   end
 
 end
-
