@@ -1,24 +1,24 @@
 require 'pipeline/mounters/base_mounter'
 
 class Pipeline::ISOMounter < Pipeline::BaseMounter
-  
+
   # THIS DOESN'T WORK SO DON'T REGISTER FOR NOW
   # Pipeline::Mounters.add self
-  
-  def initialize trigger, options
+
+  def initialize(trigger, options)
     super(trigger)
     @options = options
-    @name = "ISO"
-    @description = "Mount an iso image."
+    @name = 'ISO'
+    @description = 'Mount an iso image.'
   end
 
-  def mount target
+  def mount(target)
     base = @options[:working_dir]
-    working_target = base + "/" + target + "/"    
+    working_target = base + '/' + target + '/'
     Pipeline.notify "Cleaning directory: #{working_target}"
 
-    if ! working_target.match(/\A.*\/line\/tmp\/.*/)
-      Pipeline.notify "Bailing in case #{working_target} is malicious."      
+    if !working_target.match(/\A.*\/line\/tmp\/.*/)
+      Pipeline.notify "Bailing in case #{working_target} is malicious."
     else
       result = `rm -rf #{working_target}`
       # puts result
@@ -28,15 +28,11 @@ class Pipeline::ISOMounter < Pipeline::BaseMounter
       result = `mount -t iso9660 #{target} #{working_target}`
       # puts result
     end
-    return working_target
+    working_target
   end
 
-  def supports? target
-    last = target.slice(-4,target.length)
-    if last === ".iso"
-      return true
-    else
-      return false
-    end
+  def supports?(target)
+    last = target.slice(-4, target.length)
+    last === '.iso'
   end
 end
