@@ -1,4 +1,3 @@
-
 class Pipeline::BaseMounter
   attr_reader :errors
   attr_reader :trigger
@@ -13,10 +12,6 @@ class Pipeline::BaseMounter
   def error(error)
     @errors << error
   end
-
-  attr_reader :name
-
-  attr_reader :description
 
   def mount
   end

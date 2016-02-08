@@ -195,11 +195,7 @@ module Pipeline::Options
         end
 
         opts.on '-C', '--create-config [FILE]', 'Output configuration file based on options' do |file|
-          options[:create_config] = if file
-                                      file
-                                    else
-                                      true
-          end
+          options[:create_config] = file || true
         end
 
         opts.separator ''

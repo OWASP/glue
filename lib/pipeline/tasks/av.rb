@@ -3,6 +3,7 @@
 require 'pipeline/tasks/base_task'
 
 class Pipeline::AV < Pipeline::BaseTask
+
   Pipeline::Tasks.add self
 
   def initialize(trigger, tracker)

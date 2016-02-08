@@ -32,11 +32,7 @@ end
 
 # Set application path according to the commandline arguments
 unless options[:target]
-  options[:target] = if ARGV[-1].nil?
-                       '.'
-                     else
-                       ARGV[-1]
-  end
+  options[:target] = ARGV[-1] || '.'
 end
 
 trap('INT') do

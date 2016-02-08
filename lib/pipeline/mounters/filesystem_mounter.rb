@@ -1,6 +1,7 @@
 require 'pipeline/mounters/base_mounter'
 
 class Pipeline::FileSystemMounter < Pipeline::BaseMounter
+
   Pipeline::Mounters.add self
 
   def initialize(trigger, options)
@@ -16,10 +17,6 @@ class Pipeline::FileSystemMounter < Pipeline::BaseMounter
 
   def supports?(target)
     last = target.slice(-1)
-    if last === '/' || last === '.'
-      return true
-    else
-      return false
-    end
+    last === '/' || last === '.'
   end
 end

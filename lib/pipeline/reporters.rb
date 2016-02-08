@@ -6,8 +6,8 @@ class Pipeline::Reporters
     @reporters << klass unless @reporters.include? klass
   end
 
-  class << self
-    attr_reader :reporters
+  def self.reporters
+    @reporters
   end
 
   def self.initialize_reporters(reporters_directory = '')

@@ -31,12 +31,6 @@ class Pipeline::BaseTask
     @warnings << warning
   end
 
-  attr_reader :name
-
-  attr_reader :description
-
-  attr_reader :stage
-
   def run
   end
 

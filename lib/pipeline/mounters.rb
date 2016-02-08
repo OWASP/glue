@@ -12,8 +12,8 @@ class Pipeline::Mounters
     @mounters << klass unless @mounters.include? klass
   end
 
-  class << self
-    attr_reader :mounters
+  def self.mounters
+    @mounters
   end
 
   def initialize
@@ -31,22 +31,22 @@ class Pipeline::Mounters
     @mounters.each do |c|
       mounter = c.new trigger, tracker.options
       begin
-       Pipeline.debug "Checking about mounting #{target} with #{mounter}"
-       if mounter.supports? target
-         Pipeline.notify "Mounting #{target} with #{mounter}"
-         path = mounter.mount target
-         Pipeline.notify "Mounted #{target} with #{mounter}"
-         return path
-    end
-     rescue => e
-       Pipeline.notify e.message
-     end
+        Pipeline.debug "Checking about mounting #{target} with #{mounter}"
+        if mounter.supports? target
+          Pipeline.notify "Mounting #{target} with #{mounter}"
+          path = mounter.mount target
+          Pipeline.notify "Mounted #{target} with #{mounter}"
+          return path
+        end
+      rescue => e
+        Pipeline.notify e.message
+      end
     end
   end
 
   def self.get_mounter_name(mounter_class)
     mounter_class.to_s.split('::').last
- end
+  end
 end
 
 # Load all files in mounters/ directory

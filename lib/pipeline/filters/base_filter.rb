@@ -5,10 +5,6 @@ class Pipeline::BaseFilter
   def initialize
   end
 
-  attr_reader :name
-
-  attr_reader :description
-
   def filter
   end
 end

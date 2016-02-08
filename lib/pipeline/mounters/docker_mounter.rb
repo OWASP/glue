@@ -1,6 +1,7 @@
 require 'pipeline/mounters/base_mounter'
 
 class Pipeline::DockerMounter < Pipeline::BaseMounter
+
   Pipeline::Mounters.add self
 
   # Pass in path to the root of the Rails application
@@ -34,10 +35,6 @@ class Pipeline::DockerMounter < Pipeline::BaseMounter
   def supports?(target)
     last = target.slice(-7, target.length)
     Pipeline.debug "In Docker mounter, target: #{target} became: #{last} ... wondering if it matched .docker"
-    if last === '.docker'
-      return true
-    else
-      return false
-    end
+    last === '.docker'
   end
 end

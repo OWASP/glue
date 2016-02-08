@@ -1,6 +1,7 @@
 require 'pipeline/mounters/base_mounter'
 
 class Pipeline::ISOMounter < Pipeline::BaseMounter
+
   # THIS DOESN'T WORK SO DON'T REGISTER FOR NOW
   # Pipeline::Mounters.add self
 
@@ -32,10 +33,6 @@ class Pipeline::ISOMounter < Pipeline::BaseMounter
 
   def supports?(target)
     last = target.slice(-4, target.length)
-    if last === '.iso'
-      return true
-    else
-      return false
-    end
+    last === '.iso'
   end
 end

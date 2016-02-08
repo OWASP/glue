@@ -1,6 +1,7 @@
 require 'pipeline/mounters/base_mounter'
 
 class Pipeline::URLMounter < Pipeline::BaseMounter
+
   Pipeline::Mounters.add self
 
   def initialize(trigger, options)

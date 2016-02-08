@@ -2,6 +2,7 @@ require 'pipeline/mounters/base_mounter'
 require 'fileutils'
 
 class Pipeline::GitMounter < Pipeline::BaseMounter
+
   Pipeline::Mounters.add self
 
   def initialize(trigger, options)
@@ -41,10 +42,6 @@ class Pipeline::GitMounter < Pipeline::BaseMounter
 
   def supports?(target)
     last = target.slice(-4, target.length)
-    if last === '.git'
-      return true
-    else
-      return false
-    end
+    last === '.git'
   end
 end

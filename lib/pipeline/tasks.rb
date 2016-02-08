@@ -37,7 +37,7 @@ class Pipeline::Tasks
   end
 
   # No need to use this directly.
-  def initialize(_options = { })
+  def initialize(_options = {})
     @warnings = []
     @tasks_run = []
   end
