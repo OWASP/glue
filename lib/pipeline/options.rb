@@ -191,6 +191,17 @@ module Pipeline::Options
         end
 
         opts.separator ""
+        opts.separator "PMD options:"
+
+        opts.on "--pmd-path PATH", "The full path to the base PMD directory" do |dir|
+          options[:pmd_path] = dir
+        end
+
+        opts.on "--pmd-checks CHECK1,CHECK2", "The list of checks passed to PMD run.sh -R, default: 'java-basic,java-sunsecure'" do |checks|
+          options[:pmd_checks] = checks
+        end
+
+        opts.separator ""
         opts.separator "Configuration files:"
 
         opts.on "-c", "--config-file FILE", "Use specified configuration file" do |file|

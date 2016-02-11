@@ -1,5 +1,6 @@
 require 'pipeline/tasks/base_task'
 require 'pipeline/util'
+require 'tempfile'
 
 class Pipeline::DawnScanner < Pipeline::BaseTask
 
@@ -16,10 +17,10 @@ class Pipeline::DawnScanner < Pipeline::BaseTask
 
   def run
     Pipeline.notify "#{@name}"
-    rootpath = @trigger.path
-    Dir.chdir("#{rootpath}") do
-      runsystem(true, "dawn", "-F", "./dawn_results.json", "-j", ".")
-      @results = JSON.parse(File.read('./dawn_results.json'))['vulnerabilities']
+    Dir.chdir("#{@trigger.path}") do
+      @results_file = Tempfile.new(['dawnresults', 'xml'])
+      runsystem(true, "dawn", "-F", "#{@results_file}", "-j", ".")
+      @results = JSON.parse(File.read("#{@results_file}"))['vulnerabilities']
     end
   end
 
@@ -38,7 +39,7 @@ class Pipeline::DawnScanner < Pipeline::BaseTask
       Pipeline.warn e.message
       Pipeline.warn e.backtrace
     ensure
-      File.unlink "#{@trigger.path}/dawn_results.json"
+      File.unlink @results_file
     end
   end
 
