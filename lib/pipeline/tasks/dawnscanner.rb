@@ -19,8 +19,8 @@ class Pipeline::DawnScanner < Pipeline::BaseTask
     Pipeline.notify "#{@name}"
     Dir.chdir("#{@trigger.path}") do
       @results_file = Tempfile.new(['dawnresults', 'xml'])
-      runsystem(true, "dawn", "-F", "#{@results_file}", "-j", ".")
-      @results = JSON.parse(File.read("#{@results_file}"))['vulnerabilities']
+      runsystem(true, "dawn", "-F", "#{@results_file.path}", "-j", ".")
+      @results = JSON.parse(File.read("#{@results_file.path}"))['vulnerabilities']
     end
   end
 

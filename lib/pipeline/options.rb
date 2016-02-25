@@ -202,6 +202,13 @@ module Pipeline::Options
         end
 
         opts.separator ""
+        opts.separator "FindSecurityBugs options:"
+
+        opts.on "--findsecbugs-path PATH", "The full path to the base FindSecurityBugs directory" do |dir|
+          options[:findsecbugs_path] = dir
+        end
+
+        opts.separator ""
         opts.separator "Configuration files:"
 
         opts.on "-c", "--config-file FILE", "Use specified configuration file" do |file|
