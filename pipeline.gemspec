@@ -19,4 +19,10 @@ Gem::Specification.new do |s|
   s.add_dependency "brakeman", ">= 3.0.5"
   s.add_dependency "curb", ">= 0.8.8"
   s.add_dependency "jsonpath", ">= 0.5.7"
+  s.add_dependency "nokogiri", ">=1.6.6.2"
+  s.add_dependency "rake"
+  s.add_dependency "dawnscanner", ">= 1.6.0"
+
+  s.add_development_dependency "pry"
+  s.add_development_dependency "pry-byebug"
 end
