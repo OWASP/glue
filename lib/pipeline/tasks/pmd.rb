@@ -28,7 +28,7 @@ class Pipeline::PMD < Pipeline::BaseTask
         attributes = result.at_xpath('violation').attributes
         description = result.children.children.to_s.strip
         detail = "Ruleset: #{attributes['ruleset']}"
-        source = {:scanner => @name, :file => Pathname.new(result.attributes['name'].to_s).relative_path_from(Pathname.new(@trigger.path)), :line => attributes['beginline'].to_s, :code => "package: #{attributes['package'].to_s}\nclass: #{attributes['class'].to_s}\nmethod: #{attributes['method'].to_s}" }
+        source = {:scanner => @name, :file => Pathname.new(result.attributes['name'].to_s).relative_path_from(Pathname.new(@trigger.path)).to_s, :line => attributes['beginline'].to_s, :code => "package: #{attributes['package'].to_s}\nclass: #{attributes['class'].to_s}\nmethod: #{attributes['method'].to_s}" }
         case attributes['priority'].value.to_i
         when 3
           sev = 1
