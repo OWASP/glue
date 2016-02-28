@@ -2,6 +2,7 @@ require 'pipeline/tasks/base_task'
 require 'pipeline/util'
 require 'json'
 require 'curb'
+require 'securerandom'
 
 class Pipeline::Zap < Pipeline::BaseTask
 
@@ -20,19 +21,32 @@ class Pipeline::Zap < Pipeline::BaseTask
     rootpath = @trigger.path
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     apikey = "#{@tracker.options[:zap_api_key]}"
+    context = SecureRandom.uuid
 
-    Pipeline.debug "Running ZAP on: #{rootpath} from #{base}"
+    Pipeline.debug "Running ZAP on: #{rootpath} from #{base} with #{context}"
+    
+    # Set up Context
+    Curl.get("#{base}/JSON/context/action/newContext/?&apikey=#{apikey}&contextName=#{context}")
+    Curl.get("#{base}/JSON/context/action/includeInContext/?apikey=#{apikey}&contextName=#{context}&regex=#{rootpath}.*")
 
     # Spider
-    Curl.get("#{base}/JSON/spider/action/scan/?apikey=#{apikey}&url=#{rootpath}")
-    poll_until_100("#{base}/JSON/spider/view/status")
+    spider = get_scan_id( Curl.get("#{base}/JSON/spider/action/scan/?apikey=#{apikey}&url=#{rootpath}&context=#{context}") )
+    poll_until_100("#{base}/JSON/spider/view/status/?scanId=#{spider}")
 
     # Active Scan
-    Curl.get("#{base}/JSON/ascan/action/scan/?apikey=#{apikey}&recurse=true&inScopeOnly=true&url=#{rootpath}")
-    poll_until_100("#{base}/JSON/ascan/view/status/")
+    scan = get_scan_id ( Curl.get("#{base}/JSON/ascan/action/scan/?apikey=#{apikey}&recurse=true&inScopeOnly=true&url=#{rootpath}") )
+    poll_until_100("#{base}/JSON/ascan/view/status/?scanId=#{scan}")
       
     # Result
     @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+
+    # Remove Context
+    # Curl.get("#{base}/JSON/context/action/removeContext/?&apikey=#{apikey}&contextName=#{context}")
+  end
+
+  def get_scan_id(response)
+    json = JSON.parse response.body_str
+    return json["scan"]
   end
 
   def poll_until_100(url)
