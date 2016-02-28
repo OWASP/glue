@@ -19,21 +19,20 @@ class Pipeline::Zap < Pipeline::BaseTask
   def run
     rootpath = @trigger.path
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
+    apikey = "#{@tracker.options[:zap_api_key]}"
+
     Pipeline.debug "Running ZAP on: #{rootpath} from #{base}"
 
-    # TODO:  Add API Key
-    # TODO:  Find out if we need to worry about "contexts" stepping on each other.
-
     # Spider
-    Curl.get("#{base}/JSON/spider/action/scan/?#{rootpath}")
+    Curl.get("#{base}/JSON/spider/action/scan/?apikey=#{apikey}&url=#{rootpath}")
     poll_until_100("#{base}/JSON/spider/view/status")
 
     # Active Scan
-    Curl.get("#{base}/JSON/ascan/action/scan/?recurse=true&inScopeOnly=true&url=#{rootpath}")
+    Curl.get("#{base}/JSON/ascan/action/scan/?apikey=#{apikey}&recurse=true&inScopeOnly=true&url=#{rootpath}")
     poll_until_100("#{base}/JSON/ascan/view/status/")
       
     # Result
-    @result = Curl.get("#{base}/JSON/core/view/alerts/").body_str
+    @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
   end
 
   def poll_until_100(url)
