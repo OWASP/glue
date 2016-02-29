@@ -68,7 +68,7 @@ WORKDIR /home/pipe/line
 ## Core Pipeline (and ruby tools)
 RUN /bin/bash -l -c "git clone https://github.com/OWASP/pipeline.git"
 WORKDIR /home/pipe/line/pipeline
-RUN /bin/bash -l -c "gem install bundler; bundle install -j20; rm pipeline*.gem; gem build pipeline.gemspec; gem install pipeline*.gem;"
+RUN /bin/bash -l -c "gem install bundler; bundle install -j20; rm owasp-pipeline*.gem; gem build pipeline.gemspec; gem install owasp-pipeline*.gem;"
 
 ENTRYPOINT ["pipeline", "-a", "-d"]
 CMD ["https://github.com/Jemurai/triage.git"]
