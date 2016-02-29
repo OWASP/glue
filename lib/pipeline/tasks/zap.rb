@@ -20,7 +20,7 @@ class Pipeline::Zap < Pipeline::BaseTask
   def run
     rootpath = @trigger.path
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
-    apikey = "#{@tracker.options[:zap_api_key]}"
+    apikey = "#{@tracker.options[:zap_api_token]}"
     context = SecureRandom.uuid
 
     Pipeline.debug "Running ZAP on: #{rootpath} from #{base} with #{context}"
@@ -41,7 +41,7 @@ class Pipeline::Zap < Pipeline::BaseTask
     @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
 
     # Remove Context
-    # Curl.get("#{base}/JSON/context/action/removeContext/?&apikey=#{apikey}&contextName=#{context}")
+    Curl.get("#{base}/JSON/context/action/removeContext/?&apikey=#{apikey}&contextName=#{context}")
   end
 
   def get_scan_id(response)
