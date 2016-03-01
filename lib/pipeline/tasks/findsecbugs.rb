@@ -4,6 +4,8 @@ require 'nokogiri'
 require 'tempfile'
 require 'mkmf'
 
+MakeMakefile::Logging.instance_variable_set(:@logfile, File::NULL)
+
 class Pipeline::FindSecurityBugs < Pipeline::BaseTask
 
   Pipeline::Tasks.add self
@@ -37,7 +39,13 @@ class Pipeline::FindSecurityBugs < Pipeline::BaseTask
         description = result.xpath('ShortMessage').text
         bug_type = result.attributes['type'].value
         detail = "Class: #{result.at_xpath('Method').attributes['classname'].value}, Method: #{result.at_xpath('Method').attributes['name'].value}\n#{result.xpath('LongMessage').text}\nhttps://find-sec-bugs.github.io/bugs.htm##{bug_type}"
+
         file = result.at_xpath('SourceLine').attributes['sourcepath'].value
+        trigger_path = Pathname.new(@trigger.path)
+        real_path = nil
+        trigger_path.find {|path| real_path = path if path.fnmatch "*/#{file}"}
+        file = real_path.relative_path_from(trigger_path).to_s unless real_path.nil?
+
         line = result.at_xpath('SourceLine[@primary="true"]').attributes['start'].value
         code = "#{result.at_xpath('String').attributes['value'].value}"
         source = {:scanner => @name, :file => file, :line => line, :code => code}
@@ -55,9 +63,9 @@ class Pipeline::FindSecurityBugs < Pipeline::BaseTask
   end
 
   def supported?
-    unless find_executable('mvn') and File.exist?("#{@trigger.path}/pom.xml")
+    unless find_executable0('mvn') and File.exist?("#{@trigger.path}/pom.xml")
       Pipeline.notify "FindSecurityBugs support requires maven and pom.xml"
-      Pipeline.notify "Please install maven somewhere in your PATH and include valid pom.xml in the project root"
+      Pipeline.notify "Please install maven somewhere in your PATH and include a valid pom.xml in the project root"
       return false
     end
 
