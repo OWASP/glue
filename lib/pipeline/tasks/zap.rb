@@ -91,7 +91,7 @@ class Pipeline::Zap < Pipeline::BaseTask
     if supported["version"] =~ /2.(4|5).\d+/
       return true
     else
-      Pipeline.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct."
+      Pipeline.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct.  Supported versions = 2.4.0 and up - got #{supported['version']}"
       return false
     end
   end
