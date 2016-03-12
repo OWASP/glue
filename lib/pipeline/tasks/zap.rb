@@ -88,7 +88,7 @@ class Pipeline::Zap < Pipeline::BaseTask
   def supported?
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/").body_str)
-    if supported["version"] == "2.4.0"
+    if supported["version"] =~ /2.(4|5).\d+/
       return true
     else
       Pipeline.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct."
