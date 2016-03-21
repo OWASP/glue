@@ -16,7 +16,6 @@ class Pipeline::ESLint < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     currentpath = File.expand_path File.dirname(__FILE__)
     Pipeline.debug "ESLint Config Path: #{currentpath}"
@@ -68,4 +67,3 @@ class Pipeline::ESLint < Pipeline::BaseTask
   end
 
 end
-

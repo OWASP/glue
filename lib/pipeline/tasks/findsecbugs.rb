@@ -20,14 +20,15 @@ class Pipeline::FindSecurityBugs < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
     @results_file = Tempfile.new(['findsecbugs','xml'])
 
-    Dir.chdir("#{@trigger.path}") do
-      runsystem(true, "mvn", "compile", "-fn")
+    directories_with?('pom.xml').each do |dir|
+      Dir.chdir(dir) do
+        runsystem(true, "mvn", "compile", "-fn")
+      end
     end
 
-    Dir.chdir("#{@tracker.options[:findsecbugs_path]}") do
+    Dir.chdir(@tracker.options[:findsecbugs_path]) do
       runsystem(true, "/bin/sh", "#{@tracker.options[:findsecbugs_path]}/findsecbugs.sh", "-effort:max", "-quiet", "-xml:withMessages", "-output", "#{@results_file.path}", "#{@trigger.path}")
       @results = Nokogiri::XML(File.read(@results_file)).xpath '//BugInstance'
     end

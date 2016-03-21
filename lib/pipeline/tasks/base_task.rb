@@ -43,6 +43,22 @@ class Pipeline::BaseTask
     @stage
   end
 
+  def directories_with? file, exclude_dirs = []
+    exclude_dirs = @tracker.options[:exclude_dirs] if exclude_dirs == [] and @tracker.options[:exclude_dirs]
+    results = []
+
+    Find.find(@trigger.path) do |path|
+      if FileTest.directory? path
+        Find.prune if exclude_dirs.include? File.basename(path) or exclude_dirs.include? File.basename(path) + '/'
+        next
+      end
+
+      Find.prune unless File.basename(path) == file
+
+      results << File.dirname(path)
+    end
+    return results
+  end
 
   def run
   end

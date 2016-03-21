@@ -17,7 +17,6 @@ class Pipeline::FIM < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     if File.exists?("/area81/tmp/#{rootpath}/filehash")
       Pipeline.notify "File Hashes found, comparing to file system"

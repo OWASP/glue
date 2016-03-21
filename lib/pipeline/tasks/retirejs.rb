@@ -3,6 +3,7 @@ require 'json'
 require 'pipeline/util'
 require 'jsonpath'
 require 'pathname'
+require 'pry'
 
 class Pipeline::RetireJS < Pipeline::BaseTask
 
@@ -15,28 +16,24 @@ class Pipeline::RetireJS < Pipeline::BaseTask
     @description = "Dependency analysis for JavaScript"
     @stage = :code
     @labels << "code" << "javascript"
+    @results = []
   end
 
   def run
-    rootpath = @trigger.path
-    Pipeline.debug "Retire rootpath: #{rootpath}"
-    Dir.chdir("#{rootpath}") do
-      if @tracker.options.has_key?(:npm_registry)
-        registry = "--registry #{@tracker.options[:npm_registry]}"
-      else
-        registry = nil
-      end
-      @result = `npm install --ignore-scripts #{registry}`  # Need this even though it is slow to get full dependency analysis.
+    directories_with?('package.json').each do |dir|
+      Pipeline.notify "#{@name} scanning: #{dir}"
+      @results << `retire -c --outputformat json --path #{dir} 2>&1`
     end
-    @result = `retire -c --outputformat json --path #{rootpath} 2>&1`
   end
 
   def analyze
     begin
-      vulnerabilities = parse_retire_json(JSON.parse(@result))
+      @results.each do |result|
+        vulnerabilities = parse_retire_json(JSON.parse(result))
 
-      vulnerabilities.each do |vuln|
-        report "Package #{vuln[:package]} has known security issues", vuln[:detail], vuln[:source], vuln[:severity], fingerprint("#{vuln[:package]}#{vuln[:source]}#{vuln[:severity]}")
+        vulnerabilities.each do |vuln|
+          report "Package #{vuln[:package]} has known security issues", vuln[:detail], vuln[:source], vuln[:severity], fingerprint("#{vuln[:package]}#{vuln[:source]}#{vuln[:severity]}")
+        end
       end
     rescue Exception => e
       Pipeline.warn e.message
@@ -84,7 +81,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
     result.select { |r| !r['file'].nil? }.each do |file_result|
       JsonPath.on(file_result, '$..component').uniq.each do |comp|
         JsonPath.on(file_result, "$..results[?(@.component == \'#{comp}\')].version").uniq.each do |version|
-          source_path = Pathname.new(file_result['file']).relative_path_from Pathname.new(@trigger.path)
+          source_path = relative_path(file_result['file'], @trigger.path)
           vulnerabilities.select { |v| v[:package] == "#{comp}-#{version}" }.first[:source] = { :scanner => @name, :file => source_path.to_s, :line => nil, :code => nil }
         end
       end
@@ -103,4 +100,3 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
 end
-
