@@ -28,6 +28,14 @@ class Pipeline::FindSecurityBugs < Pipeline::BaseTask
       end
     end
 
+    unless File.exist?("#{@trigger.path}/.git/config")
+      Dir.chdir(@trigger.path) do
+        system("git", "init")
+        system("git", "add", "*")
+        system("git", "commit", "-am", "fake commit for mvn compile")
+      end
+    end
+
     Dir.chdir(@tracker.options[:findsecbugs_path]) do
       runsystem(true, "/bin/sh", "#{@tracker.options[:findsecbugs_path]}/findsecbugs.sh", "-effort:max", "-quiet", "-xml:withMessages", "-output", "#{@results_file.path}", "#{@trigger.path}")
       @results = Nokogiri::XML(File.read(@results_file)).xpath '//BugInstance'
