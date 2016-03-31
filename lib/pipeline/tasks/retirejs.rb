@@ -20,7 +20,9 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
   def run
-    directories_with?('package.json').each do |dir|
+    exclude_dirs = ['node_modules','bower_components']
+    exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
+    directories_with?('package.json', exclude_dirs).each do |dir|
       Pipeline.notify "#{@name} scanning: #{dir}"
       @results << `retire -c --outputformat json --path #{dir} 2>&1`
     end

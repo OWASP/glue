@@ -18,7 +18,9 @@ class Pipeline::Npm < Pipeline::BaseTask
   end
 
   def run
-    directories_with?('package.json').each do |dir|
+    exclude_dirs = ['node_modules','bower_components']
+    exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
+    directories_with?('package.json', exclude_dirs).each do |dir|
       Pipeline.notify "#{@name} scanning: #{dir}"
       Dir.chdir(dir) do
         if @tracker.options.has_key?(:npm_registry)
