@@ -60,8 +60,8 @@ class Pipeline::Tasks
 
       #Run or don't run task based on options
       #Now case-insensitive specifiers:  nodesecurityproject = Pipeline::NodeSecurityProject
-      
-      if tracker.options[:skip_tasks] 
+
+      if tracker.options[:skip_tasks]
         skip_tasks = tracker.options[:skip_tasks].map {|task| task.downcase}
       end
       if (tracker.options[:run_tasks])
@@ -73,9 +73,9 @@ class Pipeline::Tasks
 
         task = c.new(trigger, tracker)
         begin
-          if task.supported? and task.stage == stage  
-            if task.labels.intersect? tracker.options[:labels] or          # Only run tasks with labels 
-                 ( run_tasks and run_tasks.include? task_name.downcase )   # or that are explicitly requested. 
+          if task.supported? and task.stage == stage
+            if task.labels.intersect? tracker.options[:labels] or          # Only run tasks with labels
+                 ( run_tasks and run_tasks.include? task_name.downcase )   # or that are explicitly requested.
               Pipeline.notify "#{stage} - #{task_name} - #{task.labels}"
               task.run
               task.analyze

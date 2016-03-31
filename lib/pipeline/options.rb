@@ -99,6 +99,13 @@ module Pipeline::Options
           options[:npm_registry] = url
         end
 
+        opts.on "--exclude path1,path2,path3,etc", Array, "A list of paths to ignore when running recursive tasks (npm, retirejs, snyk, etc)" do |paths|
+          paths.each do |path|
+            options[:exclude_dirs] ||= Set.new
+            options[:exclude_dirs] << path
+          end
+        end
+
         opts.separator ""
         opts.separator "Output options:"
 

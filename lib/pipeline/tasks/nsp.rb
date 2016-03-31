@@ -12,31 +12,37 @@ class Pipeline::NodeSecurityProject < Pipeline::BaseTask
     @description = "Node Security Project"
     @stage = :code
     @labels << "code"
+    @results = []
   end
 
   def run
-    Pipeline.notify "#{@name}"
-    rootpath = @trigger.path
-    Dir.chdir("#{rootpath}") do
-      @results = JSON.parse `nsp check --output json 2>&1`
+    exclude_dirs = ['node_modules','bower_components']
+    exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
+    directories_with?('package.json', exclude_dirs).each do |dir|
+      Pipeline.notify "#{@name} scanning: #{dir}"
+      Dir.chdir(dir) do
+        @results << JSON.parse(`nsp check --output json 2>&1`)
+      end
     end
   end
 
   def analyze
     begin
-      # This block iterates through each package name found and selects the unique nsp advisories
-      # regardless of version, and builds a pipeline finding hash for each unique package/advisory combo.
-      @results.uniq {|finding| finding['module']}.each do |package|
-        @results.select {|f| f['module'] == package['module']}.uniq {|m| m['advisory']}.each do |unique_finding|
-          description = "#{unique_finding['module']} - #{unique_finding['title']}"
-          detail = "Upgrade to versions: #{unique_finding['patched_versions']}\n#{unique_finding['advisory']}"
-          source = {
-            :scanner => 'NodeSecurityProject',
-            :file => "#{unique_finding['module']} - #{unique_finding['vulnerable_versions']}",
-            :line => nil,
-            :code => nil
-          }
-          report description, detail, source, 'medium', fingerprint("#{description}#{detail}#{source}")
+      @results.each do |dir_result|
+        # This block iterates through each package name found and selects the unique nsp advisories
+        # regardless of version, and builds a pipeline finding hash for each unique package/advisory combo.
+        dir_result.uniq {|finding| finding['module']}.each do |package|
+          dir_result.select {|f| f['module'] == package['module']}.uniq {|m| m['advisory']}.each do |unique_finding|
+            description = "#{unique_finding['module']} - #{unique_finding['title']}"
+            detail = "Upgrade to versions: #{unique_finding['patched_versions']}\n#{unique_finding['advisory']}"
+            source = {
+              :scanner => 'NodeSecurityProject',
+              :file => "#{unique_finding['module']} - #{unique_finding['vulnerable_versions']}",
+              :line => nil,
+              :code => nil
+            }
+            report description, detail, source, 'medium', fingerprint("#{description}#{detail}#{source}")
+          end
         end
       end
     rescue Exception => e
@@ -56,4 +62,3 @@ class Pipeline::NodeSecurityProject < Pipeline::BaseTask
   end
 
 end
-

@@ -16,7 +16,6 @@ class Pipeline::Checkmarx < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     runsystem(true, "runCxConsole.sh", "scan", "-v",
       "-CxUser", "#{@tracker.options[:checkmarx_user]}",

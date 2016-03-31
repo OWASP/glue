@@ -17,7 +17,6 @@ class Pipeline::PMD < Pipeline::BaseTask
   end
 
   def run
-    Pipeline.notify "#{@name}"
     @tracker.options[:pmd_checks] ||= "java-basic,java-sunsecure"
     Dir.chdir @tracker.options[:pmd_path] do
       @results = Nokogiri::XML(`bin/run.sh pmd -d #{@trigger.path} -f xml -R #{@tracker.options[:pmd_checks]}`).xpath('//file')

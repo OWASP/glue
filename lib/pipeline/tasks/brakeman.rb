@@ -17,7 +17,6 @@ class Pipeline::Brakeman < Pipeline::BaseTask
   end
 
   def run
-    # Pipeline.notify "#{@name}"
     rootpath = @trigger.path
     @result=runsystem(true, "brakeman", "-A", "-q", "-f", "json", "#{rootpath}")
   end
@@ -57,4 +56,3 @@ class Pipeline::Brakeman < Pipeline::BaseTask
   end
 
 end
-
