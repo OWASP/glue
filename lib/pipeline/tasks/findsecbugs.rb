@@ -22,17 +22,17 @@ class Pipeline::FindSecurityBugs < Pipeline::BaseTask
   def run
     @results_file = Tempfile.new(['findsecbugs','xml'])
 
-    directories_with?('pom.xml').each do |dir|
-      Dir.chdir(dir) do
-        runsystem(true, "mvn", "compile", "-fn")
-      end
-    end
-
     unless File.exist?("#{@trigger.path}/.git/config")
       Dir.chdir(@trigger.path) do
         system("git", "init")
         system("git", "add", "*")
         system("git", "commit", "-am", "fake commit for mvn compile")
+      end
+    end
+
+    directories_with?('pom.xml').each do |dir|
+      Dir.chdir(dir) do
+        runsystem(true, "mvn", "compile", "-fn")
       end
     end
 
