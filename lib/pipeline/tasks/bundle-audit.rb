@@ -36,7 +36,7 @@ class Pipeline::BundleAudit < Pipeline::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "bundle-audit", "update")
+    supported=runsystem(false, "bundle-audit", "update")
     if supported =~ /command not found/
       Pipeline.notify "Run: gem install bundler-audit"
       return false

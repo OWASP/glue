@@ -24,19 +24,22 @@ class Pipeline::RetireJS < Pipeline::BaseTask
     exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
     directories_with?('package.json', exclude_dirs).each do |dir|
       Pipeline.notify "#{@name} scanning: #{dir}"
-      @results << `retire -c --outputformat json --path #{dir} 2>&1`
+      @results << runsystem(false, 'retire', '-c', '--outputformat', 'json', '--path', "#{dir}")
     end
   end
 
   def analyze
     begin
       @results.each do |result|
-        vulnerabilities = parse_retire_json(JSON.parse(result))
+        parsed_json = JSON.parse(result)
+        vulnerabilities = parse_retire_json(parsed_json) if parsed_json
 
         vulnerabilities.each do |vuln|
           report "Package #{vuln[:package]} has known security issues", vuln[:detail], vuln[:source], vuln[:severity], fingerprint("#{vuln[:package]}#{vuln[:source]}#{vuln[:severity]}")
         end
       end
+    rescue JSON::ParserError => e
+      Pipeline.debug e.message
     rescue Exception => e
       Pipeline.warn e.message
       Pipeline.warn e.backtrace
@@ -92,7 +95,7 @@ class Pipeline::RetireJS < Pipeline::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "retire", "--help")
+    supported=runsystem(false, "retire", "--help")
     if supported =~ /command not found/
       Pipeline.notify "Install RetireJS"
       return false

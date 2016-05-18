@@ -24,9 +24,9 @@ class Pipeline::FindSecurityBugs < Pipeline::BaseTask
 
     unless File.exist?("#{@trigger.path}/.git/config")
       Dir.chdir(@trigger.path) do
-        system("git", "init")
-        system("git", "add", "*")
-        system("git", "commit", "-am", "fake commit for mvn compile")
+        runsystem(true, "git", "init")
+        runsystem(true, "git", "add", "*")
+        runsystem(true, "git", "commit", "-am", "fake commit for mvn compile")
       end
     end
 

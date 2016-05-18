@@ -140,6 +140,10 @@ module Pipeline::Options
           options[:summary_only] = true
         end
 
+        opts.on "-L LOGFILE", "--logfile LOGFILE", "Write full pipeline log to LOGFILE" do |file|
+          options[:logfile] = file
+        end
+
         opts.separator ""
         opts.separator "JIRA options:"
 

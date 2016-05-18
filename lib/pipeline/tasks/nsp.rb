@@ -21,7 +21,8 @@ class Pipeline::NodeSecurityProject < Pipeline::BaseTask
     directories_with?('package.json', exclude_dirs).each do |dir|
       Pipeline.notify "#{@name} scanning: #{dir}"
       Dir.chdir(dir) do
-        @results << JSON.parse(`nsp check --output json 2>&1`)
+        res = runsystem(true, "nsp", "check", "--output", "json")
+        @results << JSON.parse(res)
       end
     end
   end
