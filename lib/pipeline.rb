@@ -34,7 +34,19 @@ module Pipeline
       options[:report_progress] = false
     end
 
-    scan options
+    unless options[:logfile].nil?
+      if options[:logfile].is_a? File
+        $logfile = options[:logfile]
+      else
+        $logfile = File.open(options[:logfile], 'a')
+      end
+
+      begin
+        scan options
+      ensure
+        $logfile.close unless options[:logfile].is_a? File
+      end
+    end
   end
 
   #Sets up options for run, checks given application path
@@ -262,18 +274,22 @@ module Pipeline
 
   def self.error message
     $stderr.puts message
+    $logfile.puts "[#{Time.now}] #{message}" if $logfile
   end
 
   def self.warn message
     $stderr.puts message unless @quiet
+    $logfile.puts "[#{Time.now}] #{message}" if $logfile
   end
 
   def self.notify message
     $stderr.puts message #unless @debug
+    $logfile.puts "[#{Time.now}] #{message}" if $logfile
   end
 
   def self.debug message
     $stderr.puts message if @debug
+    $logfile.puts "[#{Time.now}] #{message}" if $logfile
   end
 
   def self.load_pipeline_dependency name

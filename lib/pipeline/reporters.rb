@@ -25,14 +25,14 @@ class Pipeline::Reporters
   #Returns a new instance of tasks with the results.
   def self.run_report(tracker)
     @reporters.each do |c|
-      reporter = c.new()      
+      reporter = c.new()
       if tracker.options[:output_format].first == reporter.format
         begin
           output = reporter.run_report(tracker)
           if tracker.options[:output_file]
             file = File.open(tracker.options[:output_file], 'w'){ |f| f.write(output)}
           else
-            Pipeline.notify output
+            Pipeline.notify output unless tracker.options[:quiet]
           end
         rescue => e
           Pipeline.error e.message

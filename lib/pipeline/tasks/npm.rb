@@ -28,8 +28,8 @@ class Pipeline::Npm < Pipeline::BaseTask
         else
           registry = nil
         end
-        @command = "npm install --ignore-scripts #{registry}"
-        @results << system(@command)
+        @command = "npm install -q --ignore-scripts #{registry}"
+        @results << runsystem(true, @command)
       end
     end
   end
