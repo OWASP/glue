@@ -29,7 +29,7 @@ module Glue
 
     @quiet = !!options[:quiet]
     @debug = !!options[:debug]
-d
+
     if @quiet
       options[:report_progress] = false
     end
