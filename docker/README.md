@@ -1,4 +1,4 @@
-In Pipeline, we are using docker to handle configuration of our dependent tools.
+In Glue, we are using docker to handle configuration of our dependent tools.
 
 1.  Ensure you have a docker environment.
 	E.g. boot2docker shell-init
@@ -9,4 +9,3 @@ In Pipeline, we are using docker to handle configuration of our dependent tools.
 3.  Ensure they run with the command in:
 	1.  /docker/zap/run.sh
 	2.  
-

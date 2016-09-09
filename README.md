@@ -1,42 +1,42 @@
-![Pipeline Logo](https://upload.wikimedia.org/wikipedia/commons/3/37/The_Great_Wave_of_Kanagava.jpg)
+![Glue Logo](https://upload.wikimedia.org/wikipedia/commons/3/37/The_Great_Wave_of_Kanagava.jpg)
 
-# Pipeline
+# Glue
 
-Pipeline is a framework for running a series of tools.  Generally, it is intended as a backbone 
-for automating a security analysis pipeline of tools.
+Glue is a framework for running a series of tools.  Generally, it is intended as a backbone
+for automating a security analysis Glue of tools.
 
 # Recommended Usage
 
-For those wishing to run pipeline, we recommend using the docker image.
-See the documentation for more info.  [Pipeline Docker Documentation](./DOCKER.md)
+For those wishing to run Glue, we recommend using the docker image.
+See the documentation for more info.  [Glue Docker Documentation](./DOCKER.md)
 
-For those interested in how to use Pipeline in a DevOps context, see
-[Pipeline DevOps Integration Options](./DEVOPS.md)
+For those interested in how to use Glue in a DevOps context, see
+[Glue DevOps Integration Options](./DEVOPS.md)
 
 # Installation
 
-gem install pipeline
+gem install Glue
 
-# Extending Pipeline
+# Extending Glue
 
-Pipeline is intended to be extended through added "tasks".  To add a new tool, 
+Glue is intended to be extended through added "tasks".  To add a new tool,
 copy an existing task and tweak to make it work for the tool in question.
 
 # Usage
 
-pipeline <options> <target>
+Glue <options> <target>
 
 ## Options
 
-Common options include: 
+Common options include:
 -d for debug
 -f for format (takes "json", "csv", "jira")
 
-For a full list of options, use `pipeline --help` or see the [OPTIONS.md](./OPTIONS.md) file.
+For a full list of options, use `Glue --help` or see the [OPTIONS.md](./OPTIONS.md) file.
 
 ## Target
 
-The target can be: 
+The target can be:
 * Filesystem (which is analyzed in place)
 * Git repo (which is cloned for analysis)
 * Other types of images (.iso, docker, etc. are experimental)
@@ -53,11 +53,11 @@ The target can be:
 
 # Development
 
-To run the code, run the following from the root directory: 
->ruby bin/pipeline <options> target
+To run the code, run the following from the root directory:
+>ruby bin/Glue <options> target
 
-To build a gem, just run: 
-gem build pipeline.gemspec
+To build a gem, just run:
+gem build Glue.gemspec
 
 
 # Integration
@@ -66,7 +66,7 @@ gem build pipeline.gemspec
 
 First, grab the hook from the code.
 ```
-meditation:hooks mk$ cp /area53/owasp/pipeline/hooks/pre-commit .
+meditation:hooks mk$ cp /area53/owasp/Glue/hooks/pre-commit .
 ```
 
 Then make it executable.
@@ -80,9 +80,9 @@ meditation:hooks mk$ eval "$(docker-machine env default)"
 ```
 
 Now go test and make a change and commit a file.
-The result should be that pipeline runs against your 
-code and will not allow commits unless the results 
-are clean. (Which is not necessarily a reasonable 
+The result should be that Glue runs against your
+code and will not allow commits unless the results
+are clean. (Which is not necessarily a reasonable
 expectation)
 
 

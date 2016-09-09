@@ -1,6 +1,6 @@
-# Pipeline config.
+# Glue config.
 #
-# Generally this file wants to be in ~/.pipeline/
+# Generally this file wants to be in ~/.glue/
 # 	or at the root of the files.
 #
 #
@@ -10,5 +10,3 @@ jira_component: "Automated Findings"
 jira_api_url: "https://jira.yourdomain.com/rest/api/2"
 # This is auth for some environments ... need to find alternative.
 jira_cookie: ""
-
-

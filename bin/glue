@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+#Adjust path in case called directly and not through gem
+$:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
+
+require 'glue'
+require 'glue/options'
+require 'glue/version'
+
+#Parse options
+begin
+  options, parser = Glue::Options.parse! ARGV
+rescue OptionParser::ParseError => e
+  $stderr.puts e.message.capitalize
+  $stderr.puts "Please see `glue --help` for valid options"
+  exit -1
+end
+
+#Exit early for these options
+if options[:list_checks] or options[:list_optional_checks]
+  Glue.list_checks options
+  exit
+elsif options[:create_config]
+  glue.dump_config options
+  exit
+elsif options[:show_help]
+  puts parser
+  exit
+elsif options[:show_version]
+  puts "Glue #{Glue::Version}"
+  exit
+end
+
+#Set application path according to the commandline arguments
+unless options[:target]
+  if ARGV[-1].nil?
+    options[:target] = "."
+  else
+    options[:target] = ARGV[-1]
+  end
+end
+
+trap("INT") do
+  $stderr.puts "\nInterrupted - exiting."
+
+  if options[:debug]
+    $stderr.puts caller
+  end
+
+  exit!
+end
+
+if options[:quiet].nil?
+  options[:quiet] = :command_line
+end
+
+begin
+    #Run scan and output a report
+    tracker = Glue.run options.merge(:print_report => true, :quiet => options[:quiet])
+
+    #Return error code if --exit-on-warn is used and warnings were found
+    if options[:exit_on_warn] and not tracker.findings.empty?
+      exit Glue::Warnings_Found_Exit_Code
+    end
+rescue Glue::NoTargetError => e
+  $stderr.puts e.message
+  exit 1
+end
