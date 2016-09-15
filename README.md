@@ -2,12 +2,12 @@
 
 # Glue
 
-Glue is a framework for running a series of tools.  Generally, it is intended as a backbone
-for automating a security analysis Glue of tools.
+Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
 
 # Recommended Usage
 
-For those wishing to run Glue, we recommend using the docker image.
+For those wishing to run Glue, we recommend using the docker image because
+it should have the other tools it uses available already and configured.
 See the documentation for more info.  [Glue Docker Documentation](./DOCKER.md)
 
 For those interested in how to use Glue in a DevOps context, see
