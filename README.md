@@ -1,4 +1,4 @@
-![Glue Logo](./glue.png)
+<img src="./glue.png" width="120"/>
 
 # Glue
 
