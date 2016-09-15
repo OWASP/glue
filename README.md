@@ -1,4 +1,4 @@
-![Glue Logo](https://upload.wikimedia.org/wikipedia/commons/3/37/The_Great_Wave_of_Kanagava.jpg)
+![Glue Logo](./glue.png)
 
 # Glue
 
@@ -16,6 +16,22 @@ For those interested in how to use Glue in a DevOps context, see
 # Installation
 
 gem install Glue
+
+or
+
+docker run owasp/glue
+
+# Installation for Development
+
+git clone https://github.com/owasp/glue
+cd glue                     -- RVM will set to 2.3.1 with Gemset Glue
+gem install bundler
+bundle install
+
+## Running in Development
+
+cd lib
+../bin/glue -h
 
 # Extending Glue
 
