@@ -15,7 +15,7 @@ For those interested in how to use Glue in a DevOps context, see
 
 # Installation
 
-gem install Glue
+gem install owasp-glue
 
 or
 
