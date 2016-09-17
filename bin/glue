@@ -10,6 +10,7 @@ require 'glue/version'
 begin
   options, parser = Glue::Options.parse! ARGV
 rescue OptionParser::ParseError => e
+  puts "Error: #{e.message}"
   $stderr.puts e.message.capitalize
   $stderr.puts "Please see `glue --help` for valid options"
   exit -1
@@ -17,7 +18,7 @@ end
 
 #Exit early for these options
 if options[:list_checks] or options[:list_optional_checks]
-  Glue.list_checks options
+  glue.list_checks options
   exit
 elsif options[:create_config]
   glue.dump_config options

@@ -26,7 +26,6 @@ module Glue
   #  * :quiet - suppress most messages (default: true)
   def self.run options
     options = set_options options
-
     @quiet = !!options[:quiet]
     @debug = !!options[:debug]
 
@@ -35,6 +34,8 @@ module Glue
     end
 
     unless options[:logfile].nil?
+      puts "Logfile nil?"
+
       if options[:logfile].is_a? File
         $logfile = options[:logfile]
       else
@@ -42,6 +43,7 @@ module Glue
       end
 
       begin
+        puts "calling scan"
         scan options
       ensure
         $logfile.close unless options[:logfile].is_a? File
@@ -111,10 +113,11 @@ module Glue
   def self.default_options
     {
       :parallel_tasks => true,
+      :logfile => "/tmp/glue.txt",
       :skip_tasks => Set.new(),
       :exit_on_warn => true,
       :output_format => :text,
-      :working_dir => "~/line/tmp/",
+      :working_dir => "~/glue/tmp/",
       :zap_host => "http://localhost",
       :zap_port => "9999",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
@@ -232,6 +235,7 @@ module Glue
   #Run a scan. Generally called from Glue.run instead of directly.
   def self.scan options
     #Load scanner
+    puts "Running scanner"
     notify "Loading scanner..."
 
     begin
