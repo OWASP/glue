@@ -11,13 +11,13 @@ class Glue::Finding
 
   def initialize appname, description, detail, source, severity, fingerprint
   	@appname = appname
-        @timestamp = Time.now
+    @timestamp = Time.now
   	@description = description
   	@detail = detail
   	@source = source
-        @stringsrc = source.to_s
+    @stringsrc = source.to_s
   	@severity = severity
-        @fingerprint = fingerprint
+    @fingerprint = fingerprint
   end
 
   def to_string
@@ -26,7 +26,7 @@ class Glue::Finding
         s << "\n\tTimestamp: #{@timestamp}"
         s << "\n\tSource: #{@stringsrc}"
         s << "\n\tSeverity: #{@severity}"
-  	s << "\n\tFingerprint:  #{@fingerprint}"
+  	    s << "\n\tFingerprint:  #{@fingerprint}"
         s << "\n\tDetail:  #{@detail}"
   	s
   end

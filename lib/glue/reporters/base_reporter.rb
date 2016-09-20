@@ -7,12 +7,12 @@ class Glue::BaseReporter
   end
 
   def run_report(tracker)
-  	Glue.notify "Running base reoprt..."
+  	Glue.notify "Running base report..."
   	output = ""
-        tracker.findings.each do |finding|
-    	  output += out(finding)
-        end
-        output
+    tracker.findings.each do |finding|
+      output << out(finding)
+    end
+    output
   end
 
   def out(finding)

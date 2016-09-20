@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rake"
   s.add_dependency "dawnscanner", ">= 1.6.0"
   s.add_dependency "redcarpet"
+  s.add_dependency "jira-ruby"
 
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-byebug"

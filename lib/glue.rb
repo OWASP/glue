@@ -118,6 +118,7 @@ module Glue
       :exit_on_warn => true,
       :output_format => :text,
       :working_dir => "~/glue/tmp/",
+      :jira_api_context => '',
       :zap_host => "http://localhost",
       :zap_port => "9999",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
@@ -270,9 +271,12 @@ module Glue
     Glue::Filters.filter tracker
 
     # Generate Report
-    notify "Generating report...#{options[:output_format]}"
-    Glue::Reporters.run_report tracker
-
+    begin
+      Glue::Reporters.run_report tracker
+    rescue Exception => e
+      puts "Error running report #{e.message}"
+      error e
+    end
     tracker
   end
 

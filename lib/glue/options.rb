@@ -146,19 +146,21 @@ module Glue::Options
 
         opts.separator ""
         opts.separator "JIRA options:"
-
+        opts.on "--jira-api-url URL", "Specify the jira rest api endpoint. Eg. jemurai.atlassian.net." do |url|
+          options[:jira_api_url] = url
+        end
+        opts.on "--jira-api-context CONTEXT", "Specify the context (part after the base url if existing) for the rest api endpoint.  Defaults to empty." do |context|
+          options[:jira_api_context] = context
+        end
+        opts.on "--jira-username USER", "Specify the user to get to Jira.  (To be used for basic authentication - be sure it is HTTPS)" do |user|
+          options[:jira_username] = user
+        end
+        opts.on "--jira-password PASSWORD", "Specify the password to use to get to Jira." do |password|
+          options[:jira_password] = password
+        end
         opts.on "--jira-project PROJECT", "Specify the jira project to create issues in. If issue looks like APPS-13, this should be APPS." do |project|
           options[:jira_project] = project
         end
-
-        opts.on "--jira-api-url URL", "Specify the jira rest api endpoint. Eg. domain.com/jira/jira/rest/api/2/." do |url|
-          options[:jira_api_url] = url
-        end
-
-        opts.on "--jira-cookie COOKIE", "Specify the session cookie to get to Jira." do |cookie|
-          options[:jira_cookie] = cookie
-        end
-
         opts.on "--jira-component COMPONENT", "Specify the JIRA component to use." do |component|
           options[:jira_component] = component
         end

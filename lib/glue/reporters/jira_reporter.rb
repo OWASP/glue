@@ -1,7 +1,13 @@
 require 'glue/finding'
 require 'glue/reporters/base_reporter'
-require 'json'
-require 'curb'
+require 'jira-ruby'
+
+# In IRB
+# require 'jira-ruby'
+# options = { :username => 'jira@site.com', :password => 'whatever', :site => 'https://site.atlassian.net', :context_path => '', :auth_type => :basic }
+# jira = JIRA::Client.new(options)
+# issue = jira.Issue.build
+# issue.save json_for_issue
 
 class Glue::JiraReporter < Glue::BaseReporter
 
@@ -10,36 +16,38 @@ class Glue::JiraReporter < Glue::BaseReporter
   attr_accessor :name, :format
 
   def initialize()
-    @name = "JiraReporter"
+    @name = "JiraReporter2"
     @format = :to_jira
   end
 
   def run_report(tracker)
-    @project = tracker.options[:jira_project.to_s]
-    @api = tracker.options[:jira_api_url.to_s]
-    @cookie = tracker.options[:jira_cookie.to_s]
-    @component = tracker.options[:jira_component.to_s]
+    options = {
+      :username     => tracker.options[:jira_username],
+      :password     => tracker.options[:jira_password],
+      :site         => tracker.options[:jira_api_url],
+      :context_path => tracker.options[:jira_api_context],
+      :auth_type    => :basic,
+      :http_debug   => :true
+    }
+    @project = tracker.options[:jira_project]
+    @component = tracker.options[:jira_component]
+    @jira = JIRA::Client.new(options)
 
     tracker.findings.each do |finding|
-    	report finding
+      begin
+        issue = @jira.Issue.build
+        json = get_jira_json finding
+        issue.save(json)
+      rescue Exception => e
+        puts "Issue #{e.message}"
+      end
     end
     "Results are in JIRA"
   end
 
-  def report(finding)
-  	json = get_jira_json(finding)
-  	http = Curl.post("#{@api}/issue/", json.to_s) do |http|
-  		http.headers['Content-Type'] = "application/json"
-  		http.headers['Cookie'] = @cookie
-  	end
-  	if http.response_code != 201 # Created ...
-  		Glue.error "Problem with HTTP #{http.response_code} - #{http.body_str}"
-  	end
-  end
-
   private
   def get_jira_json(finding)
-	json = {
+	  json = {
     	"fields": {
        		"project":
        		{
@@ -48,12 +56,12 @@ class Glue::JiraReporter < Glue::BaseReporter
        		"summary": "#{finding.appname} - #{finding.description}",
        		"description": "#{finding.to_string}\n\nFINGERPRINT: #{finding.fingerprint}",
        		"issuetype": {
-          		"name": "Task"
+          		"name": "Bug"
        		},
-       		"labels":["Glue","#{finding.appname}"],
-       		"components": [ { "name": "#{@component}" } ]
+       		"labels":["Glue","#{finding.appname}"]
+       		#{}"components": [ { "name": "#{@component}" } ]
        	}
-	}.to_json
-	json
+	    }
+    json
   end
 end

@@ -10,7 +10,6 @@ require 'glue/version'
 begin
   options, parser = Glue::Options.parse! ARGV
 rescue OptionParser::ParseError => e
-  puts "Error: #{e.message}"
   $stderr.puts e.message.capitalize
   $stderr.puts "Please see `glue --help` for valid options"
   exit -1
