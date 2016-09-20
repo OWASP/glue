@@ -100,7 +100,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "/home/pipe/line/tools//dependency-check/bin/dependency-check.sh", "-v")
+    supported=runsystem(true, "/home/glue/tools/dependency-check/bin/dependency-check.sh", "-v")
     if supported =~ /command not found/
       Glue.notify "Install dependency-check."
       return false
