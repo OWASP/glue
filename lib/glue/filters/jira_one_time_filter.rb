@@ -1,22 +1,33 @@
 require 'glue/filters/base_filter'
-require 'json'
-require 'curb'
+require 'jira-ruby'
 
 class Glue::JiraOneTimeFilter < Glue::BaseFilter
 
-  # Glue::Filters.add self
+  Glue::Filters.add self
 
   def initialize
     @name = "Jira One Time Filter"
     @description = "Checks that each issue that will be reported doesn't already exist in JIRA."
+    @format = :to_jira
   end
 
   def filter tracker
-    @project = tracker.options[:jira_project.to_s]
-    @api = tracker.options[:jira_api_url.to_s]
-    @cookie = tracker.options[:jira_cookie.to_s]
-    @component = tracker.options[:jira_component.to_s]
-    @appname = tracker.options[:appname]
+
+    if tracker.options[:output_format].first != @format
+      return  # Bail in the case where JIRA isn't being used.
+    end
+    Glue.debug "Have #{tracker.findings.count} items pre JIRA One Time filter."
+    options = {
+      :username     => tracker.options[:jira_username],
+      :password     => tracker.options[:jira_password],
+      :site         => tracker.options[:jira_api_url],
+      :context_path => tracker.options[:jira_api_context],
+      :auth_type    => :basic,
+      :http_debug   => :true
+    }
+    @project = tracker.options[:jira_project]
+    @component = tracker.options[:jira_component]
+    @jira = JIRA::Client.new(options)
 
     potential_findings = Array.new(tracker.findings)
     tracker.findings.clear
@@ -25,33 +36,21 @@ class Glue::JiraOneTimeFilter < Glue::BaseFilter
     		tracker.report finding
     	end
     end
+    Glue.debug "Have #{tracker.findings.count} items post JIRA One Time filter."
   end
 
   private
   def confirm_new finding
-  	json = get_jira_query_json finding
-  	http = Curl.post("#{@api}/search", json.to_s) do |http|
-  		http.headers['Content-Type'] = "application/json"
-  		http.headers['Cookie'] = @cookie
-  	end
-  	if http.response_code != 200 # OK ...
-  		Glue.error "Problem with HTTP #{http.response_code} - #{http.body_str}"
-  	end
-
-  	result = JSON.parse(http.body_str)
-  	# Glue.error "Got back #{result} with #{result['total']}"
-
-  	if result['total'] < 1
-  		return true
-  	end
-  	return false
+    count = 0
+    @jira.Issue.jql("project=#{@project} AND description ~ '#{finding.fingerprint}'").each do |issue|
+      count = count + 1  # Must have at least 1 issue with fingerprint.
+    end
+    Glue.debug "Found #{count} items for #{finding.description}"
+    if count > 0 then
+      return false
+    else
+      return true # New!
+    end
   end
 
-  def get_jira_query_json finding
-    json =
-      {"jql"=>"project=#{@project} AND component='#{@component}' AND labels='#{@appname}' AND description ~ 'FINGERPRINT: #{finding.fingerprint}'"}.to_json
-    json
-  end
 end
-
-# project = APPS and component = "Automated Findings" and Labels = "service-portal" and description ~ "FINGERPRINT: bundlerauditgemsource"
