@@ -32,7 +32,7 @@ RUN /bin/bash -l -c "rvm requirements"
 RUN /bin/bash -l -c "rvm install 2.3.1"
 RUN /bin/bash -l -c "rvm use 2.3.1 --default"
 RUN /bin/bash -l -c "gem install curb"
-ENV PATH $PATH:/home/pipe/.rvm/rubies/ruby-2.3.1/bin
+ENV PATH $PATH:/home/glue/.rvm/rubies/ruby-2.3.1/bin
 
 #################################################################################################
 #       Java
@@ -68,7 +68,7 @@ WORKDIR /home/glue/
 ## Core Pipeline (and ruby tools)
 RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
 WORKDIR /home/glue/glue
-RUN /bin/bash -l -c "gem install bundler; bundle install -j20; rm glue*.gem; gem build glue.gemspec; gem install owasp-glue*.gem;"
+RUN /bin/bash -l -c "gem install bundler; bundle install -j20; rm owasp-glue*.gem; gem build glue.gemspec; gem install owasp-glue*.gem;"
 
-ENTRYPOINT ["/bin/bash", "-l", "glue"]
+ENTRYPOINT ["glue"]
 CMD ["-h"]
