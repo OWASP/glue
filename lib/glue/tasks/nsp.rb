@@ -11,7 +11,7 @@ class Glue::NodeSecurityProject < Glue::BaseTask
     @name = "NodeSecurityProject"
     @description = "Node Security Project"
     @stage = :code
-    @labels << "code"
+    @labels << "code" << "javascript" << "node"
     @results = []
   end
 

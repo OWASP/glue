@@ -17,10 +17,10 @@ end
 
 #Exit early for these options
 if options[:list_checks] or options[:list_optional_checks]
-  glue.list_checks options
+  Glue.list_checks options
   exit
 elsif options[:create_config]
-  glue.dump_config options
+  Glue.dump_config options
   exit
 elsif options[:show_help]
   puts parser

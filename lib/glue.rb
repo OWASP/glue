@@ -144,20 +144,12 @@ module Glue
 
   def self.get_format_from_output_format output_format
     case output_format
-    when :html, :to_html
-      [:to_html]
     when :csv, :to_csv
       [:to_csv]
-    when :pdf, :to_pdf
-      [:to_pdf]
-    when :tabs, :to_tabs
-      [:to_tabs]
     when :json, :to_json
       [:to_json]
     when :jira, :to_jira
       [:to_jira]
-    when :markdown, :to_markdown
-      [:to_markdown]
     else
       [:to_s]
     end
@@ -166,18 +158,10 @@ module Glue
 
   def self.get_format_from_output_file output_file
       case output_file
-      when /\.html$/i
-        :to_html
       when /\.csv$/i
         :to_csv
-      when /\.pdf$/i
-        :to_pdf
-      when /\.tabs$/i
-        :to_tabs
       when /\.json$/i
         :to_json
-      when /\.md$/i
-        :to_markdown
       else
         :to_s
       end

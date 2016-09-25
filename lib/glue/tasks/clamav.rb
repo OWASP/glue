@@ -2,13 +2,13 @@
 
 require 'glue/tasks/base_task'
 
-class Glue::AV < Glue::BaseTask
+class Glue::ClamAV < Glue::BaseTask
 
   Glue::Tasks.add self
 
   def initialize(trigger, tracker)
     super(trigger,tracker)
-    @name = "AV"
+    @name = "ClamAV"
     @description = "Test for virus/malware"
     @stage = :file
     @labels << "filesystem"

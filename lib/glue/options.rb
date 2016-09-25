@@ -37,14 +37,6 @@ module Glue::Options
 
         opts.separator "Control options:"
 
-        opts.on "-n", "--no-threads", "Run checks sequentially" do
-          options[:parallel_checks] = false
-        end
-
-        opts.on "--[no-]progress", "Show progress reports" do |progress|
-          options[:report_progress] = progress
-        end
-
         opts.on "-T", "--target PATH", "Specify target" do |target|
           options[:target] = path
         end
@@ -60,10 +52,6 @@ module Glue::Options
         opts.separator ""
         opts.separator "Scanning options:"
 
-        opts.on "-A", "--run-all-checks", "Run all default and optional checks" do
-          options[:run_all_checks] = true
-        end
-
         opts.on "-t", "--test Check1,Check2,etc", Array, "Only run the specified checks" do |checks|
           options[:run_tasks] ||= Set.new
           options[:run_tasks].merge checks
@@ -71,7 +59,6 @@ module Glue::Options
 
         opts.on "-x", "--except Check1,Check2,etc", Array, "Skip the specified checks" do |skip|
           skip.each do |s|
-
             options[:skip_checks] ||= Set.new
             options[:skip_checks] << s
           end
@@ -108,38 +95,18 @@ module Glue::Options
 
         opts.separator ""
         opts.separator "Output options:"
-
         opts.on "-d", "--debug", "Lots of output" do
           options[:debug] = true
         end
-
         opts.on "-f",
                 "--format TYPE",
-                [:text, :html, :csv, :tabs, :json, :jira, :markdown],
+                [:text, :csv, :json, :jira],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
         end
-
-        opts.on "--css-file CSSFile", "Specify CSS to use for HTML output" do |file|
-          options[:html_style] = File.expand_path file
-        end
-
-        opts.on "-i IGNOREFILE", "--ignore-config IGNOREFILE", "Use configuration to ignore warnings" do |file|
-          options[:ignore_file] = file
-        end
-
-        opts.on "-I", "--interactive-ignore", "Interactively ignore warnings" do
-          options[:interactive_ignore] = true
-        end
-
         opts.on "-o", "--output FILE", "Specify file for output. Defaults to stdout." do |file|
           options[:output_file] = file
         end
-
-        opts.on "--summary", "Only output summary of warnings" do
-          options[:summary_only] = true
-        end
-
         opts.on "-L LOGFILE", "--logfile LOGFILE", "Write full Glue log to LOGFILE" do |file|
           options[:logfile] = file
         end
@@ -167,56 +134,45 @@ module Glue::Options
 
         opts.separator ""
         opts.separator "ZAP options:"
-
         opts.on "--zap-api-token token", "Specify the ZAP API token to use when connecting to the API" do |token|
           options[:zap_api_token] = token
         end
-
         opts.on "--zap-host HOST", "Specify the host ZAP is running on." do |host|
           options[:zap_host] = host
         end
-
         opts.on "--zap-port PORT", "Specify the port ZAP is running on." do |port|
           options[:zap_port] = port
         end
 
         opts.separator ""
         opts.separator "Checkmarx options:"
-
         opts.on "--checkmarx-user USER", "Specify the Checkmarx user to use when connecting to the API" do |user|
           options[:checkmarx_user] = user
         end
-
         opts.on "--checkmarx-password PASSWORD", "Specify password for the Checkmarx API user" do |password|
           options[:checkmarx_password] = password
         end
-
         opts.on "--checkmarx-server server", "Specify the API server to use for Checkmarx scans" do |server|
           options[:checkmarx_server] = server
         end
-
         opts.on "--checkmarx-log logfile", "Specify the log file to use for Checkmarx scans" do |logfile|
           options[:checkmarx_log] = logfile
         end
-
         opts.on "--checkmarx-project project", "Specify the full path of the Checkmarx project for this scan" do |project|
           options[:checkmarx_project] = project
         end
 
         opts.separator ""
         opts.separator "PMD options:"
-
         opts.on "--pmd-path PATH", "The full path to the base PMD directory" do |dir|
           options[:pmd_path] = dir
         end
-
         opts.on "--pmd-checks CHECK1,CHECK2", "The list of checks passed to PMD run.sh -R, default: 'java-basic,java-sunsecure'" do |checks|
           options[:pmd_checks] = checks
         end
 
         opts.separator ""
         opts.separator "FindSecurityBugs options:"
-
         opts.on "--findsecbugs-path PATH", "The full path to the base FindSecurityBugs directory" do |dir|
           options[:findsecbugs_path] = dir
         end
@@ -237,19 +193,16 @@ module Glue::Options
         end
 
         opts.separator ""
-
-        opts.on "-k", "--checks", "List all available vulnerability checks" do
+        opts.separator "Other Useful Options:"
+        opts.on "-k", "--tasks", "List all available tasks" do
           options[:list_checks] = true
         end
-
         opts.on "--optional-checks", "List optional checks" do
           options[:list_optional_checks] = true
         end
-
         opts.on "-v", "--version", "Show Glue version" do
           options[:show_version] = true
         end
-
         opts.on_tail "-h", "--help", "Display this message" do
           options[:show_help] = true
         end
