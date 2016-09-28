@@ -119,6 +119,7 @@ module Glue
       :output_format => :text,
       :working_dir => "~/glue/tmp/",
       :jira_api_context => '',
+      :pivotal_api_url => 'https://www.pivotaltracker.com/services/v5/projects/',
       :zap_host => "http://localhost",
       :zap_port => "9999",
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
@@ -150,6 +151,8 @@ module Glue
       [:to_json]
     when :jira, :to_jira
       [:to_jira]
+    when :pivotal, :to_pivotal
+      [:to_pivotal]
     else
       [:to_s]
     end

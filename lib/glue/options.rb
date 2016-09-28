@@ -100,7 +100,7 @@ module Glue::Options
         end
         opts.on "-f",
                 "--format TYPE",
-                [:text, :csv, :json, :jira],
+                [:text, :csv, :json, :jira, :pivotal],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
         end
@@ -110,6 +110,9 @@ module Glue::Options
         opts.on "-L LOGFILE", "--logfile LOGFILE", "Write full Glue log to LOGFILE" do |file|
           options[:logfile] = file
         end
+
+        opts.separator ""
+        opts.separator "Bug tracking integration options:"
 
         opts.separator ""
         opts.separator "JIRA options:"
@@ -131,6 +134,21 @@ module Glue::Options
         opts.on "--jira-component COMPONENT", "Specify the JIRA component to use." do |component|
           options[:jira_component] = component
         end
+
+        opts.separator ""
+        opts.separator "Pivotal options:"
+        opts.on "--pivotal-api-url URL", "Specify the pivotal rest api endpoint. Eg. jemurai.atlassian.net." do |url|
+          options[:pivotal_api_url] = url
+        end
+        opts.on "--pivotal-token TOKEN", "Specify the token to use to get to Pivotal." do |token|
+          options[:pivotal_token] = token
+        end
+        opts.on "--pivotal-project PROJECT_ID", "Specify the pivotal project to create issues in." do |project|
+          options[:pivotal_project] = project
+        end
+
+        opts.separator ""
+        opts.separator "Scanning integration options:"
 
         opts.separator ""
         opts.separator "ZAP options:"
