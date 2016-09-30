@@ -222,3 +222,32 @@ be run alongside the Glue docker image.
 ```
 glue -t zap --zap-api-token <token> --zap-host <host>  --zap-port <port> https://site.com
 ```
+
+## Maturity
+
+In this section we will report the relative maturity of the tools and integrations.
+
+The grades are common academic grades:  A is excellent, B is ok, C is meh, F is failing.
+
+The areas we'll talk about include:  
+1.  Integration - How well the tool is integrated into Glue right now.
+2.  Tool Value - Our take on how valuable the tool is.
+3.  Focus:  Any specifics areound where the tool focuses.
+
+Grades (As of 9/30/2016):
+1. brakeman - Integration: A, Tool Value: A, Focus:  Rails
+2. bundleaudit - Integration: A, Tool Value:  A, Focus:  Ruby
+3. checkmarx - Integration: C - Uses old API, only tested in one install, Tool Value: A, Focus:  Multi-language static.
+4. clamav - Integration: B - Needs retest, Value: B, Focus: Open source Antivirus.
+5. dawnscanner - Integration:  A, Tool:  B, Focus: Rails, Sinatra
+6. eslint - Integration: F.
+7. fim - Integration: C.
+8. findsecbugs - Integration: C.
+9. nsp - Integration C.
+10. owasp-dep-check - Integration: B.
+11. pmd - Integration: F.
+12. retirejs - Integrations: F.
+13. scanjs - Integrations:  F.
+14. sfl - Integrations; A.  Tool:  B.  Focus:  Finding sensitive files / values.
+15. sync - Integrations:  F.
+16. zap - Integrations: B.  Tool: A.  Focus: Live scanning.
