@@ -49,10 +49,12 @@ glue -t brakeman
 The supported tasks, listed here by stage for convenience:
 
 File Stage
+
 1.  clamav
 2.  fim (hashdeep)
 
 Code Stage
+
 1.  brakeman
 2.  bundle-audit
 3.  checkmarx
@@ -60,14 +62,15 @@ Code Stage
 5.  eslint
 6.  findsecbugs
 7.  nsp (node security project)
-8.  owasp-dep-check
+8.  OWASPDependencyCheck
 9.  pmd
 10. retirejs
 11. scanjs
 12. sfl (sensitive file lookup)
 13. synk
 
-Live Stave
+Live Stage
+
 1. zap
 
 

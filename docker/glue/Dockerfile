@@ -66,7 +66,10 @@ RUN /bin/bash -l -c "mkdir -p /home/glue/tmp"
 WORKDIR /home/glue/
 
 ## Core Pipeline (and ruby tools)
-RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
+#RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
+RUN /bin/bash -l -c "mkdir -p /home/glue/glue"
+ADD . /home/glue/glue
+
 WORKDIR /home/glue/glue
 RUN /bin/bash -l -c "gem install bundler; bundle install -j20; rm owasp-glue*.gem; gem build glue.gemspec; gem install owasp-glue*.gem;"
 

@@ -11,7 +11,7 @@ class Glue::DepCheckListener
   def initialize(task)
     @task = task
     @count = 0
-    @sw = ""
+    @sw = [ ]
     @url = ""
     @desc = ""
     @cwe = ""
@@ -25,7 +25,7 @@ class Glue::DepCheckListener
     when "vulnerability"
       @count = @count + 1
       # Glue.debug "Grabbed #{@count} vulns."
-      @sw = ""
+      @sw = [ ]
       @url = ""
       @desc = ""
       @cwe = ""
@@ -48,18 +48,19 @@ class Glue::DepCheckListener
     when "description"
       @desc = @text
     when "vulnerableSoftware"
-      @sw = ""
     when "software"
-      @sw << ", " << @text
+      @sw << @text
     when "url"
       @url << ", " << @text
     when "vulnerability"
-      detail = @sw + "\n"+ @url
+      detail = @sw.join(', ') + "\n"+ @url
       description = @desc + "\n" + @cwe
-      @fingerprint = @sw+"-"+@name
+      @fingerprint = detail+"-"+@name
       puts "Fingerprint: #{@fingerprint}"
       puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
       @task.report @name, description, detail, @cvss, @fingerprint
+
+      @sw = ""
     end
   end
 
@@ -69,22 +70,25 @@ class Glue::DepCheckListener
 end
 
 class Glue::OWASPDependencyCheck < Glue::BaseTask
+  DOCKER_DEP_CHECK_PATH = '/home/glue/tools/dependency-check/bin/dependency-check.sh'
 
   Glue::Tasks.add self
   include Glue::Util
 
-  def initialize(trigger,tracker)
+  def initialize(trigger,tracker, dep_check_path = DOCKER_DEP_CHECK_PATH)
     super(trigger,tracker)
     @name = "OWASP Dependency Check"
     @description = "Dependency analysis for Java and .NET"
     @stage = :code
     @labels << "code" << "java" << ".net"
+
+    @dep_check_path = dep_check_path
   end
 
   def run
     Glue.notify "#{@name}"
     rootpath = @trigger.path
-    @result= runsystem(true, "/home/glue/tools/dependency-check/bin/dependency-check.sh", "-a", "Glue", "-f", "XML", "-out", "#{rootpath}", "-s", "#{rootpath}")
+    @result= runsystem(true, @dep_check_path, "--project", "Glue", "-f", "XML", "-out", "#{rootpath}", "-s", "#{rootpath}")
   end
 
   def analyze
@@ -100,7 +104,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "/home/glue/tools/dependency-check/bin/dependency-check.sh", "-v")
+    supported=runsystem(true, @dep_check_path, "-v")
     if supported =~ /command not found/
       Glue.notify "Install dependency-check."
       return false
