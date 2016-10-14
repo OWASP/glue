@@ -22,6 +22,8 @@ class Glue::DepCheckListener
 
   def tag_start(name, attrs)
     case name
+    when 'dependency'
+      @jar_name = ''
     when "vulnerability"
       @count = @count + 1
       # Glue.debug "Grabbed #{@count} vulns."
@@ -38,7 +40,8 @@ class Glue::DepCheckListener
   def tag_end(name)
     case name
     when "name"
-      if @text =~ /\D/
+      # Only take the first name tag, or we may end up with a tag from a child node (e.g. <reference>)
+      if @name.blank? && @text =~ /\D/
         @name = @text
       end
     when "cvssScore"
@@ -52,10 +55,15 @@ class Glue::DepCheckListener
       @sw << @text
     when "url"
       @url << ", " << @text
+    when 'fileName'
+      @jar_name = @text
     when "vulnerability"
-      detail = @sw.join(', ') + "\n"+ @url
+      sw_str = @sw.join(', ')
+      detail = sw_str + "\n" + @url
       description = @desc + "\n" + @cwe
-      @fingerprint = detail+"-"+@name
+      #@fingerprint = sw_str + "-" + @name
+      @fingerprint = "#{@name}:#{@jar_name}"
+
       puts "Fingerprint: #{@fingerprint}"
       puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
       @task.report @name, description, detail, @cvss, @fingerprint
