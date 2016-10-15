@@ -12,7 +12,7 @@ class Glue::DepCheckListener
     @task = task
     @count = 0
     @sw = [ ]
-    @url = ""
+    @url = [ ]
     @desc = ""
     @cwe = ""
     @cvss = ""
@@ -28,7 +28,7 @@ class Glue::DepCheckListener
       @count = @count + 1
       # Glue.debug "Grabbed #{@count} vulns."
       @sw = [ ]
-      @url = ""
+      @url = [ ]
       @desc = ""
       @cwe = ""
       @cvss = ""
@@ -59,14 +59,21 @@ class Glue::DepCheckListener
       @jar_name = @text
     when "vulnerability"
       sw_str = @sw.join(', ')
-      detail = sw_str + "\n" + @url
+      
+      urls = @url.reject { |s| s =~ /\s*,\s*/ }.join(', ')
+
+      #detail = sw_str + "\n" + @url
+      @jar_name.gsub!(/\:\s+/, '/') unless @jar_name.blank?
+      detail = "#{@jar_name}\n#{urls}"
       description = @desc + "\n" + @cwe
       #@fingerprint = sw_str + "-" + @name
       @fingerprint = "#{@name}:#{@jar_name}"
 
+      summary = "#{@name} in #{@jar_name}"
+
       puts "Fingerprint: #{@fingerprint}"
       puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
-      @task.report @name, description, detail, @cvss, @fingerprint
+      @task.report summary, description, detail, @cvss, @fingerprint
 
       @sw = ""
     end
@@ -78,19 +85,17 @@ class Glue::DepCheckListener
 end
 
 class Glue::OWASPDependencyCheck < Glue::BaseTask
-  DOCKER_DEP_CHECK_PATH = '/home/glue/tools/dependency-check/bin/dependency-check.sh'
-
   Glue::Tasks.add self
   include Glue::Util
 
-  def initialize(trigger,tracker, dep_check_path = DOCKER_DEP_CHECK_PATH)
+  def initialize(trigger,tracker)
     super(trigger,tracker)
     @name = "OWASP Dependency Check"
     @description = "Dependency analysis for Java and .NET"
     @stage = :code
     @labels << "code" << "java" << ".net"
 
-    @dep_check_path = dep_check_path
+    @dep_check_path = @tracker.options[:owasp_dep_check_path]
   end
 
   def run

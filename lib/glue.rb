@@ -122,6 +122,7 @@ module Glue
       :pivotal_api_url => 'https://www.pivotaltracker.com/services/v5/projects/',
       :zap_host => "http://localhost",
       :zap_port => "9999",
+      :owasp_dep_check_path => '/home/glue/tools/dependency-check/bin/dependency-check.sh',
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
   end

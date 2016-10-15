@@ -43,7 +43,6 @@ class Glue::JiraOneTimeFilter < Glue::BaseFilter
   def confirm_new finding
     count = 0
     Glue.debug "FINDING:::: #{finding.description}"
-    Glue.debug "FINDING NAME:::: #{finding.name}"
     Glue.debug "QUERY:::::: Issuing JQL '#{finding.fingerprint}'"
     @jira.Issue.jql("project=#{@project} AND description ~ '#{finding.fingerprint}'").each do |issue|
       count = count + 1  # Must have at least 1 issue with fingerprint.
