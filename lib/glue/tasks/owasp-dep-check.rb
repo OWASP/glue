@@ -101,7 +101,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
   def run
     Glue.notify "#{@name}"
     rootpath = @trigger.path
-    @result= runsystem(true, @dep_check_path, "--project", "Glue", "-f", "XML", "-out", "#{rootpath}", "-s", "#{rootpath}")
+    @result= runsystem(true, @dep_check_path, "--project", "Glue", "-f", "ALL", "-out", "#{rootpath}", "-s", "#{rootpath}")
   end
 
   def analyze
