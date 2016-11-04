@@ -131,18 +131,26 @@ module Glue
   #Determine output formats based on options[:output_formats]
   #or options[:output_files]
   def self.get_output_format options
+    res = [ ]
+
     if options[:output_file]
-      get_format_from_output_file options[:output_file]
-    elsif options[:output_format]
-      get_format_from_output_format options[:output_format]
-    else
+      res << get_format_from_output_file(options[:output_file])
+    end
+    
+    if options[:output_format]
+      res << get_format_from_output_format(options[:output_format])
+    end
+
+    if res.empty?
       begin
         require 'terminal-table'
-        return [:to_s]
+        res << :to_s
       rescue LoadError
-        return [:to_json]
+        res << :to_json
       end
     end
+
+    res.flatten
   end
 
   def self.get_format_from_output_format output_format

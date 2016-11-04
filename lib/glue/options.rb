@@ -134,6 +134,9 @@ module Glue::Options
         opts.on "--jira-component COMPONENT", "Specify the JIRA component to use." do |component|
           options[:jira_component] = component
         end
+        opts.on "--jira-skip-fields FIELDS", "Specify any JIRA fields to skip (separate with commas)." do |skip_fields|
+          options[:jira_skip_fields] = skip_fields
+        end
 
         opts.separator ""
         opts.separator "Pivotal options:"
@@ -199,6 +202,27 @@ module Glue::Options
         opts.separator "OWASP Dependency Check options:"
         opts.on "--owasp-dep-check-path PATH", "The full path to the OWASP Dependency Check script" do |path|
           options[:owasp_dep_check_path] = path
+        end
+
+        opts.separator ""
+        opts.separator "Contrast Security options:"
+        opts.on "--contrast-api-key API_KEY", "Contrast API key" do |contrast_api_key|
+          options[:contrast_api_key] = contrast_api_key
+        end
+        opts.on "--contrast-service-key SERVICE_KEY", "Contrast service key" do |contrast_service_key|
+          options[:contrast_service_key] = contrast_service_key
+        end
+        opts.on "--contrast-org-id ORG_ID", "Contrast organization ID" do |contrast_org_id|
+          options[:contrast_org_id] = contrast_org_id
+        end
+        opts.on "--contrast-user-name USER_NAME", "Contrast user name" do |contrast_user_name|
+          options[:contrast_user_name] = contrast_user_name
+        end
+        opts.on "--contrast-app-name APP_NAME", "Contrast app name" do |contrast_app_name|
+          options[:contrast_app_name] = contrast_app_name
+        end
+        opts.on "--contrast-update-closed-jira-issues APP_NAME", "Only update Contrast status for closed JIRA issues?" do |contrast_update_closed_jira_issues|
+          options[:contrast_update_closed_jira_issues] = true
         end
 
 
