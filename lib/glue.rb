@@ -116,12 +116,14 @@ module Glue
       :logfile => "/tmp/glue.txt",
       :skip_tasks => Set.new(),
       :exit_on_warn => true,
-      :output_format => :text,
+      :output_format => [:text],
       :working_dir => "~/glue/tmp/",
       :jira_api_context => '',
       :pivotal_api_url => 'https://www.pivotaltracker.com/services/v5/projects/',
       :zap_host => "http://localhost",
       :zap_port => "9999",
+      :owasp_dep_check_path => '/home/glue/tools/dependency-check/bin/dependency-check.sh',
+      :findsecbugs_path => '/home/glue/tools/findbugs-3.0.1',
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
   end
@@ -162,11 +164,11 @@ module Glue
   def self.get_format_from_output_file output_file
       case output_file
       when /\.csv$/i
-        :to_csv
+        [:to_csv]
       when /\.json$/i
-        :to_json
+        [:to_json]
       else
-        :to_s
+        [:to_s]
       end
   end
   private_class_method :get_format_from_output_file

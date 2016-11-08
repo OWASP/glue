@@ -196,6 +196,13 @@ module Glue::Options
         end
 
         opts.separator ""
+        opts.separator "OWASP Dependency Check options:"
+        opts.on "--owasp-dep-check-path PATH", "The full path to the OWASP Dependency Check script" do |path|
+          options[:owasp_dep_check_path] = path
+        end
+
+
+        opts.separator ""
         opts.separator "Configuration files:"
 
         opts.on "-c", "--config-file FILE", "Use specified configuration file" do |file|

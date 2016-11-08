@@ -11,8 +11,8 @@ class Glue::DepCheckListener
   def initialize(task)
     @task = task
     @count = 0
-    @sw = ""
-    @url = ""
+    @sw = [ ]
+    @url = [ ]
     @desc = ""
     @cwe = ""
     @cvss = ""
@@ -22,11 +22,13 @@ class Glue::DepCheckListener
 
   def tag_start(name, attrs)
     case name
+    when 'dependency'
+      @jar_name = ''
     when "vulnerability"
       @count = @count + 1
       # Glue.debug "Grabbed #{@count} vulns."
-      @sw = ""
-      @url = ""
+      @sw = [ ]
+      @url = [ ]
       @desc = ""
       @cwe = ""
       @cvss = ""
@@ -38,7 +40,8 @@ class Glue::DepCheckListener
   def tag_end(name)
     case name
     when "name"
-      if @text =~ /\D/
+      # Only take the first name tag, or we may end up with a tag from a child node (e.g. <reference>)
+      if @name.blank? && @text =~ /\D/
         @name = @text
       end
     when "cvssScore"
@@ -48,18 +51,31 @@ class Glue::DepCheckListener
     when "description"
       @desc = @text
     when "vulnerableSoftware"
-      @sw = ""
     when "software"
-      @sw << ", " << @text
+      @sw << @text
     when "url"
       @url << ", " << @text
+    when 'fileName'
+      @jar_name = @text
     when "vulnerability"
-      detail = @sw + "\n"+ @url
+      sw_str = @sw.join(', ')
+      
+      urls = @url.reject { |s| s =~ /\s*,\s*/ }.join(', ')
+
+      #detail = sw_str + "\n" + @url
+      @jar_name.gsub!(/\:\s+/, '/') unless @jar_name.blank?
+      detail = "#{@jar_name}\n#{urls}"
       description = @desc + "\n" + @cwe
-      @fingerprint = @sw+"-"+@name
+      #@fingerprint = sw_str + "-" + @name
+      @fingerprint = "#{@name}:#{@jar_name}"
+
+      summary = "#{@name} in #{@jar_name}"
+
       puts "Fingerprint: #{@fingerprint}"
       puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
-      @task.report @name, description, detail, @cvss, @fingerprint
+      @task.report summary, description, detail, @cvss, @fingerprint
+
+      @sw = ""
     end
   end
 
@@ -69,7 +85,6 @@ class Glue::DepCheckListener
 end
 
 class Glue::OWASPDependencyCheck < Glue::BaseTask
-
   Glue::Tasks.add self
   include Glue::Util
 
@@ -79,12 +94,14 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     @description = "Dependency analysis for Java and .NET"
     @stage = :code
     @labels << "code" << "java" << ".net"
+
+    @dep_check_path = @tracker.options[:owasp_dep_check_path]
   end
 
   def run
     Glue.notify "#{@name}"
     rootpath = @trigger.path
-    @result= runsystem(true, "/home/glue/tools/dependency-check/bin/dependency-check.sh", "-a", "Glue", "-f", "XML", "-out", "#{rootpath}", "-s", "#{rootpath}")
+    @result= runsystem(true, @dep_check_path, "--project", "Glue", "-f", "ALL", "-out", "#{rootpath}", "-s", "#{rootpath}")
   end
 
   def analyze
@@ -100,7 +117,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
   end
 
   def supported?
-    supported=runsystem(true, "/home/glue/tools/dependency-check/bin/dependency-check.sh", "-v")
+    supported=runsystem(true, @dep_check_path, "-v")
     if supported =~ /command not found/
       Glue.notify "Install dependency-check."
       return false

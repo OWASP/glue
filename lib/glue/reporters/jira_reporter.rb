@@ -53,8 +53,8 @@ class Glue::JiraReporter < Glue::BaseReporter
        		{
           		"key": "#{@project}"
        		},
-       		"summary": "#{finding.appname} - #{finding.description}",
-       		"description": "#{finding.to_string}\n\nFINGERPRINT: #{finding.fingerprint}",
+       		"summary": "#{finding.description}",
+       		"description": "#{finding.to_string}",
        		"issuetype": {
           		"name": "Bug"
        		},
