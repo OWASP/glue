@@ -26,7 +26,8 @@ class Glue::Reporters
   def self.run_report(tracker)
     @reporters.each do |c|
       reporter = c.new()
-      if tracker.options[:output_format].first == reporter.format
+
+      if tracker.options[:output_format].include?(reporter.format)
         begin
           output = reporter.run_report(tracker)
           if tracker.options[:output_file]

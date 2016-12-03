@@ -17,7 +17,7 @@ class Glue::PivotalOneTimeFilter < Glue::BaseFilter
 #  curl -X GET -H "X-TrackerToken: $TOKEN" "https://www.pivotaltracker.com/services/v5/projects/$PROJECT_ID/stories?date_format=millis&filter=label%3Aplans"
 
   def filter tracker
-    if tracker.options[:output_format].first != @format
+    if !tracker.options[:output_format].include?(@format)
       return  # Bail in the case where JIRA isn't being used.
     end
     @project = tracker.options[:pivotal_project]

@@ -13,7 +13,7 @@ class Glue::JiraOneTimeFilter < Glue::BaseFilter
 
   def filter tracker
 
-    if tracker.options[:output_format].first != @format
+    if !tracker.options[:output_format].include?(@format)
       return  # Bail in the case where JIRA isn't being used.
     end
     Glue.debug "Have #{tracker.findings.count} items pre JIRA One Time filter."
@@ -42,7 +42,8 @@ class Glue::JiraOneTimeFilter < Glue::BaseFilter
   private
   def confirm_new finding
     count = 0
-    @jira.Issue.jql("project=#{@project} AND description ~ '#{finding.fingerprint}'").each do |issue|
+    
+    @jira.Issue.jql("project=#{@project} AND description ~ '#{finding.fingerprint}' AND resolution is EMPTY").each do |issue|
       count = count + 1  # Must have at least 1 issue with fingerprint.
     end
     Glue.debug "Found #{count} items for #{finding.description}"
