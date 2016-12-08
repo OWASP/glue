@@ -23,23 +23,17 @@ class Glue::FindSecurityBugs < Glue::BaseTask
     @results_file = Tempfile.new(['findsecbugs','xml'])
 
     unless File.exist?("#{@trigger.path}/.git/config")
-      Dir.chdir(@trigger.path) do
-        runsystem(true, "git", "init")
-        runsystem(true, "git", "add", "*")
-        runsystem(true, "git", "commit", "-am", "fake commit for mvn compile")
-      end
+      runsystem(true, "git", "init", :chdir => @trigger.path)
+      runsystem(true, "git", "add", "*", :chdir => @trigger.path)
+      runsystem(true, "git", "commit", "-am", "fake commit for mvn compile", :chdir => @trigger.path)
     end
 
     directories_with?('pom.xml').each do |dir|
-      Dir.chdir(dir) do
-        runsystem(true, "mvn", "compile", "-fn")
-      end
+      runsystem(true, "mvn", "compile", "-fn", :chdir => dir)
     end
 
-    Dir.chdir(@tracker.options[:findsecbugs_path]) do
-      runsystem(true, "/bin/sh", "#{@tracker.options[:findsecbugs_path]}/findsecbugs.sh", "-effort:max", "-quiet", "-xml:withMessages", "-output", "#{@results_file.path}", "#{@trigger.path}")
-      @results = Nokogiri::XML(File.read(@results_file)).xpath '//BugInstance'
-    end
+    runsystem(true, "/bin/sh", "#{@tracker.options[:findsecbugs_path]}/findsecbugs.sh", "-effort:max", "-quiet", "-xml:withMessages", "-output", "#{@results_file.path}", "#{@trigger.path}", :chdir => @tracker.options[:findsecbugs_path] )
+    @results = Nokogiri::XML(File.read(@results_file)).xpath '//BugInstance'
   end
 
   def analyze

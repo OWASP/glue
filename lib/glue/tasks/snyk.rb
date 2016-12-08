@@ -21,50 +21,43 @@ class Glue::Snyk < Glue::BaseTask
     exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
     directories_with?('package.json', exclude_dirs).each do |dir|
       Glue.notify "#{@name} scanning: #{dir}"
-      Dir.chdir(dir) do
-        @results << JSON.parse(runsystem(true, "snyk", "test", "--json"))["vulnerabilities"]
-      end
+      @results << JSON.parse(runsystem(true, "snyk", "test", "--json", :chdir => dir))["vulnerabilities"]
     end
   end
 
   def analyze
-    begin
-      markdown = Redcarpet::Markdown.new Redcarpet::Render::HTML.new(link_attributes: {target: "_blank"}), autolink: true, tables: true
+    markdown = Redcarpet::Markdown.new Redcarpet::Render::HTML.new(link_attributes: {target: "_blank"}), autolink: true, tables: true
 
-      @results.each do |dir_result|
-        # We build a single finding for each uniq result ID, adding the unique info (upgrade path and files) as a list
-        dir_result.uniq {|r| r['id']}.each do |result|
-          description = "#{result['name']}@#{result['version']} - #{result['title']}"
+    @results.each do |dir_result|
+      # We build a single finding for each uniq result ID, adding the unique info (upgrade path and files) as a list
+      dir_result.uniq {|r| r['id']}.each do |result|
+        description = "#{result['name']}@#{result['version']} - #{result['title']}"
 
-          # Use Redcarpet to render the Markdown details to something pretty for web display
-          detail = markdown.render(result['description']).gsub('h2>','strong>').gsub('h3>', 'strong>')
-          upgrade_paths = [ "Upgrade Path:\n" ]
-          files = []
+        # Use Redcarpet to render the Markdown details to something pretty for web display
+        detail = markdown.render(result['description']).gsub('h2>','strong>').gsub('h3>', 'strong>')
+        upgrade_paths = [ "Upgrade Path:\n" ]
+        files = []
 
-          # Pull the list of files and upgrade paths from all results matching this ID
-          # This uses the same form as the retirejs task so it all looks nice together
-          dir_result.select{|r| r['id'] == result['id']}.each do |res|
-            res['upgradePath'].each_with_index do |upgrade, i|
-              upgrade_paths << "#{res['from'][i]} -> #{upgrade}"
-            end
-            files << res['from'].join('->')
+        # Pull the list of files and upgrade paths from all results matching this ID
+        # This uses the same form as the retirejs task so it all looks nice together
+        dir_result.select{|r| r['id'] == result['id']}.each do |res|
+          res['upgradePath'].each_with_index do |upgrade, i|
+            upgrade_paths << "#{res['from'][i]} -> #{upgrade}"
           end
-
-          source = {
-            :scanner => @name,
-            :file => files.join('<br>'),
-            :line => nil,
-            :code => upgrade_paths.uniq.join("\n"),
-          }
-          sev = severity(result['severity'])
-          fprint = fingerprint("#{description}#{detail}#{source}#{sev}")
-
-          report description, detail, source, sev, fprint
+          files << res['from'].join('->')
         end
+
+        source = {
+          :scanner => @name,
+          :file => files.join('<br>'),
+          :line => nil,
+          :code => upgrade_paths.uniq.join("\n"),
+        }
+        sev = severity(result['severity'])
+        fprint = fingerprint("#{description}#{detail}#{source}#{sev}")
+
+        report description, detail, source, sev, fprint
       end
-    rescue Exception => e
-      Glue.warn e.message
-      Glue.warn e.backtrace
     end
   end
 

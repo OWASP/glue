@@ -1,18 +1,15 @@
 require 'open3'
 require 'pathname'
 require 'digest'
-require 'pry'
 
 module Glue::Util
 
   def runsystem(report, *splat)
     Open3.popen3(*splat) do |stdin, stdout, stderr, wait_thr|
 
-      Thread.new do
-        if $logfile and report
-          while line = stderr.gets do
-            $logfile.puts line
-          end
+      if $logfile and report
+        while line = stderr.gets do
+          $logfile.puts line
         end
       end
 

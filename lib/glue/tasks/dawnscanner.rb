@@ -16,11 +16,9 @@ class Glue::DawnScanner < Glue::BaseTask
   end
 
   def run
-    Dir.chdir("#{@trigger.path}") do
-      @results_file = Tempfile.new(['dawnresults', 'xml'])
-      runsystem(true, "dawn", "-F", "#{@results_file.path}", "-j", ".")
-      @results = JSON.parse(File.read("#{@results_file.path}"))['vulnerabilities']
-    end
+    @results_file = Tempfile.new(['dawnresults', 'xml'])
+    runsystem(true, "dawn", "-F", "#{@results_file.path}", "-j", ".", :chdir => @trigger.path)
+    @results = JSON.parse(File.read("#{@results_file.path}"))['vulnerabilities']
   end
 
   def analyze

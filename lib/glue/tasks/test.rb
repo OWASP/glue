@@ -17,9 +17,7 @@ class Glue::Test < Glue::BaseTask
     # Glue.notify "#{@name}"
     rootpath = @trigger.path
     Glue.debug "Rootpath: #{rootpath}"
-    Dir.chdir("#{rootpath}") do
-      @result= runsystem(true, "grep", "-R", "secret")
-    end
+    @result= runsystem(true, "grep", "-R", "secret", :chdir => rootpath)
   end
 
   def analyze
