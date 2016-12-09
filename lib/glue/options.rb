@@ -205,6 +205,12 @@ module Glue::Options
         end
 
         opts.separator ""
+        opts.separator "Burp options:"
+        opts.on "--burp-xml-path BURL_XML_PATH", "Burp XML Path" do |burp_xml_path|
+          options[:burp_xml_path] = burp_xml_path
+        end
+
+        opts.separator ""
         opts.separator "Contrast Security options:"
         opts.on "--contrast-api-key API_KEY", "Contrast API key" do |contrast_api_key|
           options[:contrast_api_key] = contrast_api_key
