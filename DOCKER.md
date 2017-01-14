@@ -7,7 +7,7 @@ configured and ready to go.
 # Installation
 
 ```
-docker pull owasp/Glue:0.8
+docker pull owasp/Glue
 ```
 
 # Usage
@@ -16,41 +16,41 @@ docker pull owasp/Glue:0.8
 
 This is one way to get help.
 ```
-docker run --rm owasp/Glue:0.8 --help
+docker run --rm owasp/Glue --help
 ```
 
 ## Typical Usage
 
 Most basic starting point.  Will analyze a predetermined codebase.
 ```
-docker run --rm --name=Glue owasp/Glue:0.8
+docker run --rm --name=Glue owasp/Glue
 ```
 
 Here is an example that runs on a github repo.
 ```
-docker run --rm --name=Glue owasp/Glue:0.8 https://github.com/YourOrg/YourProject.git
+docker run --rm --name=Glue owasp/Gluehttps://github.com/YourOrg/YourProject.git
 ```
 
 This example only runs code analysis tools and outputs JSON.
 ```
-docker run --rm --name=Glue owasp/Glue:0.8 -l code -f json https://github.com/YourOrg/YourProject.git
+docker run --rm --name=Glue owasp/Glue -l code -f json https://github.com/YourOrg/YourProject.git
 ```
 
 Example:
 ```
-docker run --rm --name=Glue owasp/Glue:0.8 -l code -f json https://github.com/Owasp/triage.git
+docker run --rm --name=Glue owasp/Glue -l code -f json https://github.com/Owasp/triage.git
 ```
 
 ## On the File System
 
 Running against a local file system:
 ```
-docker run --rm --name=Glue -v /code/location:/tmp/directory owasp/Glue:0.8 -d -f json /tmp/directory/
+docker run --rm --name=Glue -v /code/location:/tmp/directory owasp/Glue -d -f json /tmp/directory/
 ```
 
 Example:
 ```
-docker run --rm --name=Glue -v /Users/mk/line/tmp/triage:/tmp/triage owasp/Glue:0.8 -l code -f json /tmp/triage/
+docker run --rm --name=Glue -v /Users/mk/line/tmp/triage:/tmp/triage owasp/Glue -l code -f json /tmp/triage/
 ```
 
 Note that the folder sharing on Windows and Mac is constrained by [Docker Volumes](https://docs.docker.com/engine/userguide/dockervolumes/).
@@ -85,7 +85,7 @@ The tools include:
 To run the code from the docker image by hand or debug issues there, run the following:
 
 ```
-docker run --name=Glue --rm -i -t --entrypoint=bash owasp/Glue:0.8
+docker run --name=Glue --rm -i -t --entrypoint=bash owasp/Glue
 ```
 
 Then, you can run the tool as though you were developing it.

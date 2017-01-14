@@ -21,13 +21,12 @@ class Glue::Finding
   end
 
   def to_string
-  	s = "Finding: #{@appname}"
-        s << "\n\tDescription: #{@description}"
-        s << "\n\tTimestamp: #{@timestamp}"
-        s << "\n\tSource: #{@stringsrc}"
-        s << "\n\tSeverity: #{@severity}"
-  	    s << "\n\tFingerprint:  #{@fingerprint}"
-        s << "\n\tDetail:  #{@detail}"
+    s = "\n\tDescription: #{@description}"
+      s << "\n\n\tTimestamp: #{@timestamp}"
+      s << "\n\n\tSource: #{@stringsrc}"
+      s << "\n\n\tSeverity: #{@severity}"
+      s << "\n\n\tFingerprint:  #{@fingerprint}"
+      s << "\n\n\tDetail:  #{@detail}"
   	s
   end
 

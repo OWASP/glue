@@ -36,7 +36,7 @@ class Glue::JiraReporter < Glue::BaseReporter
     tracker.findings.each do |finding|
       begin
         issue = @jira.Issue.build
-        json = get_jira_json finding
+        json = get_jira_json(finding, tracker.options[:jira_skip_fields] || '')
         issue.save(json)
       rescue Exception => e
         puts "Issue #{e.message}"
@@ -46,22 +46,59 @@ class Glue::JiraReporter < Glue::BaseReporter
   end
 
   private
-  def get_jira_json(finding)
+  def get_jira_json(finding, skip_fields)
 	  json = {
     	"fields": {
        		"project":
        		{
           		"key": "#{@project}"
        		},
-       		"summary": "#{finding.appname} - #{finding.description}",
-       		"description": "#{finding.to_string}\n\nFINGERPRINT: #{finding.fingerprint}",
+       		"summary": "#{finding.description}",
+       		"description": "#{finding.to_string}",
+          "priority": {
+            'name': jira_priority(finding.severity)
+          },
        		"issuetype": {
           		"name": "Bug"
-       		},
-       		"labels":["Glue","#{finding.appname}"]
+       		},       		
        		#{}"components": [ { "name": "#{@component}" } ]
        	}
 	    }
+
+    json['labels'] = [ "Glue", "#{finding.appname}" ] unless skip_fields.split(',').include?('labels')
     json
+  end
+
+  def jira_priority(severity)
+    if is_number?(severity)
+      f = Float(severity)
+
+      if f < 5
+        'Low'
+      elsif f < 7
+        'Medium'
+      else
+        'High'
+      end
+    else
+      case severity
+      when 'HIGH' then 'High'
+      when 'High' then 'High'
+      when 'MEDIUM' then 'Medium'
+      when 'Medium' then 'Medium'
+      when 'NOTE' then 'Low'
+      when 'Note' then 'Low'
+      when 'Low' then 'Low'
+      when 'Information' then 'Low'
+      else
+        Glue.notify "**** Unknown severity type #{severity}"
+        
+        severity
+      end
+    end
+  end
+
+  def is_number?(str)
+    true if Float(str) rescue false
   end
 end

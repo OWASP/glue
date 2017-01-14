@@ -19,9 +19,7 @@ class Glue::BundleAudit < Glue::BaseTask
   def run
     directories_with?('Gemfile.lock').each do |dir|
       Glue.notify "#{@name} scanning: #{dir}"
-      Dir.chdir(dir) do
-        @results[dir] = runsystem(true, "bundle-audit", "check")
-      end
+      @results[dir] = runsystem(true, "bundle-audit", "check", :chdir => dir)
     end
   end
 

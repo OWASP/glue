@@ -22,15 +22,13 @@ class Glue::Npm < Glue::BaseTask
     exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
     directories_with?('package.json', exclude_dirs).each do |dir|
       Glue.notify "#{@name} scanning: #{dir}"
-      Dir.chdir(dir) do
-        if @tracker.options.has_key?(:npm_registry)
-          registry = "--registry #{@tracker.options[:npm_registry]}"
-        else
-          registry = nil
-        end
-        @command = "npm install -q --ignore-scripts #{registry}"
-        @results << runsystem(true, @command)
+      if @tracker.options.has_key?(:npm_registry)
+        registry = "--registry #{@tracker.options[:npm_registry]}"
+      else
+        registry = nil
       end
+      @command = "npm install -q --ignore-scripts #{registry}"
+      @results << runsystem(true, @command, :chdir => dir)
     end
   end
 

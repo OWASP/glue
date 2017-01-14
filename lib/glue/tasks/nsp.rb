@@ -20,10 +20,8 @@ class Glue::NodeSecurityProject < Glue::BaseTask
     exclude_dirs = exclude_dirs.concat(@tracker.options[:exclude_dirs]).uniq if @tracker.options[:exclude_dirs]
     directories_with?('package.json', exclude_dirs).each do |dir|
       Glue.notify "#{@name} scanning: #{dir}"
-      Dir.chdir(dir) do
-        res = runsystem(true, "nsp", "check", "--output", "json")
-        @results << JSON.parse(res)
-      end
+      res = runsystem(true, "nsp", "check", "--output", "json", :chdir => dir)
+      @results << JSON.parse(res)
     end
   end
 

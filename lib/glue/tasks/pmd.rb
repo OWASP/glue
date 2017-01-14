@@ -18,9 +18,8 @@ class Glue::PMD < Glue::BaseTask
 
   def run
     @tracker.options[:pmd_checks] ||= "java-basic,java-sunsecure"
-    Dir.chdir @tracker.options[:pmd_path] do
-      @results = Nokogiri::XML(runsystem(true,'bin/run.sh', 'pmd', '-d', "#{@trigger.path}", '-f', 'xml', '-R', "#{@tracker.options[:pmd_checks]}")).xpath('//file')
-    end
+    results_xml = runsystem(true,'bin/run.sh', 'pmd', '-d', "#{@trigger.path}", '-f', 'xml', '-R', "#{@tracker.options[:pmd_checks]}", :chdir => @tracker.options[:pmd_path])
+    @results = Nokogiri::XML(results_xml).xpath('//file')
   end
 
   def analyze

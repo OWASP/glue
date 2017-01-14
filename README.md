@@ -15,23 +15,27 @@ For those interested in how to use Glue in a DevOps context, see
 
 # Installation
 
-gem install owasp-glue
+`gem install owasp-glue`
 
 or
 
-docker run owasp/glue
+`docker run owasp/glue`
 
 # Installation for Development
 
+```
 git clone https://github.com/owasp/glue
 cd glue                     -- RVM will set to 2.3.1 with Gemset Glue
 gem install bundler
 bundle install
+```
 
 ## Running in Development
 
+```
 cd lib
 ../bin/glue -h
+```
 
 # Extending Glue
 
@@ -40,13 +44,15 @@ copy an existing task and tweak to make it work for the tool in question.
 
 # Usage
 
-Glue <options> <target>
+`Glue <options> <target>`
 
 ## Options
 
 Common options include:
+```
 -d for debug
 -f for format (takes "json", "csv", "jira")
+```
 
 For a full list of options, use `Glue --help` or see the [OPTIONS.md](./OPTIONS.md) file.
 
@@ -70,10 +76,12 @@ The target can be:
 # Development
 
 To run the code, run the following from the root directory:
->ruby bin/Glue <options> target
+
+`>ruby bin/Glue <options> target`
 
 To build a gem, just run:
-gem build Glue.gemspec
+
+`gem build Glue.gemspec`
 
 
 # Integration

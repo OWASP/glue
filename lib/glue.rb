@@ -116,12 +116,14 @@ module Glue
       :logfile => "/tmp/glue.txt",
       :skip_tasks => Set.new(),
       :exit_on_warn => true,
-      :output_format => :text,
+      :output_format => [:text],
       :working_dir => "~/glue/tmp/",
       :jira_api_context => '',
       :pivotal_api_url => 'https://www.pivotaltracker.com/services/v5/projects/',
       :zap_host => "http://localhost",
       :zap_port => "9999",
+      :owasp_dep_check_path => '/home/glue/tools/dependency-check/bin/dependency-check.sh',
+      :findsecbugs_path => '/home/glue/tools/findbugs-3.0.1',
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }
   end
@@ -129,18 +131,26 @@ module Glue
   #Determine output formats based on options[:output_formats]
   #or options[:output_files]
   def self.get_output_format options
+    res = [ ]
+
     if options[:output_file]
-      get_format_from_output_file options[:output_file]
-    elsif options[:output_format]
-      get_format_from_output_format options[:output_format]
-    else
+      res << get_format_from_output_file(options[:output_file])
+    end
+    
+    if options[:output_format]
+      res << get_format_from_output_format(options[:output_format])
+    end
+
+    if res.empty?
       begin
         require 'terminal-table'
-        return [:to_s]
+        res << :to_s
       rescue LoadError
-        return [:to_json]
+        res << :to_json
       end
     end
+
+    res.flatten
   end
 
   def self.get_format_from_output_format output_format
@@ -162,11 +172,11 @@ module Glue
   def self.get_format_from_output_file output_file
       case output_file
       when /\.csv$/i
-        :to_csv
+        [:to_csv]
       when /\.json$/i
-        :to_json
+        [:to_json]
       else
-        :to_s
+        [:to_s]
       end
   end
   private_class_method :get_format_from_output_file
