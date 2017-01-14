@@ -251,3 +251,5 @@ Grades (As of 9/30/2016):
 14. sfl - Integrations; A.  Tool:  B.  Focus:  Finding sensitive files / values.
 15. sync - Integrations:  F.
 16. zap - Integrations: B.  Tool: A.  Focus: Live scanning.
+
+Naturally, these are goals we need to identify and improve upon.
