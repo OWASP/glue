@@ -42,6 +42,7 @@ class Glue::Brakeman < Glue::BaseTask
     rescue Exception => e
       Glue.warn e.message
       Glue.warn e.backtrace
+      Glue.warn "Raw result: #{@result}"
     end
   end
 

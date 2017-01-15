@@ -4,7 +4,7 @@ MAINTAINER Matt Konda <mkonda@jemurai.com>
 ################################################################################################
 #       Environment
 #
-RUN apt-get update && apt-get install -y git-core sudo curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libffi-dev libgdbm-dev libncurses5-dev automake libtool bison libffi-dev gnupg patch gawk g++ gcc make libc6-dev libcurl3-dev autoconf libtool ncurses-dev zlib1g libreadline6-dev libreadline6 openssl libcurl4-openssl-dev libgmp-dev clamav md5deep nodejs npm default-jre unzip
+RUN apt-get update && apt-get install -y git-core sudo curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libffi-dev libgdbm-dev libncurses5-dev automake libtool bison libffi-dev gnupg patch gawk g++ gcc make libc6-dev libcurl3-dev autoconf libtool ncurses-dev zlib1g libreadline6-dev libreadline6 openssl libcurl4-openssl-dev libgmp-dev clamav md5deep nodejs npm default-jre unzip python python-pip
 RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 #################################################################################################
@@ -33,6 +33,11 @@ RUN /bin/bash -l -c "rvm install 2.3.1"
 RUN /bin/bash -l -c "rvm use 2.3.1 --default"
 RUN /bin/bash -l -c "gem install curb"
 ENV PATH $PATH:/home/glue/.rvm/rubies/ruby-2.3.1/bin
+
+#################################################################################################
+#       Python
+#
+RUN /bin/bash -l -c "pip install bandit"
 
 #################################################################################################
 #       Java
@@ -69,8 +74,8 @@ RUN /bin/bash -l -c "mkdir -p /home/glue/tmp"
 WORKDIR /home/glue/
 
 ## Core Pipeline (and ruby tools)
-#RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
-RUN /bin/bash -l -c "mkdir -p /home/glue/glue"
+RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
+#RUN /bin/bash -l -c "mkdir -p /home/glue/glue"
 ADD . /home/glue/glue
 
 WORKDIR /home/glue/glue

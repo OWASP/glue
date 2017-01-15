@@ -30,6 +30,7 @@ class Glue::BundleAudit < Glue::BaseTask
     rescue Exception => e
       Glue.warn e.message
       Glue.notify "Appears not to be a project with Gemfile.lock or there was another problem ... bundle-audit skipped."
+      Glue.warn "Results look like:  #{@results}"
     end
   end
 
