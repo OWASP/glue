@@ -18,7 +18,7 @@ class Glue::Bandit < Glue::BaseTask
 
   def run
     rootpath = @trigger.path
-    @result=runsystem(true, "bandit", "-f", "json", "-r", "#{rootpath}")
+    @result=runsystem(true, "~/.local/bin/bandit", "-f", "json", "-r", "#{rootpath}")
   end
 
   def analyze
