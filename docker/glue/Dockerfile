@@ -37,7 +37,8 @@ ENV PATH $PATH:/home/glue/.rvm/rubies/ruby-2.3.1/bin
 #################################################################################################
 #       Python
 #
-RUN /bin/bash -l -c "pip install bandit"
+RUN /bin/bash -l -c "sudo pip install --upgrade pip"
+RUN /bin/bash -l -c "sudo pip install bandit"
 
 #################################################################################################
 #       Java
