@@ -7,6 +7,8 @@ class Glue::Contrast < Glue::BaseTask
   include Glue::Util
 
   CLOSED_STATUSES = [ 'Remediated', 'Not a Problem' ]
+  LIB_RATING_CONNECTOR = 'is currently rated'
+  LIB_STALE_CONNECTOR = 'latest version is'
 
   def initialize(trigger, tracker)
     super(trigger, tracker)
@@ -27,11 +29,11 @@ class Glue::Contrast < Glue::BaseTask
     Glue.notify "#{@name}"
     
     if @tracker.options[:contrast_update_closed_jira_issues]
-      puts "Updating closed JIRA issues"
+      Glue.debug "Updating closed JIRA issues"
       app_id = contrast_app_id(@app_name)
       update_closed_jira_issues(app_id)
     else
-      puts "Running Contrast process"
+      Glue.debug "Running Contrast process"
       app_id = contrast_app_id(@app_name)
       traces = contrast_traces(app_id)
   
@@ -51,13 +53,35 @@ class Glue::Contrast < Glue::BaseTask
 
   def update_closed_jira_issues(app_id)
     issues = get_closed_jira_issues
+    Glue.debug "Found #{issues.size} closed JIRA issues to update"
 
     issues.each do |iss|
+      Glue.debug "Processing issue #{iss.key}"
       contrast_id = contrast_id_for_issue(iss)
-      trace = contrast_trace_details(app_id, contrast_id)
+      Glue.debug "Got Contrast ID: #{contrast_id}"
+      Glue.debug "Using app_id: #{app_id}"
 
-      update_trace(app_id, trace, contrast_resolution_status(iss)) unless CLOSED_STATUSES.include?(trace['status'])
+      if !vulnerability?(iss)
+        Glue.debug "#{iss.key} is a library issue, skipping."
+        next
+      end
+
+      trace = contrast_trace_details(app_id, contrast_id)
+      Glue.debug "Got trace w/UUID #{trace['uuid']}"
+
+      if !CLOSED_STATUSES.include?(trace['status'])
+        Glue.debug "Updating #{trace['uuid']}"
+        update_trace(app_id, trace, contrast_resolution_status(iss))
+      end
     end
+  end
+
+  def vulnerability?(issue)
+    !library?(issue)
+  end
+
+  def library?(issue)
+    issue && issue.description =~ /#{LIB_RATING_CONNECTOR}|#{LIB_STALE_CONNECTOR}/
   end
 
   def get_closed_jira_issues
@@ -116,7 +140,7 @@ class Glue::Contrast < Glue::BaseTask
   def report_stale_lib(app_id, lib)
     # report description, detail, source, severity, fingerprint
     self.report "#{lib['file_name']} is out of date.", 
-        "Project uses version #{lib['file_version']}, latest version is #{lib['latest_version']}. #{contrast_library_html_url(app_id, lib['hash'])}",
+        "Project uses version #{lib['file_version']}, #{LIB_STALE_CONNECTOR} #{lib['latest_version']}. #{contrast_library_html_url(app_id, lib['hash'])}",
         lib['file_name'],
         'NOTE',
         lib['hash']
@@ -125,13 +149,14 @@ class Glue::Contrast < Glue::BaseTask
   def report_vulnerable_lib(app_id, lib)
     vuln_count = lib['total_vulnerabilities']
     self.report "#{lib['file_name']} has #{vuln_count} known security #{vuln_count > 1 ? 'vulnerabilities' : 'vulnerability'}.",
-        "#{lib['file_name']} is currently rated #{lib['grade']}. #{contrast_library_html_url(app_id, lib['hash'])}",
+        "#{lib['file_name']} #{LIB_RATING_CONNECTOR} #{lib['grade']}. #{contrast_library_html_url(app_id, lib['hash'])}",
         lib['file_name'],
         'High',
         lib['hash']
   end
 
   def report_trace(app_id, trace)
+    Glue.debug "Reporting trace with fingerprint #{contrast_trace_html_url(app_id, trace['uuid'])}"
     self.report trace['title'], contrast_trace_html_url(app_id, trace['uuid']), trace['uuid'], trace['severity'], trace['uuid']
   end
 
@@ -181,7 +206,10 @@ class Glue::Contrast < Glue::BaseTask
 
   def contrast_trace_details(app_id, trace_id)
     trace_url = "#{contrast_base_url}/traces/#{app_id}/trace/#{trace_id}"
+    Glue.debug "contrast_traces trace_url: #{trace_url}"
+    Glue.debug "contrast_request_headers: #{contrast_request_headers}"
     response = HTTParty.get(trace_url, :headers => contrast_request_headers)
+    Glue.debug "contrast_trace_details response:\n#{response}"
 
     response['trace']
   end
@@ -197,7 +225,7 @@ class Glue::Contrast < Glue::BaseTask
     
     mark_trace_url = "#{contrast_base_url}/traces/#{app_id}/mark"
 
-    puts ">>> Updating trace #{trace['uuid']}"
+    Glue.debug ">>> Updating trace #{trace['uuid']}"
     response = HTTParty.put(mark_trace_url, 
                             :headers => contrast_request_headers,
                             :body => payload.to_json)
