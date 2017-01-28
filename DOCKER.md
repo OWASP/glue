@@ -7,7 +7,7 @@ configured and ready to go.
 # Installation
 
 ```
-docker pull owasp/Glue
+docker pull owasp/glue
 ```
 
 # Usage
@@ -16,41 +16,41 @@ docker pull owasp/Glue
 
 This is one way to get help.
 ```
-docker run --rm owasp/Glue --help
+docker run --rm owasp/glue --help
 ```
 
 ## Typical Usage
 
 Most basic starting point.  Will analyze a predetermined codebase.
 ```
-docker run --rm --name=Glue owasp/Glue
+docker run --rm --name=Glue owasp/glue
 ```
 
 Here is an example that runs on a github repo.
 ```
-docker run --rm --name=Glue owasp/Gluehttps://github.com/YourOrg/YourProject.git
+docker run --rm --name=Glue owasp/glue https://github.com/YourOrg/YourProject.git
 ```
 
 This example only runs code analysis tools and outputs JSON.
 ```
-docker run --rm --name=Glue owasp/Glue -l code -f json https://github.com/YourOrg/YourProject.git
+docker run --rm --name=Glue owasp/glue -l code -f json https://github.com/YourOrg/YourProject.git
 ```
 
 Example:
 ```
-docker run --rm --name=Glue owasp/Glue -l code -f json https://github.com/Owasp/triage.git
+docker run --rm --name=Glue owasp/glue -l code -f json https://github.com/Owasp/triage.git
 ```
 
 ## On the File System
 
 Running against a local file system:
 ```
-docker run --rm --name=Glue -v /code/location:/tmp/directory owasp/Glue -d -f json /tmp/directory/
+docker run --rm --name=Glue -v /code/location:/tmp/directory owasp/glue -d -f json /tmp/directory/
 ```
 
 Example:
 ```
-docker run --rm --name=Glue -v /Users/mk/line/tmp/triage:/tmp/triage owasp/Glue -l code -f json /tmp/triage/
+docker run --rm --name=Glue -v /Users/mk/line/tmp/triage:/tmp/triage owasp/glue -l code -f json /tmp/triage/
 ```
 
 Note that the folder sharing on Windows and Mac is constrained by [Docker Volumes](https://docs.docker.com/engine/userguide/dockervolumes/).
@@ -61,7 +61,7 @@ a different directory you have to make it shared through VirtualBox or whatever 
 
 Glue supports running specific tools using the -t flag.  For example the following command only runs retire.js on the project.
 ```
-docker run --rm --name=Glue -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat owasp/Glue:0.7 -t retirejs -f csv /tmp/nodegoat/
+docker run --rm --name=Glue -v /Users/mk/line/tmp/NodeGoat:/tmp/nodegoat owasp/glue:0.7 -t retirejs -f csv /tmp/nodegoat/
 ```
 
 The tools include:
@@ -85,16 +85,10 @@ The tools include:
 To run the code from the docker image by hand or debug issues there, run the following:
 
 ```
-docker run --name=Glue --rm -i -t --entrypoint=bash owasp/Glue
+docker run --name=Glue --rm -i -t --entrypoint=bash owasp/glue
 ```
 
-Then, you can run the tool as though you were developing it.
-
-Change to the code directory and you will be in the root of the project.
-
-```
-cd ~/line/Glue
-```
+Then, you will be in the root of the project. You can run the tool as though you were developing it.
 
 # Configuration files
 
