@@ -4,7 +4,8 @@ MAINTAINER Matt Konda <mkonda@jemurai.com>
 ################################################################################################
 #       Environment
 #
-RUN apt-get update && apt-get install -y git-core sudo curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libffi-dev libgdbm-dev libncurses5-dev automake libtool bison libffi-dev gnupg patch gawk g++ gcc make libc6-dev libcurl3-dev autoconf libtool ncurses-dev zlib1g libreadline6-dev libreadline6 openssl libcurl4-openssl-dev libgmp-dev clamav md5deep nodejs npm default-jre unzip python python-pip
+RUN apt-get update && apt-get install -y git-core sudo curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libffi-dev libgdbm-dev libncurses5-dev automake libtool bison libffi-dev gnupg patch gawk g++ gcc make libc6-dev libcurl3-dev autoconf libtool ncurses-dev zlib1g libreadline6-dev libreadline6 openssl libcurl4-openssl-dev libgmp-dev clamav md5deep nodejs npm default-jre unzip python python-pip && rm -rf /var/lib/apt/lists/*
+
 RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 #################################################################################################
@@ -31,7 +32,7 @@ RUN /bin/bash -l -c "source ~/.rvm/scripts/rvm"
 RUN /bin/bash -l -c "rvm requirements"
 RUN /bin/bash -l -c "rvm install 2.3.1"
 RUN /bin/bash -l -c "rvm use 2.3.1 --default"
-RUN /bin/bash -l -c "gem install curb"
+RUN /bin/bash -l -c "gem install curb --no-document"
 ENV PATH $PATH:/home/glue/.rvm/rubies/ruby-2.3.1/bin
 
 #################################################################################################
@@ -64,6 +65,7 @@ RUN sudo apt-get install -y maven
 #RUN curl -L http://downloads.sourceforge.net/project/findbugs/findbugs/3.0.1/findbugs-3.0.1.zip --output findbugs.zip
 #RUN unzip findbugs.zip
 #RUN curl -L http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.4/findsecbugs-plugin-1.4.4.jar > findbugs-3.0.1/plugin/findsecbugs.jar
+#RUN git clone https://github.com/find-sec-bugs/find-sec-bugs.git
 
 
 #################################################################################################

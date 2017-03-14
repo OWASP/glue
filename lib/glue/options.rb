@@ -204,6 +204,15 @@ module Glue::Options
           options[:owasp_dep_check_path] = path
         end
 
+        opts.on "--owasp-dep-check-log", "Include verbose logging from OWAP Dependency Check" do
+          options[:owasp_dep_check_log] = true
+        end
+
+        opts.on "--owasp-suppression PATH", "The path to the OWASP Dependency Check XML suppression file" do |path|
+          Glue.debug "Setting suppression file to #{path}"
+          options[:owasp_dep_check_suppression] = path
+        end
+
         opts.separator ""
         opts.separator "Burp options:"
         opts.on "--burp-xml-path BURL_XML_PATH", "Burp XML Path" do |burp_xml_path|

@@ -101,7 +101,20 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
   def run
     Glue.notify "#{@name}"
     rootpath = @trigger.path
-    @result= runsystem(true, @dep_check_path, "--project", "Glue", "-f", "ALL", "-out", "#{rootpath}", "-s", "#{rootpath}")
+
+    run_args = [ @dep_check_path, "--project", "Glue", "-f", "ALL" ]
+
+    if @tracker.options[:owasp_dep_check_log]
+      run_args << [ "-l", "#{rootpath}/depcheck.log" ]
+    end
+
+    if @tracker.options[:owasp_dep_check_suppression]
+      run_args << [ "--suppression", "#{@tracker.options[:owasp_dep_check_suppression]}" ]
+    end
+
+    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ]
+
+    @result= runsystem(true, *run_args.flatten)
   end
 
   def analyze
