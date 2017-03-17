@@ -54,6 +54,16 @@ RUN /bin/bash -l -c "sudo pip install bandit"
 RUN /bin/bash -l -c "mkdir -p /home/glue/tools"
 WORKDIR /home/glue/tools/
 
+#################################################################################################
+#       Truffle Hog
+#
+# RUN /bin/bash -l -c "sudo pip install truffleHog"
+RUN git clone https://github.com/runako/truffleHog.git
+WORKDIR /home/glue/tools/truffleHog
+RUN git checkout rg-local-scan
+
+WORKDIR /home/glue/tools/
+
 # OWASP DEPENDENCY CHECK (needs unzip and default-jre)
 RUN curl -L http://dl.bintray.com/jeremy-long/owasp/dependency-check-1.4.3-release.zip --output owasp-dep-check.zip
 RUN unzip owasp-dep-check.zip
