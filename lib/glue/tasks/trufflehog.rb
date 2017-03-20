@@ -10,6 +10,8 @@ class Glue::Trufflehog < Glue::BaseTask
   BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
   HEX_CHARS = "1234567890abcdefABCDEF"
 
+  ISSUE_SEVERITY = 4
+
   def initialize(trigger, tracker)
     super(trigger, tracker)
     @name = "Trufflehog"
@@ -69,10 +71,7 @@ class Glue::Trufflehog < Glue::BaseTask
       description = "Possible password or other secret at #{title}."
       detail = "Apparent password or other secret: #{string}"
       fingerprint = "Trufflehog|#{title}"
-#      @task.report "Possible password or other secret in source code.", description, detail, @cvss, fingerprint
-      self.report "Possible password or other secret in source code.", detail, title, 4, fingerprint
-
-      #report description, detail, source, severity, fingerprint
+      self.report "Possible password or other secret in source code.", detail, title, ISSUE_SEVERITY, fingerprint
     end
   end
 end
