@@ -137,6 +137,9 @@ module Glue::Options
         opts.on "--jira-skip-fields FIELDS", "Specify any JIRA fields to skip (separate with commas)." do |skip_fields|
           options[:jira_skip_fields] = skip_fields
         end
+        opts.on "--jira-default-priority PRIORITY", "Specify a default priority for JIRA issues. This will override the mapping of severity to priority." do |default_priority|
+          options[:jira_default_priority] = default_priority
+        end
 
         opts.separator ""
         opts.separator "Pivotal options:"
