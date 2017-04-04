@@ -29,6 +29,7 @@ class Glue::JiraReporter < Glue::BaseReporter
       :auth_type    => :basic,
       :http_debug   => :true
     }
+    
     @project = tracker.options[:jira_project]
     @component = tracker.options[:jira_component]
     @jira = JIRA::Client.new(options)
@@ -36,7 +37,7 @@ class Glue::JiraReporter < Glue::BaseReporter
     tracker.findings.each do |finding|
       begin
         issue = @jira.Issue.build
-        json = get_jira_json(finding, tracker.options[:jira_skip_fields] || '')
+        json = get_jira_json(finding, tracker.options[:jira_skip_fields] || '', tracker.options[:jira_default_priority])
         issue.save(json)
       rescue Exception => e
         puts "Issue #{e.message}"
@@ -46,7 +47,7 @@ class Glue::JiraReporter < Glue::BaseReporter
   end
 
   private
-  def get_jira_json(finding, skip_fields)
+  def get_jira_json(finding, skip_fields, default_priority=nil)
 	  json = {
     	"fields": {
        		"project":
@@ -56,7 +57,7 @@ class Glue::JiraReporter < Glue::BaseReporter
        		"summary": "#{finding.description}",
        		"description": "#{finding.to_string}",
           "priority": {
-            'name': jira_priority(finding.severity)
+            'name': jira_priority(finding.severity, default_priority)
           },
        		"issuetype": {
           		"name": "Bug"
@@ -69,7 +70,8 @@ class Glue::JiraReporter < Glue::BaseReporter
     json
   end
 
-  def jira_priority(severity)
+  def jira_priority(severity, default_priority=nil)
+    return default_priority if default_priority
     if is_number?(severity)
       f = Float(severity)
 
