@@ -88,7 +88,7 @@ class Glue::Zap < Glue::BaseTask
   def supported?
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/").body_str)
-    if supported["version"] =~ /2.(4|5).\d+/
+    if supported["version"] =~ /2.(4|5|6).\d+/
       return true
     else
       Glue.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct.  Supported versions = 2.4.0 and up - got #{supported['version']}"
