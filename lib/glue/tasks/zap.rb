@@ -86,8 +86,14 @@ class Glue::Zap < Glue::BaseTask
   end
 
   def supported?
+    apikey = "#{@tracker.options[:zap_api_token]}"
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
-    supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/").body_str)
+    begin
+      supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/?apikey=#{apikey}").body_str)
+    rescue Exception => e
+      Glue.error "#{e.message}. Tried to connect to #{base}/JSON/core/view/version/. Check that ZAP is running on the right host and port and that you have the appropriate API key, if required."
+      return false
+    end
     if supported["version"] =~ /2.(4|5|6).\d+/
       return true
     else
