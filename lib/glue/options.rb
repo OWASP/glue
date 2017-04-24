@@ -249,7 +249,9 @@ module Glue::Options
         opts.on "--contrast-update-closed-jira-issues APP_NAME", "Only update Contrast status for closed JIRA issues?" do |contrast_update_closed_jira_issues|
           options[:contrast_update_closed_jira_issues] = true
         end
-
+        opts.on "--contrast-min-severity MIN_SEVERITY", "Contrast minimum severity" do |contrast_min_severity|
+          options[:minimum_contrast_severity] = contrast_min_severity
+        end
 
         opts.separator ""
         opts.separator "Configuration files:"

@@ -249,24 +249,10 @@ class Glue::Contrast < Glue::BaseTask
   end
 
   def analyze
-    path = @trigger.path + "/dependency-check-report.xml"
-    begin
-      Glue.debug "Parsing report #{path}"
-      get_warnings(path)
-    rescue Exception => e
-      Glue.notify "Problem running OWASP Dep Check ... skipped."
-      Glue.notify e.message
-      raise e
-    end
+    # Analysis happens as part of the run method
   end
 
   def supported?
     true
-  end
-
-  def get_warnings(path)
-    listener = Glue::DepCheckListener.new(self)
-    parser = Parsers::StreamParser.new(File.new(path), listener)
-    parser.parse
   end
 end
