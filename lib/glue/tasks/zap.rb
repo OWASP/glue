@@ -24,6 +24,7 @@ class Glue::Zap < Glue::BaseTask
     context = SecureRandom.uuid
 
     Glue.debug "Running ZAP on: #{rootpath} from #{base} with #{context}"
+    puts "Running ZAP on: #{rootpath} from #{base} with #{context}"
 
     # Create a new session so that the findings will be new.
     Curl.get("#{base}/JSON/core/action/newSession/?zapapiformat=JSON&apikey=#{apikey}&name=&overwrite=")
