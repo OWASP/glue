@@ -56,10 +56,20 @@ end
 begin
     #Run scan and output a report
     tracker = Glue.run options.merge(:print_report => true, :quiet => options[:quiet])
+    worst_finding = tracker.get_worst_finding
 
     #Return error code if --exit-on-warn is used and warnings were found
     if options[:exit_on_warn] and not tracker.findings.empty?
-      exit Glue::Warnings_Found_Exit_Code
+      if options[:severity_threshold]
+        if worst_finding.severity >= options[:severity_threshold].to_i
+          puts "Worst finding (#{worst_finding.severity}) meets severity threshold (#{options[:severity_threshold]})"
+          exit worst_finding.severity
+        else
+          puts "Worst finding (#{worst_finding.severity}) did not meet severity threshold (#{options[:severity_threshold]})"
+        end
+      else
+        exit Glue::Warnings_Found_Exit_Code
+      end
     end
 rescue Glue::NoTargetError => e
   $stderr.puts e.message

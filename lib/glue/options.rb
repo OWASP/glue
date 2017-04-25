@@ -45,9 +45,16 @@ module Glue::Options
           options[:quiet] = quiet
         end
 
-        opts.on( "-z", "--exit-on-warn", "Exit code is non-zero if warnings found") do
+        opts.on( "-z", "--exit-on-warn [severity_threshold]", "Exit code is non-zero if warnings found. If [severity_threshold] is specified, the highest severity must be greater than or equal to [severity_threshold] to tigger the non-zero exit code, which will equal the highest severity.") do |severity_threshold|
           options[:exit_on_warn] = true
+          if severity_threshold
+            puts "Setting severity_threshold to #{severity_threshold}"
+            
+          end
+          options[:severity_threshold] = severity_threshold
         end
+
+  
 
         opts.separator ""
         opts.separator "Scanning options:"

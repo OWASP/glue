@@ -33,6 +33,18 @@ class Glue::Tracker
     @findings << finding
   end
 
+  def get_worst_finding
+    worst = nil
+    @findings.each do |finding|
+      if !worst
+        worst = finding
+      elsif finding.severity > worst.severity
+        worst = finding
+      end
+    end
+    worst
+  end
+
   def to_json
     s = "{ \"findings\": [ "
     @findings.each do |finding|
