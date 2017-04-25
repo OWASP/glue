@@ -89,7 +89,6 @@ class Glue::Zap < Glue::BaseTask
   def supported?
     apikey = "#{@tracker.options[:zap_api_token]}"
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
-    
     begin
       supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/?apikey=#{apikey}").body_str)
     rescue Exception => e
