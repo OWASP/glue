@@ -252,6 +252,9 @@ module Glue::Options
         opts.on "--contrast-min-severity MIN_SEVERITY", "Contrast minimum severity" do |contrast_min_severity|
           options[:minimum_contrast_severity] = contrast_min_severity
         end
+        opts.on "--contrast-filter-options OPT1=VAL1,OPT2=VAL2", "Contrast vulnerability filter options" do |contrast_filter_options|
+          options[:contrast_filter_options] = contrast_filter_options
+        end
 
         opts.separator ""
         opts.separator "Configuration files:"
