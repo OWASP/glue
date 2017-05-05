@@ -8,14 +8,18 @@ class Glue::BaseReporter
 
   def run_report(tracker)
   	Glue.notify "Running base report..."
-  	output = ""
+    reports = [ ]
     tracker.findings.each do |finding|
-      output << out(finding)
+      reports << out(finding)
     end
-    output
+
+    combine_reports(reports)
   end
 
   def out(finding)
   end
 
+  def combine_reports(reports)
+    reports.join
+  end
 end
