@@ -17,4 +17,8 @@ class Glue::JSONReporter < Glue::BaseReporter
   def out(finding)
     finding.to_json
   end
+
+  def combine_reports(reports)
+    '[' << reports.join(', ') << ']'
+  end
 end
