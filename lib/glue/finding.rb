@@ -31,8 +31,7 @@ class Glue::Finding
   end
 
   def to_csv
-    s = "#{@appname},#{@description},#{@timestamp},#{@source.to_s},#{@severity},#{@fingerprint},#{@detail}\n"
-    s
+    [@appname, @description, @timestamp, @source.to_s, @severity, @fingerprint, @detail]
   end
 
   def to_json
