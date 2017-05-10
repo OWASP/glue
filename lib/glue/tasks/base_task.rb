@@ -23,7 +23,7 @@ class Glue::BaseTask
   end
 
   def report description, detail, source, severity, fingerprint
-    finding = Glue::Finding.new( @trigger.appname, description, detail, source, severity, fingerprint )
+    finding = Glue::Finding.new( @trigger.appname, description, detail, source, severity, fingerprint, self.class.name )
     @findings << finding
   end
 
