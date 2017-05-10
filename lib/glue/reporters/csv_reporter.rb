@@ -16,4 +16,13 @@ class Glue::CSVReporter < Glue::BaseReporter
     finding.to_csv
   end
 
+  def combine_reports(reports)
+    csv_string = CSV.generate do |csv|
+      reports.each do |report|
+        csv << report
+      end
+    end
+
+    csv_string
+  end
 end
