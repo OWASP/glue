@@ -23,6 +23,8 @@ class Glue::Contrast < Glue::BaseTask
     @org_id = @tracker.options[:contrast_org_id]
     @app_name = @tracker.options[:contrast_app_name]
     @user_name = @tracker.options[:contrast_user_name]  
+
+    @filter_options = @tracker.options[:contrast_filter_options]
   end
 
   def run
@@ -35,13 +37,15 @@ class Glue::Contrast < Glue::BaseTask
     else
       Glue.debug "Running Contrast process"
       app_id = contrast_app_id(@app_name)
-      traces = contrast_traces(app_id)
-  
-      contrast_vulnerable_libraries(app_id).each do |lib|
-        report_vulnerable_lib(app_id, lib)
+      filter_opts = build_filter_options(app_id)
+
+      traces = contrast_traces(app_id, filter_opts)
+
+      contrast_vulnerable_libraries(app_id, filter_opts).each do |lib|
+        report_vulnerable_lib(app_id, lib) 
       end
 
-      contrast_stale_libraries(app_id).each do |lib|
+      contrast_stale_libraries(app_id, filter_opts).each do |lib|
         report_stale_lib(app_id, lib)
       end
 
@@ -160,16 +164,23 @@ class Glue::Contrast < Glue::BaseTask
     self.report trace['title'], contrast_trace_html_url(app_id, trace['uuid']), trace['uuid'], trace['severity'], trace['uuid']
   end
 
-  def contrast_vulnerable_libraries(app_id)
-    contrast_libraries_filtered(app_id, 'VULNERABLE')
+  def contrast_vulnerable_libraries(app_id, filter_opts)
+    contrast_libraries_filtered(app_id, 'VULNERABLE', filter_opts)
   end
 
-  def contrast_stale_libraries(app_id)
-    contrast_libraries_filtered(app_id, 'STALE')
+  def contrast_stale_libraries(app_id, filter_opts)
+    contrast_libraries_filtered(app_id, 'STALE', filter_opts)
   end
 
-  def contrast_libraries_filtered(app_id, filter)
+  def contrast_libraries_filtered(app_id, filter, filter_opts = { })
     url = "#{contrast_base_url}/applications/#{app_id}/libraries/filter?quickFilter=#{filter}"
+
+    if !filter_opts.empty?
+      filter_opts.each do |key, val|
+        url << "&#{URI.encode(key)}=#{URI.encode(val)}"
+      end
+    end
+
     response = HTTParty.get(url, :headers => contrast_request_headers)
     response['libraries']
   end
@@ -184,8 +195,21 @@ class Glue::Contrast < Glue::BaseTask
     app['app_id']
   end
 
-  def contrast_traces(app_id)
-    trace_ids = contrast_app_trace_ids(app_id)
+  def build_filter_options(app_id)
+    opts = { }
+
+    @filter_options.split(/;/).each do |pair|
+      opt, val = pair.split('=')
+      opts[opt] = val
+    end
+
+    map_indirect_properties!(app_id, opts)
+
+    opts
+  end
+
+  def contrast_traces(app_id, filter_opts = { })
+    trace_ids = contrast_app_trace_ids(app_id, filter_opts)
     return [ ] if trace_ids.nil?
 
     res = [ ]
@@ -196,10 +220,55 @@ class Glue::Contrast < Glue::BaseTask
     res
   end
 
-  def contrast_app_trace_ids(app_id)
+  def contrast_server_id_by_name(app_id, server_name)
+    res = contrast_server_by_name(app_id, server_name)
+
+    return nil if res.nil?
+
+    res['server_id']
+  end
+
+  def contrast_server_by_name(app_id, server_name)
+    contrast_servers_by_props(app_id, { 'name' => server_name }).first
+  end
+
+  def map_indirect_properties!(app_id, properties)
+    if properties.has_key?('servers')
+      server_names = properties['servers']
+      server_ids = server_names.split('|').map { |name| contrast_server_id_by_name(app_id, name) }.join(',')
+      properties['servers'] = server_ids
+    end
+  end
+
+  def contrast_servers_by_props(app_id, props)
+    res = contrast_servers(app_id)
+    props.each do |prop, val|
+      res.select! { |server| server[prop] == val }
+    end
+
+    res
+  end
+
+  def contrast_servers(app_id)
+    servers_url = "#{contrast_base_url}/applications/#{app_id}/servers"
+
+    response = HTTParty.get(servers_url, :headers => contrast_request_headers)
+
+    response['servers']
+  end
+
+  def contrast_app_trace_ids(app_id, params = { })
     trace_ids_url = "#{contrast_base_url}/traces/#{app_id}/ids"
+
+    args = [ trace_ids_url, { :headers => contrast_request_headers } ]
     
-    response = HTTParty.get(trace_ids_url, :headers => contrast_request_headers)
+    query = { }
+    params.each do |param, val|
+      query[param] = val
+    end
+
+    args.last[:query] = query unless query.empty?
+    response = HTTParty.get(*args)
 
     response['traces']
   end
@@ -249,24 +318,10 @@ class Glue::Contrast < Glue::BaseTask
   end
 
   def analyze
-    path = @trigger.path + "/dependency-check-report.xml"
-    begin
-      Glue.debug "Parsing report #{path}"
-      get_warnings(path)
-    rescue Exception => e
-      Glue.notify "Problem running OWASP Dep Check ... skipped."
-      Glue.notify e.message
-      raise e
-    end
+    # Analysis happens as part of the run method
   end
 
   def supported?
     true
-  end
-
-  def get_warnings(path)
-    listener = Glue::DepCheckListener.new(self)
-    parser = Parsers::StreamParser.new(File.new(path), listener)
-    parser.parse
   end
 end

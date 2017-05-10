@@ -249,7 +249,13 @@ module Glue::Options
         opts.on "--contrast-update-closed-jira-issues APP_NAME", "Only update Contrast status for closed JIRA issues?" do |contrast_update_closed_jira_issues|
           options[:contrast_update_closed_jira_issues] = true
         end
-
+        opts.on "--contrast-min-severity MIN_SEVERITY", "Contrast minimum severity" do |contrast_min_severity|
+          options[:minimum_contrast_severity] = contrast_min_severity
+        end
+        opts.on "--contrast-filter-options OPT1=VAL1,OPT2=VAL2", "Contrast vulnerability filter options",
+          "Filter Contrast results using any of the query parameter options exposed by the .../traces/{appId}/ids endpoint. Each filter and its value should be in a KEY=VAL format. Values that require multiple entries can be separated with a semicolon: servers=server1;server2;server3." do |contrast_filter_options|
+          options[:contrast_filter_options] = contrast_filter_options
+        end
 
         opts.separator ""
         opts.separator "Configuration files:"

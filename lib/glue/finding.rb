@@ -1,6 +1,7 @@
 require 'json'
 
 class Glue::Finding
+  attr_reader :task
   attr_reader :appname
   attr_reader :timestamp
   attr_reader :severity
@@ -9,7 +10,10 @@ class Glue::Finding
   attr_reader :detail
   attr_reader :fingerprint
 
-  def initialize appname, description, detail, source, severity, fingerprint
+  def initialize appname, description, detail, source, severity, fingerprint, task
+    @task = task
+    @task.sub!(/^Glue::/, '') if @task
+
   	@appname = appname
     @timestamp = Time.now
   	@description = description
@@ -26,6 +30,7 @@ class Glue::Finding
       s << "\n\n\tSource: #{@stringsrc}"
       s << "\n\n\tSeverity: #{@severity}"
       s << "\n\n\tFingerprint:  #{@fingerprint}"
+      s << "\n\n\tFound by:  #{@task}"
       s << "\n\n\tDetail:  #{@detail}"
   	s
   end
@@ -36,6 +41,7 @@ class Glue::Finding
 
   def to_json
     json = {
+     'task' => @task,
      'appname' => @appname,
      'description' => @description,
      'fingerprint' => @fingerprint,
