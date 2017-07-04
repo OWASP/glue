@@ -192,6 +192,18 @@ module Glue::Options
         opts.on "--checkmarx-project project", "Specify the full path of the Checkmarx project for this scan" do |project|
           options[:checkmarx_project] = project
         end
+        opts.on "--checkmarx-exclude paths", "Specify the paths of folders (relative to target) to exclude from scan" do |exclude|
+          options[:checkmarx_exclude] = exclude
+        end
+        opts.on "--checkmarx-incremental", "Specify the full path of the Checkmarx project for this scan" do
+          options[:checkmarx_incremental] = true
+        end
+        opts.on "--checkmarx-preset", "Specify the preset to use for the scan this project" do |preset|
+          options[:checkmarx_preset] = preset
+        end
+        opts.on "--checkmarx-path path", "Specify the full path to runCxConsole.sh" do |path|
+          options[:checkmarx_path] = path
+        end
 
         opts.separator ""
         opts.separator "PMD options:"
