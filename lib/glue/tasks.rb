@@ -73,7 +73,7 @@ class Glue::Tasks
 
         task = c.new(trigger, tracker)
         begin
-          if task.supported? and task.stage == stage
+          if task.stage == stage and task.supported?
             if task.labels.intersect? tracker.options[:labels] or          # Only run tasks with labels
                  ( run_tasks and run_tasks.include? task_name.downcase )   # or that are explicitly requested.
               Glue.notify "#{stage} - #{task_name} - #{task.labels}"
