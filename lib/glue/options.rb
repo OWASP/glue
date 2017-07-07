@@ -176,6 +176,19 @@ module Glue::Options
         end
 
         opts.separator ""
+        opts.separator "Scout options:"
+        opts.on "--scout-aws-key key", "Specify the AWS Key to use with Scout" do |scout_aws_key|
+          options[:scout_aws_key] = scout_aws_key
+        end
+        opts.on "--scout-aws-secret secret", "Specify the AWS secret to use with Scout." do |scout_aws_secret|
+          options[:scout_aws_secret] = scout_aws_secret
+        end
+        opts.on "--scout-aws-level level", "Specify the level to report from Scout." do |scout_level|
+          options[:scout_level] = scout_level
+        end
+
+        
+        opts.separator ""
         opts.separator "Checkmarx options:"
         opts.on "--checkmarx-user USER", "Specify the Checkmarx user to use when connecting to the API" do |user|
           options[:checkmarx_user] = user

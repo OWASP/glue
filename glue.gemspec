@@ -3,7 +3,7 @@ require './lib/glue/version'
 Gem::Specification.new do |s|
   s.name = %q{owasp-glue}
   s.version = Glue::Version
-  s.authors = ["Matt Konda", "Alex Lock", "Rafa Perez"]
+  s.authors = ["Matt Konda", "Alex Lock", "Rafa Perez", "Runako Godfrey", "Reuben Swartz", "Varun Yeldandi"]
   s.email = "matt.konda@owasp.org"
   s.summary = "Security toolchain for software build automation."
   s.description = "Glue detects security vulnerabilities in code."

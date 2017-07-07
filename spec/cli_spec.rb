@@ -9,5 +9,5 @@ end
 RSpec.describe 'CLI Version', :type => :aruba do
   before(:each) { run('glue -v') }
   it { expect(last_command_started).to be_successfully_executed }
-  it { expect(last_command_started).to have_output /Glue 0.9.1/ }
+  it { expect(last_command_started).to have_output /Glue 0.9.4/ }
 end
