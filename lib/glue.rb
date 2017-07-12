@@ -277,6 +277,12 @@ module Glue
     tracker
   end
 
+  def self.fatal message
+    $stderr.puts message
+    $logfile.puts "[#{Time.now}] #{message}" if $logfile
+    exit!(1)
+  end
+
   def self.error message
     $stderr.puts message
     $logfile.puts "[#{Time.now}] #{message}" if $logfile
