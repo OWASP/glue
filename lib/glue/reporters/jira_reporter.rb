@@ -72,8 +72,6 @@ class Glue::JiraReporter < Glue::BaseReporter
 	    }
 
     if @jira_epic_field_id.present? && @jira_epic.present?
-      puts "updating json: #{json}"
-      puts "updating json fields: #{json['fields']}"
       json[:fields][@jira_epic_field_id] = @jira_epic
     end    
 
