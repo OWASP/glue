@@ -62,7 +62,7 @@ class Glue::Checkmarx < Glue::BaseTask
     if (File.file?("checkmarx_results.xml"))
       @results = Nokogiri::XML(File.read("checkmarx_results.xml")).xpath '//Result'
     else 
-      Glue.error "checkmarx scan failed: #{output}"
+      Glue.fatal "checkmarx scan failed: #{output}"
     end
   end
 
