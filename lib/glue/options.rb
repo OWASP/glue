@@ -141,6 +141,12 @@ module Glue::Options
         opts.on "--jira-component COMPONENT", "Specify the JIRA component to use." do |component|
           options[:jira_component] = component
         end
+        opts.on "--jira-epic-field-id EPIC_FIELD_ID", "(optional) Specify the custom field ID used to link to the JIRA epic, e.g. customfield_10001." do |jira_epic_field_id|
+          options[:jira_epic_field_id] = jira_epic_field_id
+        end
+        opts.on "--jira-epic EPIC", "(optional) Specify the ID of the JIRA epic, e.g. MYPROJ-1005." do |jira_epic|
+          options[:jira_epic] = jira_epic
+        end
         opts.on "--jira-skip-fields FIELDS", "Specify any JIRA fields to skip (separate with commas)." do |skip_fields|
           options[:jira_skip_fields] = skip_fields
         end
