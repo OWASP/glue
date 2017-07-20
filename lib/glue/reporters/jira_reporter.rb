@@ -34,6 +34,11 @@ class Glue::JiraReporter < Glue::BaseReporter
     @component = tracker.options[:jira_component]
     @jira = JIRA::Client.new(options)
 
+    @jira_epic_field_id = tracker.options[:jira_epic_field_id]
+    @jira_epic = tracker.options[:jira_epic]
+
+    Glue.debug "Set JIRA epic fields: #{@jira_epic_field_id} / #{@jira_epic}"
+
     tracker.findings.each do |finding|
       begin
         issue = @jira.Issue.build
@@ -66,6 +71,10 @@ class Glue::JiraReporter < Glue::BaseReporter
        	}
 	    }
 
+    if @jira_epic_field_id.present? && @jira_epic.present?
+      json[:fields][@jira_epic_field_id] = @jira_epic
+    end    
+
     json['labels'] = [ "Glue", "#{finding.appname}" ] unless skip_fields.split(',').include?('labels')
     json
   end
@@ -84,6 +93,8 @@ class Glue::JiraReporter < Glue::BaseReporter
       end
     else
       case severity
+      when 'Critical' then 'High'
+      when 'CRITICAL' then 'High'
       when 'HIGH' then 'High'
       when 'High' then 'High'
       when 'MEDIUM' then 'Medium'
