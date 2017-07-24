@@ -107,7 +107,7 @@ module Glue::Options
         end
         opts.on "-f",
                 "--format TYPE",
-                [:text, :csv, :json, :jira, :pivotal],
+                [:text, :csv, :json, :jira, :pivotal, :slack],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
         end
@@ -289,6 +289,19 @@ module Glue::Options
         end
 
         opts.separator ""
+        opts.separator "Slack reporter options:"
+        opts.on "--slack-token TOKEN", "Bot token" do |slack_token|
+          options[:slack_token] = slack_token
+        end
+        opts.on "--slack-channel CHANNEL", "The channel/user to post to" do |slack_channel|
+          options[:slack_channel] = slack_channel
+        end
+        opts.on "--slack-post-as-bot", "When posting to user, set this flag to post on the bot channel for this users",
+        "Otherwise, the bot will post to the user's slackbot." do |slack_post_as_user|
+          options[:slack_post_as_user] = slack_post_as_user
+        end
+
+        opts.separator ""
         opts.separator "Configuration files:"
 
         opts.on "-c", "--config-file FILE", "Use specified configuration file" do |file|
@@ -302,6 +315,7 @@ module Glue::Options
             options[:create_config] = true
           end
         end
+        
 
         opts.separator ""
         opts.separator "Other Useful Options:"
