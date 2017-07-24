@@ -307,6 +307,11 @@ module Glue::Options
           options[:teamcity_min_level] = teamcity_min_level
         end
         opts.separator ""
+        opts.separator "TeamCity reporter options"
+        opts.on "--teamcity-min-level", "Report test failure for all findings above this level" do |teamcity_min_level|
+          options[:teamcity_min_level] = teamcity_min_level
+        end
+        opts.separator ""
         opts.separator "Configuration files:"
 
         opts.on "-c", "--config-file FILE", "Use specified configuration file" do |file|
