@@ -4,6 +4,7 @@ class Glue::Finding
   attr_reader :task
   attr_reader :appname
   attr_reader :timestamp
+  #Number between 1 to 3, when 1 is the lowest severity.
   attr_reader :severity
   attr_reader :source
   attr_reader :description
@@ -11,6 +12,13 @@ class Glue::Finding
   attr_reader :fingerprint
 
   def initialize appname, description, detail, source, severity, fingerprint, task
+    unless severity.is_a? Integer
+      raise ArgumentError.new("Severity should be a number, got: #{severity}")
+    end
+    unless severity < 1 || severity > 3
+      raise ArgumentError.new("Severity should be between 1 to 5, not #{severity}")
+    end
+
     @task = task
     @task.sub!(/^Glue::/, '') if @task
 
