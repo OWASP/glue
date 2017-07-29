@@ -128,7 +128,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
   def analyze
     path = if @scala_project
       md = @result.match(/\[info\] Writing reports to (?<report_path>.*)/)
-      puts "matched against @result: #{@result}"
+      puts "matched against @result: \n**********\n#{@result}\n**********"
       puts "md: #{md}"
       md[:report_path] + "/dependency-check-report.xml"
     else
