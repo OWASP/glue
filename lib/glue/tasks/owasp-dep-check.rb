@@ -96,13 +96,19 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     @labels << "code" << "java" << ".net"
 
     @dep_check_path = @tracker.options[:owasp_dep_check_path]
+    @sbt_path = @tracker.options[:sbt_path]
+    @scala_project = @tracker.options[:scala_project]
   end
 
   def run
     Glue.notify "#{@name}"
     rootpath = @trigger.path
 
-    run_args = [ @dep_check_path, "--project", "Glue", "-f", "ALL" ]
+    if @scala_project
+      run_args = [ @sbt_path, "dependencyCheck" ]
+    else  
+      run_args = [ @dep_check_path, "--project", "Glue", "-f", "ALL" ]
+    end
 
     if @tracker.options[:owasp_dep_check_log]
       run_args << [ "-l", "#{rootpath}/depcheck.log" ]
@@ -112,13 +118,23 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
       run_args << [ "--suppression", "#{@tracker.options[:owasp_dep_check_suppression]}" ]
     end
 
-    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ]
+    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project
 
+    puts "Running #{run_args.flatten}"
     @result= runsystem(true, *run_args.flatten)
+    puts "Result: #{@result}"
   end
 
   def analyze
-    path = @trigger.path + "/dependency-check-report.xml"
+    path = if @scala_project
+      md = @result.match(/\[info\] Writing reports to (?<report_path>.*)/)
+      puts "matched against @result: #{@result}"
+      puts "md: #{md}"
+      md[:report_path] + "/dependency-check-report.xml"
+    else
+      @trigger.path + "/dependency-check-report.xml"
+    end
+
     begin
       Glue.debug "Parsing report #{path}"
       get_warnings(path)

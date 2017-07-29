@@ -254,6 +254,14 @@ module Glue::Options
           options[:owasp_dep_check_suppression] = path
         end
 
+        opts.on "--sbt-path PATH", "The full path to sbt (optional)" do |path|
+          options[:sbt_path] = path
+        end
+
+        opts.on "--scala-project", "OWAP Dependency Check for Scala project" do
+          options[:scala_project] = true
+        end
+
         opts.separator ""
         opts.separator "Burp options:"
         opts.on "--burp-xml-path BURL_XML_PATH", "Burp XML Path" do |burp_xml_path|
