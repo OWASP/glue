@@ -105,10 +105,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     rootpath = @trigger.path
 
     if @scala_project
-      # switch to target dir
-
       run_args = [ @sbt_path, "dependencyCheck" ]
-      # switch back
     else  
       run_args = [ @dep_check_path, "--project", "Glue", "-f", "ALL" ]
     end
@@ -121,10 +118,15 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
       run_args << [ "--suppression", "#{@tracker.options[:owasp_dep_check_suppression]}" ]
     end
 
-    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] #unless @scala_project
+    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project
 
     puts "Running #{run_args.flatten}"
+    
+    initial_dir = Dir.pwd
+    Dir.chdir @trigger.path if @scala_project
     @result= runsystem(true, *run_args.flatten)
+    Dir.chdir initial_dir if @scala_project
+
     puts "Result: #{@result}"
   end
 
@@ -132,7 +134,6 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     path = if @scala_project
       md = @result.match(/\e\[0m\[\e\[0minfo\e\[0m\] \e\[0mWriting reports to (?<report_path>.*)\e\[0m/)
 
-      puts "matched against @result: \n**********\n#{@result}\n**********"
       puts "md: #{md}"
       md[:report_path] + "/dependency-check-report.xml"
     else
