@@ -120,21 +120,15 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
 
     run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project
 
-    puts "Running #{run_args.flatten}"
-    
     initial_dir = Dir.pwd
     Dir.chdir @trigger.path if @scala_project
     @result= runsystem(true, *run_args.flatten)
     Dir.chdir initial_dir if @scala_project
-
-    puts "Result: #{@result}"
   end
 
   def analyze
     path = if @scala_project
       md = @result.match(/\e\[0m\[\e\[0minfo\e\[0m\] \e\[0mWriting reports to (?<report_path>.*)\e\[0m/)
-
-      puts "md: #{md}"
       md[:report_path] + "/dependency-check-report.xml"
     else
       @trigger.path + "/dependency-check-report.xml"
