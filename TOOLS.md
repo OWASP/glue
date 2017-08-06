@@ -92,15 +92,29 @@ glue -t bundle-audit target
 
 ### Checkmarx
 
-TODO:
-checkmarx
 
-Checkmarx is a commercial static analysis tool.  Note that additional options
-will be required to effectively invoke Checkmarx since we are running it via
-its API.
+[Checkmarx](https://checkmarx.atlassian.net/wiki/display/KC/Checkmarx+CxSAST+Overview) is a commercial static analysis tool - CxSAST.
+To run the tool, you first need to download the [CxConsole](https://checkmarx.atlassian.net/wiki/display/KC/-CxConsole%3A+CxSAST+CLI), as Glue is using it to run the scan.
 
-TODO:  Real world example.
+Required parameters:
+* `--checkmarx-user` and `--checkmarx-password`: The credentials for CxSAST.
+* `--checkmarx-server`: The CxSAST full URL (e.g. http://cxsast)
+* `--checkmarx-project`: The name of the project to use for this scan
 
+Optional parameters:
+* `--checkmarx-exclude`: The path to ignore when scanning, relative to the scan folder.
+* `--checkmarx-incremental`: Set this flag to run the scan as incremental.
+* `--checkmarx-preset`: The preset to use for this scan.
+* `--checkmarx-path`: The path to the CxCli folder.
+* `--checkmarx-log`: Log file for the scans
+
+See [CxConsole](https://checkmarx.atlassian.net/wiki/display/KC/-CxConsole%3A+CxSAST+CLI) documentation for more details about those options. 
+Not all options are currently supported - if you noticed a missing option you need, feel free to add.
+
+An example scan:
+```
+glue -t checkmarx /path/to/your/app/code --checkmarx-user user --checkmarx-password pass --checkmarx-server http://checkmarx --checkmarx-project proj
+```
 ### Dawn Scanner
 
 TODO:
