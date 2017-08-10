@@ -141,6 +141,12 @@ module Glue::Options
         opts.on "--jira-component COMPONENT", "Specify the JIRA component to use." do |component|
           options[:jira_component] = component
         end
+        opts.on "--jira-epic-field-id EPIC_FIELD_ID", "(optional) Specify the custom field ID used to link to the JIRA epic, e.g. customfield_10001." do |jira_epic_field_id|
+          options[:jira_epic_field_id] = jira_epic_field_id
+        end
+        opts.on "--jira-epic EPIC", "(optional) Specify the ID of the JIRA epic, e.g. MYPROJ-1005." do |jira_epic|
+          options[:jira_epic] = jira_epic
+        end
         opts.on "--jira-skip-fields FIELDS", "Specify any JIRA fields to skip (separate with commas)." do |skip_fields|
           options[:jira_skip_fields] = skip_fields
         end
@@ -246,6 +252,14 @@ module Glue::Options
         opts.on "--owasp-suppression PATH", "The path to the OWASP Dependency Check XML suppression file" do |path|
           Glue.debug "Setting suppression file to #{path}"
           options[:owasp_dep_check_suppression] = path
+        end
+
+        opts.on "--sbt-path PATH", "The full path to sbt (optional)" do |path|
+          options[:sbt_path] = path
+        end
+
+        opts.on "--scala-project", "OWAP Dependency Check for Scala project" do
+          options[:scala_project] = true
         end
 
         opts.separator ""

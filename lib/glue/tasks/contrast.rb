@@ -38,8 +38,10 @@ class Glue::Contrast < Glue::BaseTask
       Glue.debug "Running Contrast process"
       app_id = contrast_app_id(@app_name)
       filter_opts = build_filter_options(app_id)
+      Glue.debug "Using filter_opts: #{filter_opts}"
 
       traces = contrast_traces(app_id, filter_opts)
+      Glue.debug "Got #{traces.size} traces"
 
       contrast_vulnerable_libraries(app_id, filter_opts).each do |lib|
         report_vulnerable_lib(app_id, lib) 
@@ -198,13 +200,14 @@ class Glue::Contrast < Glue::BaseTask
   def build_filter_options(app_id)
     opts = { }
 
-    @filter_options.split(/;/).each do |pair|
+    return opts if @filter_options.nil?
+
+    @filter_options.split(/,/).each do |pair|
       opt, val = pair.split('=')
       opts[opt] = val
     end
 
     map_indirect_properties!(app_id, opts)
-
     opts
   end
 
@@ -229,7 +232,7 @@ class Glue::Contrast < Glue::BaseTask
   end
 
   def contrast_server_by_name(app_id, server_name)
-    contrast_servers_by_props(app_id, { 'name' => server_name }).first
+    contrast_servers_by_props(app_id, { 'name' => server_name }).first    
   end
 
   def map_indirect_properties!(app_id, properties)
