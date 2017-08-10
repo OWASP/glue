@@ -8,7 +8,8 @@ class Glue::BaseTask
   attr_accessor :description
   attr_accessor :stage
   attr_accessor :appname
-
+  attr_accessor :result
+  
   def initialize(trigger, tracker)
     @findings = []
     @warnings = []
