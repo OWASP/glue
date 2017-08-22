@@ -1,0 +1,6 @@
+{
+  "name": "snyk-test",
+  "dependencies": {
+    "cli": "0.11.3"
+  }
+}
