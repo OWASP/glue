@@ -1,0 +1,370 @@
+{
+  "ok": false,
+  "vulnerabilities": [
+    {
+      "title": "Insecure use of /tmp folder",
+      "credit": [
+        "Steve Kemp"
+      ],
+      "creationTime": "2016-06-16T00:00:02.709Z",
+      "modificationTime": "2016-06-16T00:00:02.709Z",
+      "publicationTime": "2016-08-27T23:22:22.000Z",
+      "disclosureTime": "2015-12-28T18:28:58.000Z",
+      "description": "## Overview\n[`cli`](https://www.npmjs.com/package/cli) is an npm package used for rapidly building command line apps. \n\nWhen used in `daemon` mode, the library makes insecure use of two files in the `/tmp/` folder: `/tmp/<app-name>.pid` and `/tmp/<app-name>.log`. These allow an attacker to overwrite files they typically cannot access, but that are accessible by the user running the CLI-using app. This is possible since the `/tmp/` folder is (typically) writeable to all system users, and because the names of the files in question are easily predicted by an attacker.\n\nNote that while this is a real vulnerability, it relies on functionality (`daemon` mode) which is only supported in very old Node versions (0.8 or older), and so is unlikely to be used by most `cli` users. To avoid any doubt, the fixed version (1.0.0) removes support for this feature entirely. \n\n## Details\nFor example, assume user _victim_ occasionally runs a CLI tool called `cli-tool`, which uses the `cli` package.\nIf an attacker gains write access to the `/tmp/` folder of that machine (but not the higher permissions _victim_ has), they can create the symbolic link `/tmp/cli-tool.pid -> /home/victim/important-file`. When _victim_ runs `cli-tool`, the `important-file` in victim's root directory will be nullified. If the CLI tool is run as root, the same can be done to nullify `/etc/passwd` and make the system unbootable. \n\nNote that popular CLI tools have no reason to mask their names, and so attackers can easily guess a long list of tools victims may run by checking the `cli` package [dependents](https://www.npmjs.com/browse/depended/cli).\n\n## Remediation\nUpgrade `cli` to version `1.0.0` or greater, which disables the affected feature.\n\nFrom the fix release notes:\n```\nThis feature relies on a beta release (e.g. version 0.5.1) of a Node.js\nmodule on npm--one that was superseded by a stable (e.g. version 1.0)\nrelease published three years ago [2]. Due to a build-time dependency on\nthe long-since deprecated `node-waf` tool, the module at that version\ncan only be built for Node.js versions 0.8 and below.\n\nGiven this, actual usage of this feature is likely very limited. Remove\nit completely so the integrity of this module's core functionality can\nbe verified.\n```\n\n## References\n[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809252\n[2] https://github.com/node-js-libs/cli/commit/fd6bc4d2a901aabe0bb6067fbcc14a4fe3faa8b9\n",
+      "semver": {
+        "vulnerable": "<1.0.0",
+        "unaffected": ">=1.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N",
+      "severity": "low",
+      "identifiers": {
+        "CWE": [
+          "CWE-59"
+        ],
+        "CVE": [],
+        "NSP": 95,
+        "ALTERNATIVE": [
+          "SNYK-JS-CLI-10133"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cli",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cli:20160615",
+      "packageName": "cli",
+      "cvssScore": 2.8,
+      "alternativeIds": [
+        "SNYK-JS-CLI-10133"
+      ],
+      "from": [
+        "snyk-test@null",
+        "cli@0.11.3"
+      ],
+      "upgradePath": [
+        false,
+        "cli@1.0.0"
+      ],
+      "version": "0.11.3",
+      "name": "cli",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    },
+    {
+      "title": "Insecure use of /tmp folder",
+      "credit": [
+        "Steve Kemp"
+      ],
+      "creationTime": "2016-06-16T00:00:02.709Z",
+      "modificationTime": "2016-06-16T00:00:02.709Z",
+      "publicationTime": "2016-08-27T23:22:22.000Z",
+      "disclosureTime": "2015-12-28T18:28:58.000Z",
+      "description": "## Overview\n[`cli`](https://www.npmjs.com/package/cli) is an npm package used for rapidly building command line apps. \n\nWhen used in `daemon` mode, the library makes insecure use of two files in the `/tmp/` folder: `/tmp/<app-name>.pid` and `/tmp/<app-name>.log`. These allow an attacker to overwrite files they typically cannot access, but that are accessible by the user running the CLI-using app. This is possible since the `/tmp/` folder is (typically) writeable to all system users, and because the names of the files in question are easily predicted by an attacker.\n\nNote that while this is a real vulnerability, it relies on functionality (`daemon` mode) which is only supported in very old Node versions (0.8 or older), and so is unlikely to be used by most `cli` users. To avoid any doubt, the fixed version (1.0.0) removes support for this feature entirely. \n\n## Details\nFor example, assume user _victim_ occasionally runs a CLI tool called `cli-tool`, which uses the `cli` package.\nIf an attacker gains write access to the `/tmp/` folder of that machine (but not the higher permissions _victim_ has), they can create the symbolic link `/tmp/cli-tool.pid -> /home/victim/important-file`. When _victim_ runs `cli-tool`, the `important-file` in victim's root directory will be nullified. If the CLI tool is run as root, the same can be done to nullify `/etc/passwd` and make the system unbootable. \n\nNote that popular CLI tools have no reason to mask their names, and so attackers can easily guess a long list of tools victims may run by checking the `cli` package [dependents](https://www.npmjs.com/browse/depended/cli).\n\n## Remediation\nUpgrade `cli` to version `1.0.0` or greater, which disables the affected feature.\n\nFrom the fix release notes:\n```\nThis feature relies on a beta release (e.g. version 0.5.1) of a Node.js\nmodule on npm--one that was superseded by a stable (e.g. version 1.0)\nrelease published three years ago [2]. Due to a build-time dependency on\nthe long-since deprecated `node-waf` tool, the module at that version\ncan only be built for Node.js versions 0.8 and below.\n\nGiven this, actual usage of this feature is likely very limited. Remove\nit completely so the integrity of this module's core functionality can\nbe verified.\n```\n\n## References\n[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809252\n[2] https://github.com/node-js-libs/cli/commit/fd6bc4d2a901aabe0bb6067fbcc14a4fe3faa8b9\n",
+      "semver": {
+        "vulnerable": "<1.0.0",
+        "unaffected": ">=1.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N",
+      "severity": "low",
+      "identifiers": {
+        "CWE": [
+          "CWE-59"
+        ],
+        "CVE": [],
+        "NSP": 95,
+        "ALTERNATIVE": [
+          "SNYK-JS-CLI-10133"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cli",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cli:20160615",
+      "packageName": "cli",
+      "cvssScore": 2.8,
+      "alternativeIds": [
+        "SNYK-JS-CLI-10133"
+      ],
+      "from": [
+        "snyk-test@null",
+        "cookie-signature@1.0.3",
+        "cli@0.11.3"
+      ],
+      "upgradePath": [
+        false,
+        "cookie-signature@1.0.3"
+      ],
+      "version": "0.11.3",
+      "name": "cli",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    },
+    {
+      "title": "Insecure use of /tmp folder",
+      "credit": [
+        "Steve Kemp"
+      ],
+      "creationTime": "2016-06-16T00:00:02.709Z",
+      "modificationTime": "2016-06-16T00:00:02.709Z",
+      "publicationTime": "2016-08-27T23:22:22.000Z",
+      "disclosureTime": "2015-12-28T18:28:58.000Z",
+      "description": "## Overview\n[`cli`](https://www.npmjs.com/package/cli) is an npm package used for rapidly building command line apps. \n\nWhen used in `daemon` mode, the library makes insecure use of two files in the `/tmp/` folder: `/tmp/<app-name>.pid` and `/tmp/<app-name>.log`. These allow an attacker to overwrite files they typically cannot access, but that are accessible by the user running the CLI-using app. This is possible since the `/tmp/` folder is (typically) writeable to all system users, and because the names of the files in question are easily predicted by an attacker.\n\nNote that while this is a real vulnerability, it relies on functionality (`daemon` mode) which is only supported in very old Node versions (0.8 or older), and so is unlikely to be used by most `cli` users. To avoid any doubt, the fixed version (1.0.0) removes support for this feature entirely. \n\n## Details\nFor example, assume user _victim_ occasionally runs a CLI tool called `cli-tool`, which uses the `cli` package.\nIf an attacker gains write access to the `/tmp/` folder of that machine (but not the higher permissions _victim_ has), they can create the symbolic link `/tmp/cli-tool.pid -> /home/victim/important-file`. When _victim_ runs `cli-tool`, the `important-file` in victim's root directory will be nullified. If the CLI tool is run as root, the same can be done to nullify `/etc/passwd` and make the system unbootable. \n\nNote that popular CLI tools have no reason to mask their names, and so attackers can easily guess a long list of tools victims may run by checking the `cli` package [dependents](https://www.npmjs.com/browse/depended/cli).\n\n## Remediation\nUpgrade `cli` to version `1.0.0` or greater, which disables the affected feature.\n\nFrom the fix release notes:\n```\nThis feature relies on a beta release (e.g. version 0.5.1) of a Node.js\nmodule on npm--one that was superseded by a stable (e.g. version 1.0)\nrelease published three years ago [2]. Due to a build-time dependency on\nthe long-since deprecated `node-waf` tool, the module at that version\ncan only be built for Node.js versions 0.8 and below.\n\nGiven this, actual usage of this feature is likely very limited. Remove\nit completely so the integrity of this module's core functionality can\nbe verified.\n```\n\n## References\n[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809252\n[2] https://github.com/node-js-libs/cli/commit/fd6bc4d2a901aabe0bb6067fbcc14a4fe3faa8b9\n",
+      "semver": {
+        "vulnerable": "<1.0.0",
+        "unaffected": ">=1.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N",
+      "severity": "low",
+      "identifiers": {
+        "CWE": [
+          "CWE-59"
+        ],
+        "CVE": [],
+        "NSP": 95,
+        "ALTERNATIVE": [
+          "SNYK-JS-CLI-10133"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cli",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cli:20160615",
+      "packageName": "cli",
+      "cvssScore": 2.8,
+      "alternativeIds": [
+        "SNYK-JS-CLI-10133"
+      ],
+      "from": [
+        "snyk-test@null",
+        "pivottable@1.4.0",
+        "cli@0.11.3"
+      ],
+      "upgradePath": [
+        false,
+        "pivottable@1.4.0"
+      ],
+      "version": "0.11.3",
+      "name": "cli",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    },
+    {
+      "title": "Insecure use of /tmp folder",
+      "credit": [
+        "Steve Kemp"
+      ],
+      "creationTime": "2016-06-16T00:00:02.709Z",
+      "modificationTime": "2016-06-16T00:00:02.709Z",
+      "publicationTime": "2016-08-27T23:22:22.000Z",
+      "disclosureTime": "2015-12-28T18:28:58.000Z",
+      "description": "## Overview\n[`cli`](https://www.npmjs.com/package/cli) is an npm package used for rapidly building command line apps. \n\nWhen used in `daemon` mode, the library makes insecure use of two files in the `/tmp/` folder: `/tmp/<app-name>.pid` and `/tmp/<app-name>.log`. These allow an attacker to overwrite files they typically cannot access, but that are accessible by the user running the CLI-using app. This is possible since the `/tmp/` folder is (typically) writeable to all system users, and because the names of the files in question are easily predicted by an attacker.\n\nNote that while this is a real vulnerability, it relies on functionality (`daemon` mode) which is only supported in very old Node versions (0.8 or older), and so is unlikely to be used by most `cli` users. To avoid any doubt, the fixed version (1.0.0) removes support for this feature entirely. \n\n## Details\nFor example, assume user _victim_ occasionally runs a CLI tool called `cli-tool`, which uses the `cli` package.\nIf an attacker gains write access to the `/tmp/` folder of that machine (but not the higher permissions _victim_ has), they can create the symbolic link `/tmp/cli-tool.pid -> /home/victim/important-file`. When _victim_ runs `cli-tool`, the `important-file` in victim's root directory will be nullified. If the CLI tool is run as root, the same can be done to nullify `/etc/passwd` and make the system unbootable. \n\nNote that popular CLI tools have no reason to mask their names, and so attackers can easily guess a long list of tools victims may run by checking the `cli` package [dependents](https://www.npmjs.com/browse/depended/cli).\n\n## Remediation\nUpgrade `cli` to version `1.0.0` or greater, which disables the affected feature.\n\nFrom the fix release notes:\n```\nThis feature relies on a beta release (e.g. version 0.5.1) of a Node.js\nmodule on npm--one that was superseded by a stable (e.g. version 1.0)\nrelease published three years ago [2]. Due to a build-time dependency on\nthe long-since deprecated `node-waf` tool, the module at that version\ncan only be built for Node.js versions 0.8 and below.\n\nGiven this, actual usage of this feature is likely very limited. Remove\nit completely so the integrity of this module's core functionality can\nbe verified.\n```\n\n## References\n[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809252\n[2] https://github.com/node-js-libs/cli/commit/fd6bc4d2a901aabe0bb6067fbcc14a4fe3faa8b9\n",
+      "semver": {
+        "vulnerable": "<1.0.0",
+        "unaffected": ">=1.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N",
+      "severity": "low",
+      "identifiers": {
+        "CWE": [
+          "CWE-59"
+        ],
+        "CVE": [],
+        "NSP": 95,
+        "ALTERNATIVE": [
+          "SNYK-JS-CLI-10133"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cli",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cli:20160615",
+      "packageName": "cli",
+      "cvssScore": 2.8,
+      "alternativeIds": [
+        "SNYK-JS-CLI-10133"
+      ],
+      "from": [
+        "snyk-test@null",
+        "pivottable@1.4.0",
+        "cookie-signature@1.0.3",
+        "cli@0.11.3"
+      ],
+      "upgradePath": [
+        false,
+        "pivottable@1.4.0"
+      ],
+      "version": "0.11.3",
+      "name": "cli",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    },
+    {
+      "title": "Non-Constant Time String Comparison",
+      "credit": [
+        ""
+      ],
+      "creationTime": "2016-08-04T03:44:13.904Z",
+      "modificationTime": "2016-08-04T03:44:13.904Z",
+      "publicationTime": "2016-08-29T00:00:00.000Z",
+      "disclosureTime": "2014-01-28T00:00:00.000Z",
+      "description": "## Overview\n['cookie-signature'](https://www.npmjs.com/package/cookie-signature) is a library for signing cookies.\n\nVersions before `1.0.4` of the library use the built-in string comparison mechanism, `===`, and not a time constant string comparison. As a result, the comparison will fail faster when the first characters in the token are incorrect. \nAn attacker can use this difference to perform a timing attack, essentially allowing them to guess the secret one character at a time.\n\n## Details\nYou can read more about timing attacks in Node.js on the Snyk blog: https://snyk.io/blog/node-js-timing-attack-ccc-ctf/\n\n## Remediation\nUpgrade to `1.0.4` or greater.\n\n## References\n- https://github.com/tj/node-cookie-signature/blob/master/History.md#104--2014-06-25\n- https://github.com/tj/node-cookie-signature/commit/39791081692e9e14aa62855369e1c7f80fbfd50e\n",
+      "semver": {
+        "vulnerable": "<=1.0.3",
+        "unaffected": ">=1.0.4"
+      },
+      "CVSSv3": "CVSS:3.0/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N",
+      "severity": "medium",
+      "identifiers": {
+        "CWE": [
+          "CWE-208"
+        ],
+        "CVE": [],
+        "NSP": 134,
+        "ALTERNATIVE": [
+          "SNYK-JS-COOKIESIGNATURE-10134"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cookie-signature",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cookie-signature:20160804",
+      "packageName": "cookie-signature",
+      "cvssScore": 6.3,
+      "alternativeIds": [
+        "SNYK-JS-COOKIESIGNATURE-10134"
+      ],
+      "from": [
+        "snyk-test@null",
+        "cookie-signature@1.0.3"
+      ],
+      "upgradePath": [
+        false,
+        "cookie-signature@1.0.4"
+      ],
+      "version": "1.0.3",
+      "name": "cookie-signature",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    },
+    {
+      "title": "Non-Constant Time String Comparison",
+      "credit": [
+        ""
+      ],
+      "creationTime": "2016-08-04T03:44:13.904Z",
+      "modificationTime": "2016-08-04T03:44:13.904Z",
+      "publicationTime": "2016-08-29T00:00:00.000Z",
+      "disclosureTime": "2014-01-28T00:00:00.000Z",
+      "description": "## Overview\n['cookie-signature'](https://www.npmjs.com/package/cookie-signature) is a library for signing cookies.\n\nVersions before `1.0.4` of the library use the built-in string comparison mechanism, `===`, and not a time constant string comparison. As a result, the comparison will fail faster when the first characters in the token are incorrect. \nAn attacker can use this difference to perform a timing attack, essentially allowing them to guess the secret one character at a time.\n\n## Details\nYou can read more about timing attacks in Node.js on the Snyk blog: https://snyk.io/blog/node-js-timing-attack-ccc-ctf/\n\n## Remediation\nUpgrade to `1.0.4` or greater.\n\n## References\n- https://github.com/tj/node-cookie-signature/blob/master/History.md#104--2014-06-25\n- https://github.com/tj/node-cookie-signature/commit/39791081692e9e14aa62855369e1c7f80fbfd50e\n",
+      "semver": {
+        "vulnerable": "<=1.0.3",
+        "unaffected": ">=1.0.4"
+      },
+      "CVSSv3": "CVSS:3.0/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N",
+      "severity": "medium",
+      "identifiers": {
+        "CWE": [
+          "CWE-208"
+        ],
+        "CVE": [],
+        "NSP": 134,
+        "ALTERNATIVE": [
+          "SNYK-JS-COOKIESIGNATURE-10134"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cookie-signature",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cookie-signature:20160804",
+      "packageName": "cookie-signature",
+      "cvssScore": 6.3,
+      "alternativeIds": [
+        "SNYK-JS-COOKIESIGNATURE-10134"
+      ],
+      "from": [
+        "snyk-test@null",
+        "pivottable@1.4.0",
+        "cookie-signature@1.0.3"
+      ],
+      "upgradePath": [
+        false,
+        "pivottable@1.4.0"
+      ],
+      "version": "1.0.3",
+      "name": "cookie-signature",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    },
+    {
+      "title": "Cross-site Scripting (XSS)",
+      "credit": [
+        "Todd Wolfson"
+      ],
+      "creationTime": "2016-08-17T15:13:32.564Z",
+      "modificationTime": "2016-08-17T15:13:32.564Z",
+      "publicationTime": "2016-08-17T15:13:32.564Z",
+      "disclosureTime": "2016-08-17T15:13:32.564Z",
+      "description": "## Overview\n[`PivotTable.js`](https://www.npmjs.com/package/pivottable) is a Javascript Pivot Table library with drag-and-drop functionality built on top of jQuery/jQueryUI.\n\nDue to a change from text to html functions in how JSON elements are rendered, a Cross-site scripting (XSS) vulnerability was introduced in version 1.4.0.  This vulnerability remained in place until version 2.0.0.\n\nSource: _Node Security Project_\n\n## Remediation\nUpgrade to version 2.0.0 or later.\n\n## References\n- https://github.com/nicolaskruchten/pivottable/pull/401\n\n",
+      "semver": {
+        "vulnerable": ">=1.4.0 <2.0.0",
+        "unaffected": ">=2.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N",
+      "severity": "high",
+      "identifiers": {
+        "CWE": [
+          "CWE-80"
+        ],
+        "CVE": [],
+        "NSP": 139,
+        "ALTERNATIVE": [
+          "SNYK-JS-PIVOTTABLE-10132"
+        ]
+      },
+      "patches": [],
+      "moduleName": "pivottable",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:pivottable:20160817",
+      "packageName": "pivottable",
+      "cvssScore": 7.2,
+      "alternativeIds": [
+        "SNYK-JS-PIVOTTABLE-10132"
+      ],
+      "from": [
+        "snyk-test@null",
+        "pivottable@1.4.0"
+      ],
+      "upgradePath": [
+        false,
+        "pivottable@2.0.0"
+      ],
+      "version": "1.4.0",
+      "name": "pivottable",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    }
+  ],
+  "dependencyCount": 3,
+  "licensesPolicy": null,
+  "isPrivate": true,
+  "packageManager": "npm",
+  "summary": "7 vulnerable dependency paths",
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 3
+}

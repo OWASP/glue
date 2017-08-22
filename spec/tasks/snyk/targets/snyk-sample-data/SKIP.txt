@@ -1,0 +1,6 @@
+The snyk cli should not be run on this target.
+The 'report.json' is a mildly-edited version of:
+https://github.com/snyk/snyk-to-html/blob/master/sample-data/test-report.json
+
+In the spec, Glue::Snyk.analyze will receive this file as input,
+and generate a list of findings from it.
