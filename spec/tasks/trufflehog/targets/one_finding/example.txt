@@ -1,0 +1,6 @@
+// This line has no issues
+
+// The following line will get flagged:
+Application.config.secret_token = 'b8e407aed80782ce12a008a8c'
+
+// This line has no issues either
