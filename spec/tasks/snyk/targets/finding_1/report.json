@@ -1,0 +1,65 @@
+{
+  "ok": false,
+  "vulnerabilities": [
+    {
+      "title": "Insecure use of /tmp folder",
+      "credit": [
+        "Steve Kemp"
+      ],
+      "creationTime": "2016-06-16T00:00:02.709Z",
+      "modificationTime": "2016-06-16T00:00:02.709Z",
+      "publicationTime": "2016-08-27T23:22:22.000Z",
+      "disclosureTime": "2015-12-28T18:28:58.000Z",
+      "description": "## Overview\n[`cli`](https://www.npmjs.com/package/cli) is an npm package used for rapidly building command line apps. \n\nWhen used in `daemon` mode, the library makes insecure use of two files in the `/tmp/` folder: `/tmp/<app-name>.pid` and `/tmp/<app-name>.log`. These allow an attacker to overwrite files they typically cannot access, but that are accessible by the user running the CLI-using app. This is possible since the `/tmp/` folder is (typically) writeable to all system users, and because the names of the files in question are easily predicted by an attacker.\n\nNote that while this is a real vulnerability, it relies on functionality (`daemon` mode) which is only supported in very old Node versions (0.8 or older), and so is unlikely to be used by most `cli` users. To avoid any doubt, the fixed version (1.0.0) removes support for this feature entirely. \n\n## Details\nFor example, assume user _victim_ occasionally runs a CLI tool called `cli-tool`, which uses the `cli` package.\nIf an attacker gains write access to the `/tmp/` folder of that machine (but not the higher permissions _victim_ has), they can create the symbolic link `/tmp/cli-tool.pid -> /home/victim/important-file`. When _victim_ runs `cli-tool`, the `important-file` in victim's root directory will be nullified. If the CLI tool is run as root, the same can be done to nullify `/etc/passwd` and make the system unbootable. \n\nNote that popular CLI tools have no reason to mask their names, and so attackers can easily guess a long list of tools victims may run by checking the `cli` package [dependents](https://www.npmjs.com/browse/depended/cli).\n\n## Remediation\nUpgrade `cli` to version `1.0.0` or greater, which disables the affected feature.\n\nFrom the fix release notes:\n```\nThis feature relies on a beta release (e.g. version 0.5.1) of a Node.js\nmodule on npm--one that was superseded by a stable (e.g. version 1.0)\nrelease published three years ago [2]. Due to a build-time dependency on\nthe long-since deprecated `node-waf` tool, the module at that version\ncan only be built for Node.js versions 0.8 and below.\n\nGiven this, actual usage of this feature is likely very limited. Remove\nit completely so the integrity of this module's core functionality can\nbe verified.\n```\n\n## References\n[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=809252\n[2] https://github.com/node-js-libs/cli/commit/fd6bc4d2a901aabe0bb6067fbcc14a4fe3faa8b9\n",
+      "semver": {
+        "vulnerable": "<1.0.0",
+        "unaffected": ">=1.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:L/AC:L/PR:L/UI:R/S:U/C:N/I:L/A:N",
+      "severity": "low",
+      "identifiers": {
+        "CWE": [
+          "CWE-59"
+        ],
+        "CVE": [],
+        "NSP": 95,
+        "ALTERNATIVE": [
+          "SNYK-JS-CLI-10133"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cli",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cli:20160615",
+      "packageName": "cli",
+      "cvssScore": 2.8,
+      "alternativeIds": [
+        "SNYK-JS-CLI-10133"
+      ],
+      "from": [
+        "snyk-test@null",
+        "cli@0.11.3"
+      ],
+      "upgradePath": [
+        false,
+        "cli@1.0.0"
+      ],
+      "version": "0.11.3",
+      "name": "cli",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    }
+  ],
+  "dependencyCount": 1,
+  "licensesPolicy": null,
+  "isPrivate": true,
+  "packageManager": "npm",
+  "summary": "1 vulnerable dependency path",
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 1
+}

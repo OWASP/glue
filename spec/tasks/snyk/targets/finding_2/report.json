@@ -1,0 +1,65 @@
+{
+  "ok": false,
+  "vulnerabilities": [
+    {
+      "title": "Non-Constant Time String Comparison",
+      "credit": [
+        ""
+      ],
+      "creationTime": "2016-08-04T03:44:13.904Z",
+      "modificationTime": "2016-08-04T03:44:13.904Z",
+      "publicationTime": "2016-08-29T00:00:00.000Z",
+      "disclosureTime": "2014-01-28T00:00:00.000Z",
+      "description": "## Overview\n['cookie-signature'](https://www.npmjs.com/package/cookie-signature) is a library for signing cookies.\n\nVersions before `1.0.4` of the library use the built-in string comparison mechanism, `===`, and not a time constant string comparison. As a result, the comparison will fail faster when the first characters in the token are incorrect. \nAn attacker can use this difference to perform a timing attack, essentially allowing them to guess the secret one character at a time.\n\n## Details\nYou can read more about timing attacks in Node.js on the Snyk blog: https://snyk.io/blog/node-js-timing-attack-ccc-ctf/\n\n## Remediation\nUpgrade to `1.0.4` or greater.\n\n## References\n- https://github.com/tj/node-cookie-signature/blob/master/History.md#104--2014-06-25\n- https://github.com/tj/node-cookie-signature/commit/39791081692e9e14aa62855369e1c7f80fbfd50e\n",
+      "semver": {
+        "vulnerable": "<=1.0.3",
+        "unaffected": ">=1.0.4"
+      },
+      "CVSSv3": "CVSS:3.0/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:N/A:N",
+      "severity": "medium",
+      "identifiers": {
+        "CWE": [
+          "CWE-208"
+        ],
+        "CVE": [],
+        "NSP": 134,
+        "ALTERNATIVE": [
+          "SNYK-JS-COOKIESIGNATURE-10134"
+        ]
+      },
+      "patches": [],
+      "moduleName": "cookie-signature",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:cookie-signature:20160804",
+      "packageName": "cookie-signature",
+      "cvssScore": 6.3,
+      "alternativeIds": [
+        "SNYK-JS-COOKIESIGNATURE-10134"
+      ],
+      "from": [
+        "snyk-test@null",
+        "cookie-signature@1.0.3"
+      ],
+      "upgradePath": [
+        false,
+        "cookie-signature@1.0.4"
+      ],
+      "version": "1.0.3",
+      "name": "cookie-signature",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    }
+  ],
+  "dependencyCount": 1,
+  "licensesPolicy": null,
+  "isPrivate": true,
+  "packageManager": "npm",
+  "summary": "1 vulnerable dependency path",
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 1
+}
