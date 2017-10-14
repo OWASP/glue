@@ -1,0 +1,6 @@
+{
+  "name": "retirejs-test",
+  "dependencies": {
+    "jquery": "1.8.0"
+  }
+}
