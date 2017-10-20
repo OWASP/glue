@@ -19,10 +19,10 @@ glue --checks
 
 In most of the examples provided for running Glue, we specify the CLI like:
 ```
-glue operation target.  
+glue operation target.
 ```
 
-The target can be:  
+The target can be:
 1.  A git repository eg:  https://github.com/jemurai/triage.git
 2.  A local directory (/tmp/hello)
 3.  A url (for live tools)
@@ -108,7 +108,7 @@ Optional parameters:
 * `--checkmarx-path`: The path to the CxCli folder.
 * `--checkmarx-log`: Log file for the scans
 
-See [CxConsole](https://checkmarx.atlassian.net/wiki/display/KC/-CxConsole%3A+CxSAST+CLI) documentation for more details about those options. 
+See [CxConsole](https://checkmarx.atlassian.net/wiki/display/KC/-CxConsole%3A+CxSAST+CLI) documentation for more details about those options.
 Not all options are currently supported - if you noticed a missing option you need, feel free to add.
 
 An example scan:
@@ -150,7 +150,7 @@ glue -t nsp target
 ### Retire.js
 
 ```
-npm install -g retirejs
+npm install -g retire
 ```
 
 Retire.js is a node library for checking dependencies for known vulnerabilities.
@@ -243,7 +243,7 @@ In this section we will report the relative maturity of the tools and integratio
 
 The grades are common academic grades:  A is excellent, B is ok, C is meh, F is failing.
 
-The areas we'll talk about include:  
+The areas we'll talk about include:
 1.  Integration - How well the tool is integrated into Glue right now.
 2.  Tool Value - Our take on how valuable the tool is.
 3.  Focus:  Any specifics areound where the tool focuses.
