@@ -21,7 +21,14 @@ class Glue::Zap < Glue::BaseTask
     rootpath = @trigger.path
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     apikey = "#{@tracker.options[:zap_api_token]}"
+    mode = @tracker.options[:zap_passive_mode]
     context = SecureRandom.uuid
+
+    if (mode)
+        # Result
+        @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+        return
+    end
 
     Glue.debug "Running ZAP on: #{rootpath} from #{base} with #{context}"
     puts "Running ZAP on: #{rootpath} from #{base} with #{context}"

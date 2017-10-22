@@ -180,6 +180,9 @@ module Glue::Options
         opts.on "--zap-port PORT", "Specify the port ZAP is running on." do |port|
           options[:zap_port] = port
         end
+        opts.on "--zap-passive-mode", "Specify the port ZAP is running on." do
+            options[:zap_passive_mode] = true
+          end
 
         opts.separator ""
         opts.separator "Scout options:"
