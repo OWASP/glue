@@ -12,6 +12,9 @@ class Glue::FileFilter < Glue::BaseFilter
   end
 
   def filter tracker
+    if (tracker.options[:finding_file_path].nil?)
+        return
+    end
     exisiting_finding = {}
     if (File.exist? tracker.options[:finding_file_path])
         exisiting_finding = JSON.parse!(File.read tracker.options[:finding_file_path])
