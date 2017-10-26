@@ -299,6 +299,10 @@ module Glue::Options
           options[:contrast_filter_options] = contrast_filter_options
         end
 
+        opts.on "--finding-file-path PATH", "the path to the file with existing issues" do |path|
+            options[:finding_file_path] = path
+        end
+
         opts.separator ""
         opts.separator "Configuration files:"
 
