@@ -25,6 +25,11 @@ class Glue::Zap < Glue::BaseTask
     context = SecureRandom.uuid
 
     if (mode)
+        count = 1
+        while (count != 0)
+            count = get_records_to_scan( Curl.get("#{base}/JSON/pscan/view/recordsToScan/?zapapiformat=JSON&formMethod=GET"))
+            sleep(0.5)
+        end
         # Result
         @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
         return
@@ -58,6 +63,11 @@ class Glue::Zap < Glue::BaseTask
   def get_scan_id(response)
     json = JSON.parse response.body_str
     return json["scan"]
+  end
+
+  def get_records_to_scan(response)
+    json = JSON.parse response.body_str
+    return json['recordsToScan'].to_i
   end
 
   def poll_until_100(url)
