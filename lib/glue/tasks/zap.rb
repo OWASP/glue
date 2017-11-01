@@ -31,7 +31,7 @@ class Glue::Zap < Glue::BaseTask
             sleep(0.5)
         end
         # Result
-        @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+        @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
         return
     end
 
@@ -54,7 +54,7 @@ class Glue::Zap < Glue::BaseTask
     poll_until_100("#{base}/JSON/ascan/view/status/?scanId=#{scan}")
 
     # Result
-    @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+    @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
 
     # Remove Context
     Curl.get("#{base}/JSON/context/action/removeContext/?&apikey=#{apikey}&contextName=#{context}")
