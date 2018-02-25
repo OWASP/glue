@@ -1,0 +1,1 @@
+[{"results":[{"component":"uglify-js","version":"2.4.0","parent":{"component":"retirejs-test","version":""},"level":1,"vulnerabilities":[{"info":["https://github.com/mishoo/UglifyJS2/issues/751","https://github.com/tmcw/mdast-uglify-bug","https://nodesecurity.io/advisories/39"],"severity":"high"},{"info":["https://nodesecurity.io/advisories/48"],"severity":"medium"}]}]}]

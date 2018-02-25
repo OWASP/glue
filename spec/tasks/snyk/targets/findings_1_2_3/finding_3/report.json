@@ -1,0 +1,65 @@
+{
+  "ok": false,
+  "vulnerabilities": [
+    {
+      "title": "Cross-site Scripting (XSS)",
+      "credit": [
+        "Todd Wolfson"
+      ],
+      "creationTime": "2016-08-17T15:13:32.564Z",
+      "modificationTime": "2016-08-17T15:13:32.564Z",
+      "publicationTime": "2016-08-17T15:13:32.564Z",
+      "disclosureTime": "2016-08-17T15:13:32.564Z",
+      "description": "## Overview\n[`PivotTable.js`](https://www.npmjs.com/package/pivottable) is a Javascript Pivot Table library with drag-and-drop functionality built on top of jQuery/jQueryUI.\n\nDue to a change from text to html functions in how JSON elements are rendered, a Cross-site scripting (XSS) vulnerability was introduced in version 1.4.0.  This vulnerability remained in place until version 2.0.0.\n\nSource: _Node Security Project_\n\n## Remediation\nUpgrade to version 2.0.0 or later.\n\n## References\n- https://github.com/nicolaskruchten/pivottable/pull/401\n\n",
+      "semver": {
+        "vulnerable": ">=1.4.0 <2.0.0",
+        "unaffected": ">=2.0.0"
+      },
+      "CVSSv3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N",
+      "severity": "high",
+      "identifiers": {
+        "CWE": [
+          "CWE-80"
+        ],
+        "CVE": [],
+        "NSP": 139,
+        "ALTERNATIVE": [
+          "SNYK-JS-PIVOTTABLE-10132"
+        ]
+      },
+      "patches": [],
+      "moduleName": "pivottable",
+      "language": "js",
+      "packageManager": "npm",
+      "id": "npm:pivottable:20160817",
+      "packageName": "pivottable",
+      "cvssScore": 7.2,
+      "alternativeIds": [
+        "SNYK-JS-PIVOTTABLE-10132"
+      ],
+      "from": [
+        "snyk-test@null",
+        "pivottable@1.4.0"
+      ],
+      "upgradePath": [
+        false,
+        "pivottable@2.0.0"
+      ],
+      "version": "1.4.0",
+      "name": "pivottable",
+      "isUpgradable": true,
+      "isPatchable": false,
+      "parentDepType": "prod"
+    }
+  ],
+  "dependencyCount": 1,
+  "licensesPolicy": null,
+  "isPrivate": true,
+  "packageManager": "npm",
+  "summary": "1 vulnerable dependency path",
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 1
+}

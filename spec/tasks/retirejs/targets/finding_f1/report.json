@@ -1,0 +1,1 @@
+[{"file":"finding_f1/file_1.js","results":[{"version":"1.9.2","component":"jquery-ui-tooltip","detection":"filecontent","vulnerabilities":[{"info":["http://bugs.jqueryui.com/ticket/8859"],"severity":"high","identifiers":{"bug":"8859","summary":"Autocomplete cross-site scripting vulnerability"}}]}]}]

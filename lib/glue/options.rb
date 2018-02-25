@@ -178,6 +178,9 @@ module Glue::Options
         opts.on "--zap-port PORT", "Specify the port ZAP is running on." do |port|
           options[:zap_port] = port
         end
+        opts.on "--zap-passive-mode", "Specify the port ZAP is running on." do
+            options[:zap_passive_mode] = true
+          end
 
         opts.separator ""
         opts.separator "Scout options:"
@@ -252,6 +255,14 @@ module Glue::Options
           options[:owasp_dep_check_suppression] = path
         end
 
+        opts.on "--sbt-path PATH", "The full path to sbt (optional)" do |path|
+          options[:sbt_path] = path
+        end
+
+        opts.on "--scala-project", "OWAP Dependency Check for Scala project" do
+          options[:scala_project] = true
+        end
+
         opts.separator ""
         opts.separator "Burp options:"
         opts.on "--burp-xml-path BURL_XML_PATH", "Burp XML Path" do |burp_xml_path|
@@ -286,6 +297,15 @@ module Glue::Options
           options[:contrast_filter_options] = contrast_filter_options
         end
 
+        opts.on "--finding-file-path PATH", "the path to the file with existing issues" do |path|
+            options[:finding_file_path] = path
+        end
+
+        opts.separator ""
+        opts.separator "TeamCity reporter options"
+        opts.on "--teamcity-min-level", "Report test failure for all findings above this level" do |teamcity_min_level|
+          options[:teamcity_min_level] = teamcity_min_level
+        end
         opts.separator ""
         opts.separator "TeamCity reporter options"
         opts.on "--teamcity-min-level LEVEL", "Report test failure for all findings above this level" do |teamcity_min_level|

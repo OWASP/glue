@@ -1,0 +1,1 @@
+[{"results":[{"component":"pivottable","version":"1.4.0","parent":{"component":"retirejs-test","version":""},"level":1,"vulnerabilities":[{"info":["https://nodesecurity.io/advisories/139"],"severity":"high","identifiers":{"advisory":"XSS"}}]}]}]

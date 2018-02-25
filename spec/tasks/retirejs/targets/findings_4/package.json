@@ -1,0 +1,6 @@
+{
+  "name": "retirejs-test",
+  "dependencies": {
+    "uglify-js": "2.4.0"
+  }
+}

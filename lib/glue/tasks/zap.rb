@@ -21,7 +21,19 @@ class Glue::Zap < Glue::BaseTask
     rootpath = @trigger.path
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     apikey = "#{@tracker.options[:zap_api_token]}"
+    mode = @tracker.options[:zap_passive_mode]
     context = SecureRandom.uuid
+
+    if (mode)
+        count = 1
+        while (count != 0)
+            count = get_records_to_scan( Curl.get("#{base}/JSON/pscan/view/recordsToScan/?zapapiformat=JSON&formMethod=GET"))
+            sleep(0.5)
+        end
+        # Result
+        @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+        return
+    end
 
     Glue.debug "Running ZAP on: #{rootpath} from #{base} with #{context}"
     puts "Running ZAP on: #{rootpath} from #{base} with #{context}"
@@ -42,7 +54,7 @@ class Glue::Zap < Glue::BaseTask
     poll_until_100("#{base}/JSON/ascan/view/status/?scanId=#{scan}")
 
     # Result
-    @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+    @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
 
     # Remove Context
     Curl.get("#{base}/JSON/context/action/removeContext/?&apikey=#{apikey}&contextName=#{context}")
@@ -51,6 +63,11 @@ class Glue::Zap < Glue::BaseTask
   def get_scan_id(response)
     json = JSON.parse response.body_str
     return json["scan"]
+  end
+
+  def get_records_to_scan(response)
+    json = JSON.parse response.body_str
+    return json['recordsToScan'].to_i
   end
 
   def poll_until_100(url)
@@ -72,7 +89,7 @@ class Glue::Zap < Glue::BaseTask
       alerts.each do |alert|
         count = count + 1
         description = alert["description"]
-        detail = "Url: #{alert["url"]} Param: #{alert["param"]} \nReference: #{alert["reference"]}\n"+
+        detail = "Url: #{alert["url"]} Param: #{alert["param"]} \n Evidence: #{alert["evidence"]} \n #{alert["reference"]}\n"+
                  "Solution: #{alert["solution"]}\nCWE: #{alert["cweid"]}\tWASCID: #{alert["wascid"]}"
         source = @name + alert["url"]
         sev = severity alert["risk"]
@@ -95,7 +112,7 @@ class Glue::Zap < Glue::BaseTask
       Glue.error "#{e.message}. Tried to connect to #{base}/JSON/core/view/version/. Check that ZAP is running on the right host and port and that you have the appropriate API key, if required."
       return false
     end
-    if supported["version"] =~ /2.(4|5|6).\d+/
+    if supported["version"] =~ /2.(4|5|6|7).\d+/
       return true
     else
       Glue.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct.  Supported versions = 2.4.0 and up - got #{supported['version']}"

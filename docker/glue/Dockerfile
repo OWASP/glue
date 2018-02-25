@@ -78,6 +78,16 @@ RUN sudo apt-get install -y maven
 #RUN curl -L http://search.maven.org/remotecontent?filepath=com/h3xstream/findsecbugs/findsecbugs-plugin/1.4.4/findsecbugs-plugin-1.4.4.jar > findbugs-3.0.1/plugin/findsecbugs.jar
 #RUN git clone https://github.com/find-sec-bugs/find-sec-bugs.git
 
+# SBT plugin (for Scala)
+RUN sudo apt-get update
+RUN echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+RUN sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+RUN sudo apt-get install apt-transport-https
+RUN sudo apt-get update
+RUN sudo apt-get install sbt
+
+RUN mkdir -p /home/glue/.sbt/0.13/plugins
+RUN echo "addSbtPlugin(\"net.vonbuchholtz\" % \"sbt-dependency-check\" % \"0.1.4\")" >  /home/glue/.sbt/0.13/plugins/build.sbt
 
 #################################################################################################
 #       Glue App

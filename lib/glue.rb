@@ -123,6 +123,7 @@ module Glue
       :zap_host => "http://localhost",
       :zap_port => "9999",
       :owasp_dep_check_path => '/home/glue/tools/dependency-check/bin/dependency-check.sh',
+      :sbt_path => '/usr/bin/sbt',
       :findsecbugs_path => '/home/glue/tools/findbugs-3.0.1',
       :labels => Set.new() << "filesystem" << "code"     # Defaults to run.
     }

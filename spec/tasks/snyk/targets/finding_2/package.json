@@ -1,0 +1,6 @@
+{
+  "name": "snyk-test",
+  "dependencies": {
+    "cookie-signature": "1.0.3"
+  }
+}
