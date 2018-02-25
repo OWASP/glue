@@ -14,32 +14,37 @@ class Glue::TeamCityReporter < Glue::BaseReporter
 
     if (tracker.options[:teamcity_min_level])
       unless tracker.options[:teamcity_min_level].is_a? Integer
-        Glue.fatal "min level should be a number, got: #{tracker.options[:teamcity-min-level]}"
+        Glue.fatal "min level should be a number, got: #{tracker.options[:teamcity_min_level]}"
       end
-      unless tracker.options[:teamcity_min_level] < 1 || tracker.options[:teamcity-min-level] > 3
-        Glue.fatal "min level should be between 1 to 3, not #{tracker.options[:teamcity-min-level]}"
+      unless tracker.options[:teamcity_min_level] >= 1 && tracker.options[:teamcity_min_level] <= 3
+        Glue.fatal "min level should be between 1 to 3, not #{tracker.options[:teamcity_min_level]}"
       end
       min_level = tracker.options[:teamcity_min_level]
     end
     reports = [ ]
 
-    puts "##teamcity[message text='Report failed tests for each finding with severity equal or above #{printSeverity(min_level)}' status='NORMAL']"
+    output = ""
+
+    output << "##teamcity[message text='Report failed tests for each finding with severity equal or above #{printSeverity(min_level)}' status='NORMAL']" << "\n"
 
     tracker.findings.group_by{|finding| finding.task}.each do |task, task_findings|
-      puts "##teamcity[testSuiteStarted name='#{task}']"
+      output << "##teamcity[testSuiteStarted name='#{task}']" << "\n"
       task_findings.each do |finding|
+        output << finding.severity
         if finding.severity < min_level
-          puts "##teamcity[testIgnored name='#{finding.fingerprint}' message='Severity #{printSeverity(finding.severity)}']"
-          return
+          output << "##teamcity[testIgnored name='#{finding.fingerprint}' message='Severity #{printSeverity(finding.severity)}']" << "\n"
+          next
         end
 
-        puts "##teamcity[testStarted name='#{finding.fingerprint}' captureStandardOutput='true']"
-        puts "##teamcity[testFailed name='#{finding.fingerprint}' message='Severity #{printSeverity(finding.severity)}' details='#{finding.description}']"
-        puts "Source: #{finding.source}"
-        puts "##teamcity[testFinished name='#{finding.fingerprint}']"
+        output << "##teamcity[testStarted name='#{finding.fingerprint}' captureStandardOutput='true']" << "\n"
+        output << "##teamcity[testFailed name='#{finding.fingerprint}' message='Severity #{printSeverity(finding.severity)}' details='#{finding.description}']" << "\n"
+        output << "Source: #{finding.source}" << "\n"
+        output << "##teamcity[testFinished name='#{finding.fingerprint}']" << "\n"
       end
-      puts "##teamcity[testSuiteFinished name='#{task}']"
+      output << "##teamcity[testSuiteFinished name='#{task}']" << "\n"
     end
+
+    return output
   end
 
   def out(finding)
