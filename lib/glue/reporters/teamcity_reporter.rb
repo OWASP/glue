@@ -30,6 +30,7 @@ class Glue::TeamCityReporter < Glue::BaseReporter
     tracker.findings.group_by{|finding| finding.task}.each do |task, task_findings|
       output << "##teamcity[testSuiteStarted name='#{task}']" << "\n"
       task_findings.each do |finding|
+        output << finding.severity
         if finding.severity < min_level
           output << "##teamcity[testIgnored name='#{escapeString(finding.fingerprint)}' message='Severity #{printSeverity(finding.severity)}']" << "\n"
           next
