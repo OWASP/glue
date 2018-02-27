@@ -24,11 +24,11 @@ class Glue::TeamCityReporter < Glue::BaseReporter
     reports = [ ]
 
     output = ""
-    
-    output << "##teamcity[message text='Report failed tests for each finding with severity equal or above #{printSeverity(min_level)}' status='NORMAL']"
+
+    output << "##teamcity[message text='Report failed tests for each finding with severity equal or above #{printSeverity(min_level)}' status='NORMAL']" << "\n"
 
     tracker.findings.group_by{|finding| finding.task}.each do |task, task_findings|
-      output << "##teamcity[testSuiteStarted name='#{task}']"
+      output << "##teamcity[testSuiteStarted name='#{task}']" << "\n"
       task_findings.each do |finding|
         if finding.severity < min_level
           output << "##teamcity[testIgnored name='#{escapeString(finding.fingerprint)}' message='Severity #{printSeverity(finding.severity)}']" << "\n"
@@ -40,7 +40,7 @@ class Glue::TeamCityReporter < Glue::BaseReporter
         output << "Source: #{finding.source}" << "\n"
         output << "##teamcity[testFinished name='#{escapeString(finding.fingerprint)}']" << "\n"
       end
-      puts "##teamcity[testSuiteFinished name='#{task}']"
+      output << "##teamcity[testSuiteFinished name='#{task}']"  << "\n"
     end
   end
 
