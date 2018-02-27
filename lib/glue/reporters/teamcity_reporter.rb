@@ -41,6 +41,8 @@ class Glue::TeamCityReporter < Glue::BaseReporter
         output << "##teamcity[testFinished name='#{escapeString(finding.fingerprint)}']" << "\n"
       end
       output << "##teamcity[testSuiteFinished name='#{task}']"  << "\n"
+      
+      return output
     end
   end
 
