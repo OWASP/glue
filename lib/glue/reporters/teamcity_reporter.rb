@@ -14,19 +14,21 @@ class Glue::TeamCityReporter < Glue::BaseReporter
 
     if (tracker.options[:teamcity_min_level])
       unless tracker.options[:teamcity_min_level].is_a? Integer
-        Glue.fatal "min level should be a number, got: #{tracker.options[:teamcity-min-level]}"
+        Glue.fatal "min level should be a number, got: #{tracker.options[:teamcity_min_level]}"
       end
-      unless tracker.options[:teamcity_min_level] < 1 || tracker.options[:teamcity-min-level] > 3
-        Glue.fatal "min level should be between 1 to 3, not #{tracker.options[:teamcity-min-level]}"
+      unless tracker.options[:teamcity_min_level] >= 1 && tracker.options[:teamcity_min_level] <= 3
+        Glue.fatal "min level should be between 1 to 3, not #{tracker.options[:teamcity_min_level]}"
       end
       min_level = tracker.options[:teamcity_min_level]
     end
     reports = [ ]
 
-    puts "##teamcity[message text='Report failed tests for each finding with severity equal or above #{printSeverity(min_level)}' status='NORMAL']"
+    output = ""
+    
+    output << "##teamcity[message text='Report failed tests for each finding with severity equal or above #{printSeverity(min_level)}' status='NORMAL']"
 
     tracker.findings.group_by{|finding| finding.task}.each do |task, task_findings|
-      puts "##teamcity[testSuiteStarted name='#{task}']"
+      output << "##teamcity[testSuiteStarted name='#{task}']"
       task_findings.each do |finding|
         if finding.severity < min_level
           output << "##teamcity[testIgnored name='#{escapeString(finding.fingerprint)}' message='Severity #{printSeverity(finding.severity)}']" << "\n"
