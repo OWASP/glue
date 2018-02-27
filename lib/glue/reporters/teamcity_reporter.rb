@@ -44,6 +44,8 @@ class Glue::TeamCityReporter < Glue::BaseReporter
       
       return output
     end
+
+    return output
   end
 
   def out(finding)
