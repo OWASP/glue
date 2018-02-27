@@ -29,14 +29,14 @@ class Glue::TeamCityReporter < Glue::BaseReporter
       puts "##teamcity[testSuiteStarted name='#{task}']"
       task_findings.each do |finding|
         if finding.severity < min_level
-          puts "##teamcity[testIgnored name='#{finding.fingerprint}' message='Severity #{printSeverity(finding.severity)}']"
-          return
+          output << "##teamcity[testIgnored name='#{escapeString(finding.fingerprint)}' message='Severity #{printSeverity(finding.severity)}']" << "\n"
+          next
         end
 
-        puts "##teamcity[testStarted name='#{finding.fingerprint}' captureStandardOutput='true']"
-        puts "##teamcity[testFailed name='#{finding.fingerprint}' message='Severity #{printSeverity(finding.severity)}' details='#{finding.description}']"
-        puts "Source: #{finding.source}"
-        puts "##teamcity[testFinished name='#{finding.fingerprint}']"
+        output << "##teamcity[testStarted name='#{escapeString(finding.fingerprint)}' captureStandardOutput='true']" << "\n"
+        output << "##teamcity[testFailed name='#{escapeString(finding.fingerprint)}' message='Severity #{printSeverity(finding.severity)}' details='#{escapeString(finding.description)}']" << "\n"
+        output << "Source: #{finding.source}" << "\n"
+        output << "##teamcity[testFinished name='#{escapeString(finding.fingerprint)}']" << "\n"
       end
       puts "##teamcity[testSuiteFinished name='#{task}']"
     end
@@ -55,6 +55,10 @@ class Glue::TeamCityReporter < Glue::BaseReporter
       return "High"
     return "Not supported"
     end
+  end
+
+  def escapeString(text)
+    return text.gsub('|', '||').gsub('\n', '|n').gsub('\r', '|r').gsub('\'', '|\'').gsub('[', '|[').gsub(']', '|]')
   end
 
   def combine_reports(reports)
