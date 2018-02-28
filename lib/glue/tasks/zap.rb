@@ -90,7 +90,7 @@ class Glue::Zap < Glue::BaseTask
         count = count + 1
         description = alert["description"]
         detail = "Url: #{alert["url"]} Param: #{alert["param"]} \nReference: #{alert["reference"]}\n"+
-                 "Solution: #{alert["solution"]}\nCWE: #{alert["cweid"]}\tWASCID: #{alert["wascid"]}"
+                 "Solution: #{alert["solution"]}\nCWE: #{alert["cweid"]}\tWASCID: #{alert["wascid"]}\tRule ID: #{alert["pluginId"]}"
         source = @name + alert["url"]
         sev = severity alert["risk"]
         fingerprint = @name + alert["url"] + alert["alert"] + alert["param"]
