@@ -6,7 +6,12 @@ steps:
     image_name: soluto/glue
     working_directory: ./
     dockerfile: docker/glue/Dockerfile-raw
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    tag: '${{BuildingDockerImage}}'
+  UnitTests:
+    image: node:latest # image that contains installed tools for performing test commands
+    commands:
+      - bundle install
+      - rake
   PushingToDockerRegistry:
     title: Pushing to Docker Registry
     type: push
