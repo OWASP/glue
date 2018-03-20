@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-       - image: ruby:2.4-alpine
+       - image: circleci/ruby:2.4
       
     working_directory: ~/repo
 
