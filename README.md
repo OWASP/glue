@@ -1,6 +1,6 @@
 <img src="./glue.png" width="120"/>
 
-[![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=Soluto&repoName=glue&branch=master&pipelineName=glue&accountName=soluto&type=cf-1)]( https://g.codefresh.io/repositories/Soluto/glue/builds?filter=trigger:build;branch:master;service:5a93b277c5880a000147d7f0~glue)
+[![CircleCI](https://circleci.com/gh/Soluto/glue/tree/master.svg?style=svg)](https://circleci.com/gh/Soluto/glue/tree/master)
 
 
 
