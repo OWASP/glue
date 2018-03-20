@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-       - image: circleci/ruby:2.4
+       - image: ruby:2.4-alpine
       
     working_directory: ~/repo
 
@@ -23,7 +23,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            apt-get install -y build-base curl-dev
+            apk add --update build-base curl-dev
             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
       - save_cache:
@@ -41,8 +41,7 @@ jobs:
             bundle exec rspec --format progress \
                             --format RspecJunitFormatter \
                             --out /tmp/test-results/rspec.xml \
-                            --format progress \
-                            $TEST_FILES
+                            --format progress 
 
       # collect reports
       - store_test_results:
