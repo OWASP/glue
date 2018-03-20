@@ -27,11 +27,12 @@ class Glue::Zap < Glue::BaseTask
     if (mode)
         count = 1
         while (count != 0)
-            count = get_records_to_scan( Curl.get("#{base}/JSON/pscan/view/recordsToScan/?zapapiformat=JSON&formMethod=GET"))
+            count = get_records_to_scan( Curl.get("#{base}/JSON/pscan/view/recordsToScan/", "zapapiformat" => "JSON", "formMethod" => "GET", "apikey" => URI.encode_www_form_component(apikey)))
             sleep(0.5)
         end
         # Result
-        @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+
+        @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{URI.encode_www_form_component(rootpath)}&apikey=#{URI.encode_www_form_component(apikey)}").body_str
         return
     end
 
@@ -107,7 +108,7 @@ class Glue::Zap < Glue::BaseTask
     apikey = "#{@tracker.options[:zap_api_token]}"
     base = "#{@tracker.options[:zap_host]}:#{@tracker.options[:zap_port]}"
     begin
-      supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/?apikey=#{apikey}").body_str)
+      supported=JSON.parse(Curl.get("#{base}/JSON/core/view/version/", "apikey" => URI.encode_www_form_component(apikey)).body_str)
     rescue Exception => e
       Glue.error "#{e.message}. Tried to connect to #{base}/JSON/core/view/version/. Check that ZAP is running on the right host and port and that you have the appropriate API key, if required."
       return false
