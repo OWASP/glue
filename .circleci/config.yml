@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  test:
     docker:
        - image: ruby:2.4-alpine
       
@@ -49,3 +49,30 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
+  
+  push:
+    machine: true
+
+    steps:
+     - checkout
+     # start proprietary DB using private Docker image
+     # with credentials stored in the UI
+     - run: |
+         docker login -u $DOCKER_USER -p $DOCKER_PASS
+     # build the application image
+     - run: docker build -t soluto/glue:$CIRCLE_BUILD_NUM . -f docker/glue/Dockerfile-raw -l COMMIT_SHA:$CIRCLE_SHA1 -l BUILD_URL:$CIRCLE_BUILD_URL
+
+     # deploy the image
+     - run: docker push soluto/glue:$CIRCLE_BUILD_NUM
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test:
+      - push:
+          requires:
+            - test
+          filters:
+            branch:
+              only: master
