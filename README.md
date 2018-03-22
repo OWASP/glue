@@ -1,8 +1,16 @@
 <img src="./glue.png" width="120"/>
 
+[![Build Status](https://travis-ci.org/Soluto/glue.svg?branch=master)](https://travis-ci.org/Soluto/glue)
+
 # Glue
 
 Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
+
+# Acknowledge
+
+This is a fork of the offical [Glue](https://github.com/OWASP/glue) repo. The fork contains many PR that are waiting to be merged and was required in order to integrate Zap into our CI. Hopefully, in the near future we can stop using this fork and use the official version. Unless you need to integrate Zap, consider using the official version.
+
+You can take a look at the merged [PRs](https://github.com/Soluto/glue/pulls) to see what merged into this fork. Each PR in this repo contains also matching PR in the official repo.
 
 # Recommended Usage
 

@@ -1,0 +1,78 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+jobs:
+  test:
+    docker:
+       - image: ruby:2.4-alpine
+      
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            apk add --update build-base curl-dev
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+        
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            
+            bundle exec rspec --format progress \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress 
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+  
+  push:
+    machine: true
+
+    steps:
+     - checkout
+     # start proprietary DB using private Docker image
+     # with credentials stored in the UI
+     - run: |
+         docker login -u $DOCKER_USER -p $DOCKER_PASS
+     # build the application image
+     - run: docker build -t soluto/glue:$CIRCLE_BUILD_NUM . -f docker/glue/Dockerfile-raw -l COMMIT_SHA:$CIRCLE_SHA1 -l BUILD_URL:$CIRCLE_BUILD_URL
+
+     # deploy the image
+     - run: docker push soluto/glue:$CIRCLE_BUILD_NUM
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test:
+      - push:
+          requires:
+            - test
+          filters:
+            branch:
+              only: master
