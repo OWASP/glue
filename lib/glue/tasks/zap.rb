@@ -90,7 +90,7 @@ class Glue::Zap < Glue::BaseTask
       alerts.each do |alert|
         count = count + 1
         description = alert["description"]
-        detail = "Url: #{alert["url"]} Param: #{alert["param"]} \n Evidence: #{alert["evidence"]} \n Reference: #{alert["reference"]}\n" +
+        detail = "Url: #{alert["url"]} Param: #{alert["param"]}\nEvidence: #{alert["evidence"]}\nReference: #{alert["reference"]}\n" +
                  "Solution: #{alert["solution"]}\nCWE: #{alert["cweid"]}\tWASCID: #{alert["wascid"]}\tRule ID: #{alert["pluginId"]}"
         source = @name + alert["url"]
         sev = severity alert["risk"]

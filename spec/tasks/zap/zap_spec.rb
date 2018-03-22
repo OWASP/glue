@@ -6,7 +6,6 @@ require 'glue/tracker'
 require 'glue/tasks'
 require 'glue/tasks/zap'
 
-
 describe Glue::Zap do
   # Run 'spec/tasks/snyk/generate_reports.sh' to generate the reports
   # for any new 'targets' you want to test against.
@@ -133,11 +132,12 @@ describe Glue::Zap do
         expect(finding.severity).to eq(2)
         expect(finding.fingerprint).to eq("ZAPhttp://juiceshop/Storable but Non-Cacheable Contentparam")
         expect(finding.detail).to eq("""Url: http://juiceshop/ Param: param
+Evidence: max-age=0
 Reference: https://tools.ietf.org/html/rfc7234
 https://tools.ietf.org/html/rfc7231
 http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html (obsoleted by rfc7234)
 Solution: solution
-CWE: 524\tWASCID: 13""")
+CWE: 524\tWASCID: 13\tRule ID: 10049""")
       end
     end
    end
