@@ -1,8 +1,6 @@
 <img src="./glue.png" width="120"/>
 
-[![CircleCI](https://circleci.com/gh/Soluto/glue/tree/master.svg?style=svg)](https://circleci.com/gh/Soluto/glue/tree/master)
-
-
+[![Build Status](https://travis-ci.org/Soluto/glue.svg?branch=master)](https://travis-ci.org/Soluto/glue)
 
 # Glue
 
