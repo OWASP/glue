@@ -13,6 +13,18 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter %r{^/spec/}
+  add_group "lib/glue/filters", "filters"
+  add_group "lib/glue/mounters", "mounters"
+  add_group "lib/glue/reporters", "reporters"
+  add_group "lib/glue/tasks", "tasks"
+end
+
+SimpleCov.minimum_coverage 40
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
