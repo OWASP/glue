@@ -3,7 +3,7 @@ rvm:
   - 2.4
 install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y build-essential curl-dev
+  - sudo apt-get install -y build-essential libcurl-dev
   - bundle
 script: 
   - bundle exec rspec
