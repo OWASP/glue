@@ -1,6 +1,10 @@
 <img src="./glue.png" width="120"/>
 
 [![Build Status](https://travis-ci.org/Soluto/glue.svg?branch=master)](https://travis-ci.org/Soluto/glue)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c242f719e9ede1397183/maintainability)](https://codeclimate.com/github/Soluto/glue/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c242f719e9ede1397183/test_coverage)](https://codeclimate.com/github/Soluto/glue/test_coverage)
+[![Docker stars](https://img.shields.io/docker/stars/soluto/glue.svg)](https://hub.docker.com/r/soluto/glue/)
+
 
 # Glue
 
@@ -21,13 +25,9 @@ See the documentation for more info.  [Glue Docker Documentation](./DOCKER.md)
 For those interested in how to use Glue in a DevOps context, see
 [Glue DevOps Integration Options](./DEVOPS.md)
 
-# Installation
+# Local run
 
-`gem install owasp-glue`
-
-or
-
-`docker run owasp/glue`
+`docker run soluto/glue`
 
 # Installation for Development
 
