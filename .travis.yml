@@ -10,9 +10,18 @@ rvm:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y build-essential libcurl4-openssl-dev
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script: 
   - bundle exec rspec
   - docker build -t soluto/glue:$TRAVIS_BUILD_NUMBER . -f docker/glue/Dockerfile-raw --label COMMIT_SHA:$TRAVIS_COMMIT
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 deploy:
   provider: script
