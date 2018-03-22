@@ -1,4 +1,10 @@
 language: ruby
+cache: bundler
+sudo: required
+
+services:
+  - docker
+
 rvm: 
   - 2.4
 before_install:
@@ -6,3 +12,10 @@ before_install:
   - sudo apt-get install -y build-essential libcurl4-openssl-dev
 script: 
   - bundle exec rspec
+  - docker build -t soluto/glue:$TRAVIS_BUILD_NUMBER . -f docker/glue/Dockerfile-raw -l COMMIT_SHA:$TRAVIS_COMMIT
+
+deploy:
+  provider: script
+  script: bash scripts/docker_push.sh soluto/glue:$TRAVIS_BUILD_NUMBER
+  on:
+    branch: master
