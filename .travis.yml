@@ -21,7 +21,7 @@ script:
   - docker build -t soluto/glue:$TRAVIS_BUILD_NUMBER . -f docker/glue/Dockerfile-raw --label COMMIT_SHA:$TRAVIS_COMMIT
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --debug
 
 deploy:
   provider: script
