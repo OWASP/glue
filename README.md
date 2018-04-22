@@ -25,6 +25,8 @@ See the documentation for more info.  [Glue Docker Documentation](./DOCKER.md)
 For those interested in how to use Glue in a DevOps context, see
 [Glue DevOps Integration Options](./DEVOPS.md)
 
+Checkout the [Playground](./PLAYGROUND.md) to get a better understanding of Glue's features and how you can use them.
+
 # Local run
 
 `docker run soluto/glue`
