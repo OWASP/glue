@@ -1,7 +1,6 @@
 require 'glue/tasks/base_task'
 require 'glue/util'
 require 'find'
-require 'pry'
 
 class Glue::Npm < Glue::BaseTask
 

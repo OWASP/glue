@@ -31,7 +31,7 @@ class Glue::Zap < Glue::BaseTask
             sleep(0.5)
         end
         # Result
-        @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+        @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
         return
     end
 
@@ -54,7 +54,7 @@ class Glue::Zap < Glue::BaseTask
     poll_until_100("#{base}/JSON/ascan/view/status/?scanId=#{scan}")
 
     # Result
-    @result = Curl.get("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
+    @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{rootpath}").body_str
 
     # Remove Context
     Curl.get("#{base}/JSON/context/action/removeContext/?&apikey=#{apikey}&contextName=#{context}")
@@ -112,7 +112,7 @@ class Glue::Zap < Glue::BaseTask
       Glue.error "#{e.message}. Tried to connect to #{base}/JSON/core/view/version/. Check that ZAP is running on the right host and port and that you have the appropriate API key, if required."
       return false
     end
-    if supported["version"] =~ /2.(4|5|6).\d+/
+    if supported["version"] =~ /2.(4|5|6|7).\d+/
       return true
     else
       Glue.notify "Install ZAP from owasp.org and ensure that the configuration to connect is correct.  Supported versions = 2.4.0 and up - got #{supported['version']}"
