@@ -164,6 +164,8 @@ module Glue
       [:to_jira]
     when :pivotal, :to_pivotal
       [:to_pivotal]
+    when :slack
+      [:to_slack]
     else
       [:to_s]
     end
