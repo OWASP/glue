@@ -166,6 +166,8 @@ module Glue
       [:to_pivotal]
     when :teamcity, :to_teamcity
       [:to_teamcity]
+    when :slack
+      [:to_slack]
     else
       [:to_s]
     end
