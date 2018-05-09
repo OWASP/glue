@@ -25,6 +25,6 @@ after_script:
 
 deploy:
   provider: script
-  script: bash scripts/docker_push.sh soluto/glue:$TRAVIS_BUILD_NUMBER
+  script: bash scripts/docker_push.sh owasp/glue:$TRAVIS_BUILD_NUMBER
   on:
     branch: master
