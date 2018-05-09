@@ -4,7 +4,8 @@
 
 
 <img src="./glue.png" width="120"/>
-# Glue
+
+# OWASP Glue
 
 Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
 
