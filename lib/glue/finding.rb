@@ -15,8 +15,8 @@ class Glue::Finding
     unless severity.is_a? Integer
       raise ArgumentError.new("Severity should be a number, got: #{severity}")
     end
-    unless severity < 1 || severity > 3
-      raise ArgumentError.new("Severity should be between 1 to 5, not #{severity}")
+    unless severity > 0 && severity < 4
+      raise ArgumentError.new("Severity should be between 1 to 3, not #{severity}")
     end
 
     @task = task
