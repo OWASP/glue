@@ -105,6 +105,7 @@ module Glue::Options
         end
         opts.on "-f",
                 "--format TYPE",
+                [:text, :csv, :json, :jira, :pivotal, :teamcity],
                 [:text, :csv, :json, :jira, :pivotal, :slack, :teamcity],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
@@ -302,10 +303,12 @@ module Glue::Options
         end
 
         opts.separator ""
+
         opts.separator "TeamCity reporter options"
         opts.on "--teamcity-min-level LEVEL", "Report test failure for all findings above this level" do |teamcity_min_level|
           options[:teamcity_min_level] = teamcity_min_level.to_i()
         end
+
         opts.separator "Slack reporter options:"
         opts.on "--slack-token TOKEN", "Bot token" do |slack_token|
           options[:slack_token] = slack_token

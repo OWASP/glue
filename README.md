@@ -1,8 +1,20 @@
 <img src="./glue.png" width="120"/>
 
+[![Build Status](https://travis-ci.org/Soluto/glue.svg?branch=master)](https://travis-ci.org/Soluto/glue)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c242f719e9ede1397183/maintainability)](https://codeclimate.com/github/Soluto/glue/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c242f719e9ede1397183/test_coverage)](https://codeclimate.com/github/Soluto/glue/test_coverage)
+[![Docker stars](https://img.shields.io/docker/stars/soluto/glue.svg)](https://hub.docker.com/r/soluto/glue/)
+
+
 # Glue
 
 Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
+
+# Acknowledge
+
+This is a fork of the offical [Glue](https://github.com/OWASP/glue) repo. The fork contains many PR that are waiting to be merged and was required in order to integrate Zap into our CI. Hopefully, in the near future we can stop using this fork and use the official version.
+
+You can take a look at the merged [PRs](https://github.com/Soluto/glue/pulls) to see what merged into this fork. Each PR in this repo contains also matching PR in the official repo.
 
 # Recommended Usage
 
@@ -13,13 +25,11 @@ See the documentation for more info.  [Glue Docker Documentation](./DOCKER.md)
 For those interested in how to use Glue in a DevOps context, see
 [Glue DevOps Integration Options](./DEVOPS.md)
 
-# Installation
+Checkout the [Playground](./PLAYGROUND.md) to get a better understanding of Glue's features and how you can use them.
 
-`gem install owasp-glue`
+# Local run
 
-or
-
-`docker run owasp/glue`
+`docker run soluto/glue`
 
 # Installation for Development
 
