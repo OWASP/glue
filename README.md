@@ -1,5 +1,4 @@
 <img src="./glue.png" width="120"/>
-
 # Glue
 
 Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
@@ -13,11 +12,9 @@ See the documentation for more info.  [Glue Docker Documentation](./DOCKER.md)
 For those interested in how to use Glue in a DevOps context, see
 [Glue DevOps Integration Options](./DEVOPS.md)
 
-# Installation
+Checkout the [Playground](./PLAYGROUND.md) to get a better understanding of Glue's features and how you can use them.
 
-`gem install owasp-glue`
-
-or
+# Local run
 
 `docker run owasp/glue`
 

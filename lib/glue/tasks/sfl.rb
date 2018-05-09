@@ -81,7 +81,7 @@ class Glue::SFL < Glue::BaseTask
     description = pattern['caption']
     detail = pattern['description']
     source = "#{@name}:#{filepath}"
-    severity = 'unknown'
+    severity = 1
     fprint = fingerprint("SFL-#{pattern['part']}#{pattern['type']}" \
                           "#{pattern['pattern']}#{filepath}")
 
