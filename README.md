@@ -1,3 +1,8 @@
+
+![https://twitter.com/owaspglue](https://img.shields.io/twitter/url/http/shields.io.svg?style=social) 
+![https://rubygems.org/gems/owasp-glue](https://img.shields.io/gem/dtv/rails.svg) ![https://hub.docker.com/r/owasp/glue/](https://img.shields.io/docker/stars/owasp/glue.svg)
+
+
 <img src="./glue.png" width="120"/>
 # Glue
 
