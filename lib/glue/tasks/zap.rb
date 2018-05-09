@@ -31,7 +31,6 @@ class Glue::Zap < Glue::BaseTask
             sleep(0.5)
         end
         # Result
-
         @result = Curl::Easy.perform("#{base}/JSON/core/view/alerts/?baseurl=#{URI.encode_www_form_component(rootpath)}&apikey=#{URI.encode_www_form_component(apikey)}").body_str
         return
     end

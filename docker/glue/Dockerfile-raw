@@ -1,5 +1,8 @@
 FROM ruby:2.4-alpine
 
+LABEL maintainer="mkonda@jemurai.com"
+LABEL maintainer="omer.levihevroni@owasp.org"
+
 WORKDIR /glue
 
 RUN apk add --update build-base curl-dev

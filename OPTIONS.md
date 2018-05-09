@@ -94,10 +94,20 @@ The alternatives are:
 2.  text (default)
 3.  json
 4.  jira (must specify JIRA options)
+5.  slack (must specify SLACK options)
 
 Generally, it is advised to run Glue with the options you want to try
 and get the output in text or one of the other local formats (json, csv)
-prior to pushing to JIRA.
+prior to pushing to JIRA/Slack.
+
+### Slack Configurations
+The Slack reporters send the finding in one message to a given channel. 
+In order to be able to report to slack, you need first to create a new [Slack Bot](https://my.slack.com/services/new/bot).
+After creating the bot, copy the API token and pass it to glue using the `--slack-token` parameter.
+You can control the channel using the `--slack-channel` parameter - can be either channel name or user name.
+Please note that in order to post to channel, you first has to add the bot you created to this channel.
+When posting to a user instead to a channel, you can configure the behavior using the `--slack-post-as-bot` flag.
+See the documentation [here](https://api.slack.com/methods/chat.postMessage#channels) for details.
 
 ## Configuration Files
 
