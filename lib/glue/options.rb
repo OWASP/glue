@@ -105,7 +105,6 @@ module Glue::Options
         end
         opts.on "-f",
                 "--format TYPE",
-                [:text, :csv, :json, :jira, :pivotal, :teamcity],
                 [:text, :csv, :json, :jira, :pivotal, :slack, :teamcity],
                 "Specify output formats. Default is text" do |type|
           options[:output_format] = type
