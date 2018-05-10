@@ -22,9 +22,3 @@ script:
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --debug
-
-deploy:
-  provider: script
-  script: bash scripts/docker_push.sh owasp/glue:$TRAVIS_BUILD_NUMBER
-  on:
-    branch: master
