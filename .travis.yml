@@ -1,30 +1,30 @@
 language: ruby
 cache: bundler
 sudo: required
-
 services:
-  - docker
-
-rvm: 
-  - 2.4
+- docker
+rvm:
+- 2.4
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y build-essential libcurl4-openssl-dev
-
+- sudo apt-get -qq update
+- sudo apt-get install -y build-essential libcurl4-openssl-dev
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
-
-script: 
-  - bundle exec rspec
-  - docker build -t soluto/glue:$TRAVIS_BUILD_NUMBER . -f docker/glue/Dockerfile-raw --label COMMIT_SHA:$TRAVIS_COMMIT
-
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- "./cc-test-reporter before-build"
+script:
+- bundle exec rspec
+- docker build -t soluto/glue:$TRAVIS_BUILD_NUMBER . -f docker/glue/Dockerfile-raw
+  --label COMMIT_SHA:$TRAVIS_COMMIT
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --debug
-
+- "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --debug"
 deploy:
-  provider: script
-  script: bash scripts/docker_push.sh owasp/glue:$TRAVIS_BUILD_NUMBER
-  on:
-    branch: master
+  - provider: rubygems
+    api_key:
+      secure: F/HpV5oaF0W0d0yhHd1oOgzJUxPXW/IGxLBXieyiqoyfae2kA6VoTvCijSz6tY4Fo7kYXQvwWouLWr/MokTRISO4pD3iwghfFQONtqjqBAB99+wGwJFARdIhVGAHTTlDoykgmh/nIYRwWMYvo/9sg+cq7RN6guMC88suaZ9AF3sweFNOiMiDvks7E0Id/6yyE2USlK8Lef03LaoTgylpB2raogKmDwQ6yx5JVBWUAzZnshSvQWst+o1CKQUGC8/U/1shjpPRmUlEAxLwdrkk9BYffHX2QdMYPzaBYU4zool/YypbjOHIws7izgJI3zUrbYVNyAwOfyaMQjYpnu2C9XGYVA7Fm5xCnJXkzfIP0jNhcoA7d55NedVLn3tFbsE1HgkC8tG3QephOmHJdW5oQy6+L4c1jkAQzV5HQPodBMHkSG0Zw7H28R67DSoIFIo76i6ak8Ina0KTZ7/mtu/O2UKN8sRLQW4+AE6yHRXQp3DsZxwdjoC+TyWEqpthFVHb9PeEJpxldd9r82lRyBGX8C4Gia265c4A4WfY675tzR6S9X6JxUnl0HkrLpOeg5lv5EfF2eg5ypM4sb5cVhD3dnyLY1EWVaJ8kZAb33JL75TFR8jQ+TVM0HqCMTiAw5dNQXxAMvGmcpOOVvHB/GpZMIDuxRfHZmgGQ9iJggGMl/I=
+    gem: owasp-glue
+    on:
+      tags: true
+      branch: master
+      repo: OWASP/glue
