@@ -1,6 +1,7 @@
 
-![https://twitter.com/owaspglue](https://img.shields.io/twitter/url/http/shields.io.svg?style=social) 
-![https://rubygems.org/gems/owasp-glue](https://img.shields.io/gem/dtv/rails.svg) ![https://hub.docker.com/r/owasp/glue/](https://img.shields.io/docker/stars/owasp/glue.svg)
+[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/owaspglue)
+[![Ruby Gem](https://img.shields.io/gem/dtv/rails.svg)](https://rubygems.org/gems/owasp-glue) [![Dockerhub](https://img.shields.io/docker/stars/owasp/glue.svg)](https://hub.docker.com/r/owasp/glue/)
+[![Travis](https://img.shields.io/travis/USER/REPO.svg)](https://travis-ci.org/OWASP/glue)
 
 
 <img src="./glue.png" width="120"/>
