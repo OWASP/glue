@@ -1,0 +1,16 @@
+{
+  "task_name": "dummy",
+  "a_name": "name",
+  "mappings": [
+    {
+      "key": "issues",
+      "properties": {
+        "description": "description",
+        "detail": "detail",
+        "source": "source",
+        "severity": "severity",
+        "fingerprint": "fingerprint"
+      }
+    }
+  ]
+}

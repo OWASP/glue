@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gemspec :name => "owasp-glue"
 
+gem 'rspec-collection_matchers', :group => :test
 gem 'rake', :group => :test
 gem 'rspec', :group => :test
 gem 'webmock', :group => :test
