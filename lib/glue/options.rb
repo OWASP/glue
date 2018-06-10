@@ -37,7 +37,7 @@ module Glue::Options
 
         opts.separator "Control options:"
 
-        opts.on "-T", "--target PATH", "Specify target" do |target|
+        opts.on "-T", "--target PATH", "Specify target" do |path|
           options[:target] = path
         end
 
@@ -300,6 +300,13 @@ module Glue::Options
         opts.on "--finding-file-path PATH", "the path to the file with existing issues" do |path|
             options[:finding_file_path] = path
         end
+
+        opts.separator ""
+        opts.separator "Dynamic mapping options"
+        opts.on "--mapping-file MAPPING_FILE_PATH", "Burp XML Path" do |mapping_file_path|
+          options[:mapping_file_path] = mapping_file_path
+        end
+
 
         opts.separator ""
 

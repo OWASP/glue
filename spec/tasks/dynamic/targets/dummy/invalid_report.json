@@ -1,0 +1,12 @@
+{
+  "name": "test",
+  "items": [
+    {
+      "description": "desc",
+      "detail": "detail",
+      "source": "source",
+      "severity": "high",
+      "fingerprint": "fingerprint"
+    }
+  ]
+}

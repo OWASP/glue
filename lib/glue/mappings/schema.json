@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "title": "Mapping",
+  "description": "A mapping used by Glue to extract findings from a security tool report",
+  "type": "object",
+  "required": ["task_name", "app_name", "mappings"],
+  "properties": {
+    "task_name": {
+      "type": "string",
+      "description": "The name of the task (tool) the produce those findings"
+    },
+    "app_name": {
+      "type": "string",
+      "description": "Path to the property in the report file that contains the target app name"
+    },
+    "mappings": {
+      "type": "array",
+      "description": "An array of mappings",
+      "items": {
+        "type": "object",
+        "required": ["key"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The key in the JSON report to an array that contains findings"
+          },
+          "properties": {
+            "type": "object",
+            "description": "The mapping between the items in the array and Glue's findings",
+            "required": ["description", "detail", "source", "severity", "fingerprint"],
+            "properties": {
+              "description": {
+                "type": "string",
+                "description": "The path on the array item to extract the description"
+              },
+              "detail": {
+                "type": "string",
+                "description": "The path on the array item to extract the details"
+              },
+              "source": {
+                "type": "string",
+                "description": "The path on the array item to extract the source"
+              },
+              "severity": {
+                "type": "string",
+                "description": "The path on the array item to extract the severity"
+              },
+              "fingerprint": {
+                "type": "string",
+                "description": "The path on the array item to extract the fingerprint"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

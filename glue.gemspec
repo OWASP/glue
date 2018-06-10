@@ -24,7 +24,8 @@ Gem::Specification.new do |s|
   s.add_dependency "redcarpet"
   s.add_dependency "jira-ruby"
   s.add_dependency "httparty"
-
+  s.add_dependency "json-schema"
+  
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-byebug"
 end
