@@ -33,7 +33,7 @@ deploy:
       branch: master
       repo: OWASP/glue
   - provider: script
-    script: docker tag owasp/glue owasp/glue:latest-raw && docker push owasp/glue:raw-latest
+    script: docker tag owasp/glue owasp/glue:raw-latest && docker push owasp/glue:raw-latest
     on:
       branch: master
       repo: OWASP/glue
