@@ -1,6 +1,7 @@
 language: ruby
 cache: bundler
 sudo: required
+
 services:
 - docker
 rvm:
@@ -15,10 +16,13 @@ before_script:
 - "./cc-test-reporter before-build"
 script:
 - bundle exec rspec
-- docker build -t soluto/glue:$TRAVIS_BUILD_NUMBER . -f docker/glue/Dockerfile-raw
-  --label COMMIT_SHA:$TRAVIS_COMMIT
+- docker build -t owasp/glue . -f docker/glue/Dockerfile-raw --label COMMIT_SHA:$TRAVIS_COMMIT
 after_script:
 - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --debug"
+before_deploy:
+- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+after_deploy:
+- docker logout
 deploy:
   - provider: rubygems
     api_key:
@@ -28,3 +32,18 @@ deploy:
       tags: true
       branch: master
       repo: OWASP/glue
+  - provider: script
+    script: docker tag owasp/glue owasp/glue:latest-raw && docker push owasp/glue:raw-latest
+    on:
+      branch: master
+      repo: OWASP/glue
+  - provider: script
+    script: docker tag owasp/glue owasp/glue:$TRAVIS_TAG && docker push owasp/glue:$TRAVIS_TAG
+    on:
+      branch: master
+      tags: true
+      repo: OWASP/glue
+env:
+  global:
+    - secure: idBRF6n/XLA25Z46aHBI4KaM+ljbzzD9L58JuASp/VBuViM07r0ASO0HDMMafiVuYpyBUXeo8f7/Kzb88z8fQUi3aTnMkOxsAl5PiygR0on7DQie1G78OKJ+wZ6NiEzYwFLrzVhjEXvFIsu8zZWtLfRNC+54HignxhIrdw0PEcsXbAE1UT1zR9zuBJfWrCtHGH6sQ6a57qiyGoOkjBnScDef5Tn0LgPT8WISy4Qb1AiAJDAnW9D8lF3sSWRbwysMjbIUTlTMqaZGpGVtTGiW75Vx60kY1qZ1dRZNm5U/QLlD3T8SAig6gYXGBXHgV1CR3S1JVNhX//Fk26HzTI5S3lNCw/h+qpSevdfqXZMaLSOJ5QF0920V1i+veUxSnd7BeFcCG6sxpVaHr/ztzptMSqyceYMEzmdpcDqXuPC+wn/U3QA4LWFW0PyfbWxrH9ibP4BaMEQNIHG1mByIDFLgZzB6zIQUQWPoB55DkmlRA1QC5Te+8JntvbVZF8qMk0Sv7lrg2ilTkFON7cHPE9y9wkaM5EhbdAwAl8cg6tDVeLrvmB6W+AuCFt1wgm46UEn8soSBNdYZThtfw7DvmUoFuMP/Nnmr9see6OFFnrSO4oslbbxLQAowWjnR1JzwXbrJcwrvA6d0Oy3C5byAduQoZCxN8d7SdnUuQeeSi1xVAzc=
+    - DOCKER_USERNAME=owaspglueci
