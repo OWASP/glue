@@ -131,4 +131,27 @@ describe Glue::Dynamic do
       expect(finding.task).to eq("MobSF")
     end
   end
+
+  # The tests used the report after transformed with JQ, see the documentation for more details
+  context "zaproxy" do
+    let(:task) { get_dynamic_task_buildin_mapping "tools_samples/zaproxy.json", "zaproxy"}
+    subject(:task_findings) { task.findings }
+    before do 
+      task.run
+    end
+    it "should produce one finding" do
+      should have(1).items
+    end
+
+    it "should fill all the required fields" do
+      finding = subject[0]
+      expect(finding.severity).to eq(1)
+      expect(finding.description).to eq("<p>Base64 encoded data was disclosed by the application/web server</p>")
+      expect(finding.detail).to eq("Base64 Disclosure \n Evidence: DxyPP_YQ6qdWluCCz93Xs1CeJPvg \n Solution: <p>Manually confirm that the Base64 data does not leak sensitive information, and that the data cannot be aggregated/used to exploit other vulnerabilities.</p> \n Other info: <p>\\x000f\\x001c�?�\\x0010�V���Re\\x000c��9�7C\\x001b \\x0011Ű�\\x0004?a\tP�\\x0017���\u007f@]ۺ�\\x0005\\x0007��7\\x0006\\x000e���\\x0019�,�D[�n���_)��X�w��&^���3l����'�~h?��O\\x0011�H����΅\\x001c��ޕ�Bi|��>\\x0007\u007f:�-QY(\\x0016</p><p>��A|��9��E��%&\\x0011�]�j\\x001c!��o�\\x000e�\\x0014԰�L�\\x0000j:\\x0008V:��]L����փԫ�o$\\x0003����KՆn��5�T_P�ͭ�w����l$\\x000fU���+vq\\x001e\\x001b& P\n7+���u9�\\x001e��tN����+\\x0003�X�R$\\,��{5\t�O</p> \n Reference: <p>https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure</p><p>http://projects.webappsec.org/w/page/13246936/Information%20Leakage</p>")
+      expect(finding.source).to eq("URI: http://api:9999/ Method: POST")
+      expect(finding.fingerprint).to eq("10094_http://api:9999/_POST")
+      expect(finding.appname).to eq("http://api:9999")
+      expect(finding.task).to eq("OWASP Zaproxy")
+    end
+  end
  end
