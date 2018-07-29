@@ -1,0 +1,121 @@
+{
+  "ok": false,
+  "vulnerabilities": [
+    {
+      "title": "Denial of Service (DoS)",
+      "credit": [
+        "Unknown"
+      ],
+      "packageName": "Microsoft.AspNetCore.All",
+      "language": "dotnet",
+      "packageManager": "nuget",
+      "description": "description",
+      "identifiers": {
+        "CWE": [
+          "CWE-400"
+        ],
+        "CVE": []
+      },
+      "semver": {
+        "unaffected": "",
+        "vulnerable": "[,2.0.9), [2.1.0, 2.1.2)"
+      },
+      "patches": [],
+      "cvssScore": 6.5,
+      "severity": "medium",
+      "CVSSv3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+      "disclosureTime": "2018-07-18T21:00:00.000Z",
+      "publicationTime": "2018-07-26T11:23:24.744Z",
+      "modificationTime": "2018-07-25T11:23:46.125Z",
+      "creationTime": "2018-07-25T11:23:46.125Z",
+      "id": "SNYK-DOTNET-MICROSOFTASPNETCOREALL-60258",
+      "from": [
+        "Microsoft.AspNetCore.All@2.0.5"
+      ],
+      "upgradePath": [],
+      "version": "2.0.5",
+      "name": "Microsoft.AspNetCore.All",
+      "isUpgradable": false,
+      "isPatchable": false
+    },
+    {
+      "title": "Privilege Escalation",
+      "credit": [
+        "Unknown"
+      ],
+      "language": "dotnet",
+      "packageManager": "nuget",
+      "packageName": "Microsoft.AspNetCore.HttpOverrides",
+      "description": "description",
+      "semver": {
+        "vulnerable": "[,2.0.2)",
+        "unaffected": ""
+      },
+      "identifiers": {
+        "CVE": [
+          "CVE-2018-0787"
+        ],
+        "CWE": [
+          "CWE-20"
+        ]
+      },
+      "patches": [],
+      "cvssScore": 8.8,
+      "severity": "high",
+      "CVSSv3": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+      "modificationTime": "2017-01-25T13:19:47.018Z",
+      "creationTime": "2017-01-25T13:19:47.018Z",
+      "disclosureTime": "2017-01-25T13:19:47.018Z",
+      "publicationTime": "2018-05-02T14:33:27.159Z",
+      "id": "SNYK-DOTNET-MICROSOFTASPNETCOREHTTPOVERRIDES-60238",
+      "from": [
+        "Microsoft.AspNetCore.All@2.0.5"
+      ],
+      "upgradePath": [],
+      "version": "2.0.1",
+      "name": "Microsoft.AspNetCore.HttpOverrides",
+      "isUpgradable": false,
+      "isPatchable": false
+    }
+  ],
+  "dependencyCount": 322,
+  "org": "soluto-tel-aviv",
+  "licensesPolicy": {
+    "severities": {
+      "MS-RL": "medium",
+      "EPL-1.0": "medium",
+      "GPL-2.0": "high",
+      "GPL-3.0": "high",
+      "MPL-1.1": "medium",
+      "MPL-2.0": "medium",
+      "AGPL-1.0": "high",
+      "AGPL-3.0": "high",
+      "CDDL-1.0": "medium",
+      "LGPL-2.0": "medium",
+      "LGPL-2.1": "medium",
+      "LGPL-3.0": "medium",
+      "CPOL-1.02": "high",
+      "LGPL-2.1+": "medium",
+      "LGPL-3.0+": "medium",
+      "SimPL-2.0": "high",
+      "Artistic-1.0": "medium",
+      "Artistic-2.0": "medium"
+    }
+  },
+  "isPrivate": true,
+  "packageManager": "nuget",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.12.0\nignore: {}\npatch: {}\n",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": true,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "88 vulnerable dependency paths",
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 18,
+  "path": "dummy/obj"
+}

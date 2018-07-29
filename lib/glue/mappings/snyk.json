@@ -1,0 +1,16 @@
+{
+  "task_name": "Snyk",
+  "app_name": "path",
+  "mappings": [
+    {
+      "key": "vulnerabilities",
+      "properties": {
+        "description": "title",
+        "detail": "description",
+        "source": "packageName",
+        "severity": "severity",
+        "fingerprint": "id"
+      }
+    }
+  ]
+}

@@ -132,8 +132,8 @@ describe Glue::Dynamic do
     end
   end
 
-  # The tests used the report after transformed with JQ, see the documentation for more details
-  context "zaproxy" do
+   # The tests used the report after transformed with JQ, see the documentation for more details
+   context "zaproxy" do
     let(:task) { get_dynamic_task_buildin_mapping "tools_samples/zaproxy.json", "zaproxy"}
     subject(:task_findings) { task.findings }
     before do 
@@ -152,6 +152,28 @@ describe Glue::Dynamic do
       expect(finding.fingerprint).to eq("10094_http://api:9999/_POST")
       expect(finding.appname).to eq("http://api:9999")
       expect(finding.task).to eq("OWASP Zaproxy")
+    end
+  end
+
+  context "snyk" do
+    let(:task) { get_dynamic_task_buildin_mapping "tools_samples/snyk.json", "snyk"}
+    subject(:task_findings) { task.findings }
+    before do 
+      task.run
+    end
+    it "should produce one finding" do
+      should have(2).items
+    end
+
+    it "should fill all the required fields" do
+      finding = subject[0]
+      expect(finding.severity).to eq(2)
+      expect(finding.description).to eq("Denial of Service (DoS)")
+      expect(finding.detail).to eq("description")
+      expect(finding.source).to eq("Microsoft.AspNetCore.All")
+      expect(finding.fingerprint).to eq("SNYK-DOTNET-MICROSOFTASPNETCOREALL-60258")
+      expect(finding.appname).to eq("dummy/obj")
+      expect(finding.task).to eq("Snyk")
     end
   end
  end
