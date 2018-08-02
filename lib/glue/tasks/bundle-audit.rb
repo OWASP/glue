@@ -45,14 +45,6 @@ class Glue::BundleAudit < Glue::BaseTask
   end
 
   private
-  def normalize_unknown_severity sev
-    sev = '' if sev.nil?
-    return sev if sev.strip.chomp.downcase != "unknown"
-    Glue.warn "Criticality: Unknown. Setting it to medium"
-    return "medium"
-  end
-
-  private
   def get_warnings
     @results.each do |dir, result|
       detail, jem, source, sev, hash = '','',{},'',''
@@ -79,7 +71,7 @@ class Glue::BundleAudit < Glue::BaseTask
           source = { :scanner => @name, :file => "#{relative_path(dir, @trigger.path)}/Gemfile.lock", :line => nil, :code => nil }
           hash << value
         when 'Criticality'
-          sev = severity(normalize_unknown_severity(value))
+          sev = severity(value)
           hash << sev
         when 'URL'
           detail += line.chomp.split('URL:').last
