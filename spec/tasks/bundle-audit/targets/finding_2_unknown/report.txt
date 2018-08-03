@@ -1,0 +1,9 @@
+Name: nokogiri
+Version: 1.8.2
+Advisory: CVE-2018-8048
+Criticality: Unknown
+URL: https://github.com/sparklemotion/nokogiri/pull/1746
+Title: Revert libxml2 behavior in Nokogiri gem that could cause XSS
+Solution: upgrade to >= 1.8.3
+
+Vulnerabilities found!

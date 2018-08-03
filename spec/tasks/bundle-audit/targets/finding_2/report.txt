@@ -1,0 +1,9 @@
+Name: http
+Version: 0.7.1
+Advisory: CVE-2015-1828
+Criticality: Medium
+URL: https://groups.google.com/forum/#!topic/httprb/jkb4oxwZjkU
+Title: HTTPS MitM vulnerability in http.rb
+Solution: upgrade to >= 0.7.3, ~> 0.6.4
+
+Vulnerabilities found!
