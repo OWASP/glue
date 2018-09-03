@@ -61,4 +61,31 @@ class Glue::Finding
     json
   end
 
+  # This is to fit a common JSON schema.
+  # See:  https://github.com/OWASP/off/blob/master/owasp.off.schema.json
+  def to_off
+    off_json = {
+      'name' => @description,
+      'description' => @description,
+      'detail' => @detail,
+      'severity' => get_severity_string(@severity),
+      'confidence' => 'medium', # Glue tools don't reliably get something here yet.
+      'fingerprint' => @fingerprint,
+      'timestamp' => @timestamp,
+      'source' => @source, # This is a JSON array ... keeps it usable.
+      'location' => @stringsrc # Source structure varies, but this shows file and line for some tools.
+    }.to_json
+    off_json
+  end
+
+  def get_severity_string severity
+    case severity
+    when 3
+      'high'
+    when 2
+      'medium'
+    else
+      'low'
+    end
+  end
 end
