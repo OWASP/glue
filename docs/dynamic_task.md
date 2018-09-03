@@ -38,11 +38,43 @@ Replace `report.json` and `mapping.json` with the paths to the relevant files.
 ## Built-In Tools
 The dynamic task support built-in mappings, that are shipped with Glue. 
 Those mapping files aims to help others to use the mapping your created.
-To use a built-in tools run Glue in the following format:
+
+### MobSF
+
+To parse MobSF report, use the following format:
 ```
 ruby bin/glue -t Dynamic -T report.json --mapping-file mobsf
 ```
-This will look for a file with the name `mobsf.json` under this [folder](/lib/glue/mappings/).
+where `report.json` is your report
+
+### Zaproxy
+To parse Zaproxy report, you first need to generate it by using the API:
+```
+curl --fail $PROXY_URL/OTHER/core/other/jsonreport/?formMethod=GET --output report.json
+```
+Than, use [jq](https://stedolan.github.io/jq/) to flatten the report so Glue can parse it:
+```
+jq '{ "@name" : .site."@name",
+  "alerts": 
+  [.site.alerts[] as $in 
+  | $in.instances[] as $h 
+  | $in
+  | $h * $in
+  | {
+      "description": $in.desc, 
+      "source": "URI: \($h.uri) Method: \($h.method)",
+      "detail": "\($in.name) \n Evidence: \($h.evidence) \n Solution: \($in.solution) \n Other info: \($in.otherinfo) \n Reference: \($in.reference)",
+      "severity": $in.riskdesc | split(" ") | .[0],
+      "fingerprint": "\($in.pluginid)_\($h.uri)_\($h.method)" 
+    }
+  ]
+} ' report.json > output.json
+```
+Now use Glue to process the report:
+```
+ruby bin/glue -t Dynamic -T report.json --mapping-file zaproxy
+```
+You can modify the jq pattern to modify the fields in Glue's results. For example, you might want to remove `otherinfo`, or use something else for the fingerprint.
 ## Adding a new tool
 First, create the mapping file.
 After you have a working mapping file, open a PR and add it under `/lib/glue/mappings/`. 
