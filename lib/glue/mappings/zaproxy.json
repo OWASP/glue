@@ -1,0 +1,16 @@
+{
+  "task_name": "OWASP Zaproxy",
+  "app_name": "@name",
+  "mappings": [
+    {
+      "key": "alerts",
+      "properties": {
+        "description": "description",
+        "detail": "detail",
+        "source": "source",
+        "severity": "severity",
+        "fingerprint": "fingerprint"
+      }
+    }
+  ]
+}

@@ -75,7 +75,7 @@ class Glue::BaseTask
     return 1 if @severity_filter[:low].include?(sev.strip.chomp.downcase)
     return 2 if @severity_filter[:medium].include?(sev.strip.chomp.downcase)
     return 3 if @severity_filter[:high].include?(sev.strip.chomp.downcase)
-    puts "unsupperted severity found: " + sev
+    Glue.warn "unsupperted severity found: " + sev
     return 0
   end
 
