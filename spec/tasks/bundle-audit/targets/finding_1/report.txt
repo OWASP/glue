@@ -1,0 +1,9 @@
+Name: kafo
+Version: 0.3.1
+Advisory: CVE-2014-0135
+Criticality: Low
+URL: http://osvdb.org/show/osvdb/106826
+Title: Kafo default_values.yaml Insecure Permissions Local Information Disclosure
+Solution: upgrade to ~> 0.3.17, >= 0.5.2
+
+Vulnerabilities found!

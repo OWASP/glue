@@ -1,0 +1,9 @@
+Name: curl
+Version: 
+Advisory: CVE-2013-2617
+Criticality: High
+URL: http://osvdb.org/show/osvdb/91230
+Title: Curl Gem for Ruby URI Handling Arbitrary Command Injection
+Solution: remove or disable this gem until a patch is available!
+
+Vulnerabilities found!
