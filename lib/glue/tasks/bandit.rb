@@ -18,7 +18,13 @@ class Glue::Bandit < Glue::BaseTask
 
   def run
     rootpath = @trigger.path
-    @result=runsystem(true, "bandit", "-f", "json", "-r", "#{rootpath}")
+    context = SecureRandom.uuid
+    @tmppath = "/tmp/#{context}/"    
+    Dir.mkdir @tmppath
+    # https://docs.openstack.org/bandit/latest/man/bandit.html?highlight=verbose
+    runsystem(true, "bandit", "-f", "json", "-o", "#{@tmppath}/bandit.json","-r", "#{rootpath}")
+    file = File.open("#{@tmppath}/bandit.json", "rb")
+    @result= file.read
   end
 
   def analyze
