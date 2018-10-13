@@ -8,7 +8,7 @@
 
 # OWASP Glue
 
-Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
+Glue is a framework for running a series of tools.  It is intended as a backbone for automating a security analysis pipeline of tools.
 
 # Recommended Usage
 
@@ -121,8 +121,12 @@ For advanced usage scenarios, you can save your configuration and use it at runt
 # Authors
 
 Matt Konda
+Omer Levi Hevroni
+Brian Fore
 Alex Lock
+Runako Godfrey
 Rafa Perez
+Reuben Swartz
 
 # License
 

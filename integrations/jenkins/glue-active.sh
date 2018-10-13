@@ -6,4 +6,4 @@ echo "Script executed from: ${PWD}"
 
 eval $(docker-machine env patched)
 GUID="$RANDOM"
-docker run --rm=true --name=glue_ci_active owasp/glue:0.9.0 -z -t zap -d https://staging.jemurai.com/
+docker run --rm=true --name=glue_ci_active owasp/glue -z -t zap -d https://staging.jemurai.com/

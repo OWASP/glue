@@ -4,7 +4,7 @@ echo "Pre-commit: Testing for security issues ..."
 # -z tells glue to emit error on warnings
 # -v mount volumes
 # -l code stage
-docker run --name="glue-precommit" --rm=true -v /Users/mk/line/tmp/triage/:/tmp/triage/ owasp/glue:0.9.0 -z -l code /tmp/triage/
+docker run --name="glue-precommit" --rm=true -v /Users/mk/line/tmp/triage/:/tmp/triage/ owasp/glue -z -l code /tmp/triage/
 RESULT=$?
 if [$RESULT -eq 0]
 then

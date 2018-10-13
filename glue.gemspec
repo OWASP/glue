@@ -3,7 +3,7 @@ require './lib/glue/version'
 Gem::Specification.new do |s|
   s.name = %q{owasp-glue}
   s.version = Glue::Version
-  s.authors = ["Matt Konda", "Alex Lock", "Rafa Perez", "Runako Godfrey", "Reuben Swartz", "Varun Yeldandi"]
+  s.authors = ["Matt Konda", "Omer Levi Hevroni", "Brian Fore", "Alex Lock", "Rafa Perez", "Runako Godfrey", "Reuben Swartz", "Varun Yeldandi"]
   s.email = "matt.konda@owasp.org"
   s.summary = "Security toolchain for software build automation."
   s.description = "Glue detects security vulnerabilities in code."
@@ -19,7 +19,8 @@ Gem::Specification.new do |s|
   s.add_dependency "brakeman", ">= 3.0.5"
   s.add_dependency "curb", ">= 0.8.8"
   s.add_dependency "jsonpath", ">= 0.5.7"
-  s.add_dependency "nokogiri", ">=1.6.6.2"
+  s.add_dependency "nokogiri", ">=1.8.5"
+  s.add_dependency "ffi", ">=1.9.24"
   s.add_dependency "rake"
   s.add_dependency "redcarpet"
   s.add_dependency "jira-ruby"
