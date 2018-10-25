@@ -56,10 +56,9 @@ analysis and review.
 
 ## Rich Custom Application for Inventory and Triage
 
-One organization built an entire front end for Glue (called CodeBurner)
+Groupon built an entire front end for Glue (called [CodeBurner](https://github.com/groupon/codeburner))
 that makes it easy for folks to self service the findings and selectively
-push them to JIRA or filter them in the future.  Once this application is
-fully open source, we will present a link to that codebase.
+push them to JIRA or filter them in the future.
 
 
 ## Process Your Images
