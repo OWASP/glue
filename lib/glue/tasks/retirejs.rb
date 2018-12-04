@@ -88,7 +88,7 @@ class Glue::RetireJS < Glue::BaseTask
     return [] if all_results.nil?
 
     js_results, npm_results = all_results.partition do |result|
-      result[0].eql? 'file'
+      result.key?('file')
     end
 
     js_vulnerabilities(js_results) + npm_vulnerabilities(npm_results)
@@ -188,7 +188,7 @@ class Glue::RetireJS < Glue::BaseTask
   end
 
   def vulnerability_hashes(proto_result, source_tag)
-    if !proto_result.has_key?('vulnerabilities') then
+    if !proto_result.has_key?('vulnerabilities')
       return []
     end
     proto_result['vulnerabilities'].each_with_object([]) do |vuln, vulns|
