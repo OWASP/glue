@@ -440,6 +440,18 @@ describe Glue::RetireJS do
         end
       end
 
+      context 'with one js lib where not all components have vulnerabilities' do
+        # jQuery v1.9.0: two js vulns (med, high)
+        # components jquery-ui-autocomplete and jquery-ui-tooltip have no vulnerabilities field
+
+        let(:target) { 'findings_f1_components_wo_vulnerabilities' }
+        let(:findings) { task.findings }
+
+        it 'results in two findings' do
+          expect(findings.size).to eq(2)
+        end
+      end
+
       context 'with one js finding in a subdirectory' do
         let(:target) { 'finding_f1_nested' }
         let(:findings) { task.findings }
