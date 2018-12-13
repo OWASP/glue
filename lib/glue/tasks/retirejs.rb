@@ -188,6 +188,9 @@ class Glue::RetireJS < Glue::BaseTask
   end
 
   def vulnerability_hashes(proto_result, source_tag)
+    if !proto_result.has_key?('vulnerabilities')
+      return []
+    end
     proto_result['vulnerabilities'].each_with_object([]) do |vuln, vulns|
       vuln_hash = {
         package: package_tag(proto_result),
