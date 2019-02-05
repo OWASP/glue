@@ -259,8 +259,12 @@ module Glue::Options
           options[:sbt_path] = path
         end
 
-        opts.on "--scala-project", "OWAP Dependency Check for Scala project" do
+        opts.on "--scala-project", "OWASP Dependency Check for Scala project" do
           options[:scala_project] = true
+        end
+
+        opts.on "--gradle-project", "OWASP Dependency Check for Gradle project" do
+          options[:gradle_project] = true
         end
 
         opts.separator ""
