@@ -267,6 +267,10 @@ module Glue::Options
           options[:gradle_project] = true
         end
 
+        opts.on "--maven-project", "OWASP Dependency Check for Maven project" do
+          options[:maven_project] = true
+        end
+
         opts.separator ""
         opts.separator "Burp options:"
         opts.on "--burp-xml-path BURL_XML_PATH", "Burp XML Path" do |burp_xml_path|

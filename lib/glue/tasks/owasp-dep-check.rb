@@ -103,6 +103,7 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     @sbt_path = @tracker.options[:sbt_path]
     @scala_project = @tracker.options[:scala_project]
     @gradle_project = @tracker.options[:gradle_project]
+    @maven_project = @tracker.options[:maven_project]
   end
 
   def run
@@ -112,7 +113,9 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     if @scala_project
       run_args = [ @sbt_path, "dependencyCheck" ]
     elsif @gradle_project
-        run_args = [ "./gradlew", "dependencyCheckAnalyze" ]
+      run_args = [ "./gradlew", "dependencyCheckAnalyze" ]
+    elsif @maven_project
+      run_args = [ "mvn", "org.owasp:dependency-check-maven:check" ]
     else  
       run_args = [ @dep_check_path, "--project", "Glue", "-f", "ALL" ]
     end
@@ -125,13 +128,13 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
       run_args << [ "--suppression", "#{@tracker.options[:owasp_dep_check_suppression]}" ]
     end
 
-    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project || @gradle_project
+    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project || @gradle_project || @maven_project
 
     initial_dir = Dir.pwd
-    Dir.chdir @trigger.path if @scala_project || @gradle_project
+    Dir.chdir @trigger.path if @scala_project || @gradle_project || @maven_project
     @result= runsystem(true, *run_args.flatten)
     @sbt_settings = runsystem(true, @sbt_path, "dependencyCheckListSettings") if @scala_project
-    Dir.chdir initial_dir if @scala_project || @gradle_project
+    Dir.chdir initial_dir if @scala_project || @gradle_project || @maven_project
   end
 
   def analyze
@@ -142,6 +145,8 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
       report_directory[:report_path] + "/dependency-check-report.xml"
     elsif @gradle_project
       @trigger.path + "/build/reports/dependency-check-report.xml"
+    elsif @maven_project
+      @trigger.path + "/target/dependency-check-report.xml"
     else
       @trigger.path + "/dependency-check-report.xml"
     end
