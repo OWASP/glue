@@ -13,7 +13,8 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 #            Early because it needs to run as root.
 #            Requires nodejs npm
 #
-RUN npm install -g nsp retire eslint eslint-plugin-scanjs-rules eslint-plugin-no-unsafe-innerhtml
+## retirejs locked to most recent pre-2.x.x version (2.x.x breaks the retirejs task)
+RUN npm install -g nsp retire@1.6.2 eslint eslint-plugin-scanjs-rules eslint-plugin-no-unsafe-innerhtml
 RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 #################################################################################################
@@ -26,6 +27,8 @@ USER glue
 #       RVM / Ruby
 #
 #
+RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+RUN curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 RUN /bin/bash -l -c "curl -L https://get.rvm.io | bash -s stable"
 RUN /bin/bash -l -c "source ~/.rvm/scripts/rvm"
@@ -45,12 +48,13 @@ RUN /bin/bash -l -c "sudo pip install awsscout2"
 #################################################################################################
 #       Java
 #
-#RUN apt-get install -y software-properties-common
-#RUN add-apt-repository -y ppa:webupd8team/java
-#RUN apt-get update
+## JDK needed for Dependency Check Maven plugin
+RUN sudo apt-get install -y software-properties-common
+RUN sudo add-apt-repository -y ppa:webupd8team/java
+RUN sudo apt-get update
 ## Auto-accept the Oracle JDK license
-#RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-#RUN apt-get install -y oracle-java8-installer
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+RUN sudo apt-get install -y oracle-java8-installer
 
 RUN /bin/bash -l -c "mkdir -p /home/glue/tools"
 WORKDIR /home/glue/tools/
