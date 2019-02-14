@@ -41,7 +41,7 @@ class Glue::DepCheckListener
     case name
     when "name"
       # Only take the first name tag, or we may end up with a tag from a child node (e.g. <reference>)
-      if @name.blank? && @text =~ /\D/
+      if @name.empty? && @text =~ /\D/
         @name = @text
       end
     when "cvssScore"
@@ -63,7 +63,7 @@ class Glue::DepCheckListener
       urls = @url.reject { |s| s =~ /\s*,\s*/ }.join(', ')
 
       #detail = sw_str + "\n" + @url
-      @jar_name.gsub!(/\:\s+/, '/') unless @jar_name.blank?
+      @jar_name.gsub!(/\:\s+/, '/') unless @jar_name.empty?
       detail = "#{@jar_name}\n#{urls}"
       description = @desc + "\n" + @cwe
       #@fingerprint = sw_str + "-" + @name
