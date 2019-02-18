@@ -72,6 +72,18 @@ describe Glue::OWASPDependencyCheck do
         task.supported?
       end
     end
+
+    context "when 'runsystem' returns a version message" do
+      before do
+        allow(Glue).to receive(:notify)
+        cmd_args = [true, @dep_check_path, "-v"]
+        cmd_str = 'Dependency-Check Core version'
+        allow(task).to receive(:runsystem).with(*cmd_args).and_return(cmd_str)
+      end
+
+      it { is_expected.to be_supported }
+
+    end
   end
 
   describe "#run" do
