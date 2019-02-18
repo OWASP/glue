@@ -116,15 +116,6 @@ describe Glue::OWASPDependencyCheck do
       end
     end
 
-    context "with one build.sbt file in the root directory" do
-    end
-
-    context "with one pom.xml file in the root directory" do
-    end
-
-    context "with one build.gradle file in the root directory" do
-    end
-
   end
 
   describe "#analyze" do
@@ -134,6 +125,7 @@ describe Glue::OWASPDependencyCheck do
     before do
       allow(Glue).to receive(:notify)
       allow(Glue).to receive(:warn)
+      allow(STDOUT).to receive(:puts)
 
       allow(task).to receive(:runsystem) do
         minimal_response
