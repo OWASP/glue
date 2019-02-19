@@ -41,7 +41,7 @@ class Glue::DepCheckListener
     case name
     when "name"
       # Only take the first name tag, or we may end up with a tag from a child node (e.g. <reference>)
-      if @name.blank? && @text =~ /\D/
+      if @name.empty? && @text =~ /\D/
         @name = @text
       end
     when "cvssScore"
@@ -63,13 +63,17 @@ class Glue::DepCheckListener
       urls = @url.reject { |s| s =~ /\s*,\s*/ }.join(', ')
 
       #detail = sw_str + "\n" + @url
-      @jar_name.gsub!(/\:\s+/, '/') unless @jar_name.blank?
+      @jar_name.gsub!(/\:\s+/, '/') unless @jar_name.empty?
       detail = "#{@jar_name}\n#{urls}"
       description = @desc + "\n" + @cwe
       #@fingerprint = sw_str + "-" + @name
       @fingerprint = "#{@name}:#{@jar_name}"
 
       summary = "#{@name} in #{@jar_name}"
+
+      # Convert CVSS score to 1-3 scale
+      divisor = 10.0 / 3    # 10.0 is the CVSS max score
+      @cvss = (@cvss.to_f / divisor).ceil
 
       puts "Fingerprint: #{@fingerprint}"
       puts "Vuln: #{@name} CVSS: #{@cvss} Description #{description} Detail #{detail}"
@@ -98,6 +102,8 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
     @dep_check_path = @tracker.options[:owasp_dep_check_path]
     @sbt_path = @tracker.options[:sbt_path]
     @scala_project = @tracker.options[:scala_project]
+    @gradle_project = @tracker.options[:gradle_project]
+    @maven_project = @tracker.options[:maven_project]
   end
 
   def run
@@ -106,6 +112,10 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
 
     if @scala_project
       run_args = [ @sbt_path, "dependencyCheck" ]
+    elsif @gradle_project
+      run_args = [ "./gradlew", "dependencyCheckAnalyze" ]
+    elsif @maven_project
+      run_args = [ "mvn", "org.owasp:dependency-check-maven:check" ]
     else  
       run_args = [ @dep_check_path, "--project", "Glue", "-f", "ALL" ]
     end
@@ -118,18 +128,25 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
       run_args << [ "--suppression", "#{@tracker.options[:owasp_dep_check_suppression]}" ]
     end
 
-    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project
+    run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project || @gradle_project || @maven_project
 
     initial_dir = Dir.pwd
-    Dir.chdir @trigger.path if @scala_project
+    Dir.chdir @trigger.path if @scala_project || @gradle_project || @maven_project
     @result= runsystem(true, *run_args.flatten)
-    Dir.chdir initial_dir if @scala_project
+    @sbt_settings = runsystem(true, @sbt_path, "dependencyCheckListSettings") if @scala_project
+    Dir.chdir initial_dir if @scala_project || @gradle_project || @maven_project
   end
 
   def analyze
     path = if @scala_project
-      md = @result.match(/\e\[0m\[\e\[0minfo\e\[0m\] \e\[0mWriting reports to (?<report_path>.*)\e\[0m/)
-      md[:report_path] + "/dependency-check-report.xml"
+      #md = @result.match(/\e\[0m\[\e\[0minfo\e\[0m\] \e\[0mWriting reports to (?<report_path>.*)\e\[0m/)
+      #md[:report_path] + "/dependency-check-report.xml"
+      report_directory = @sbt_settings.match(/.*dependencyCheckOutputDirectory: (?<report_path>.*)\e\[0m/)
+      report_directory[:report_path] + "/dependency-check-report.xml"
+    elsif @gradle_project
+      @trigger.path + "/build/reports/dependency-check-report.xml"
+    elsif @maven_project
+      @trigger.path + "/target/dependency-check-report.xml"
     else
       @trigger.path + "/dependency-check-report.xml"
     end

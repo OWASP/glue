@@ -6,14 +6,25 @@ module Glue::Util
 
   def runsystem(report, *splat)
     Open3.popen3(*splat) do |stdin, stdout, stderr, wait_thr|
-
+      
+      # start a thread consuming the stdout buffer
+      # if the pipes fill up a deadlock occurs
+      stdout_consumed = ""
+      consumer_thread = Thread.new {
+        while line = stdout.gets do
+          stdout_consumed += line
+        end
+      }
+      
       if $logfile and report
         while line = stderr.gets do
           $logfile.puts line
         end
       end
 
-      return stdout.read.chomp
+      consumer_thread.join
+      return stdout_consumed.chomp
+      #return stdout.read.chomp
     end
   end
 

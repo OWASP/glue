@@ -204,7 +204,7 @@ The OWASP Dependency Check project looks at a project's dependencies and checks 
 Vulnerability Database (NVD) and alerts us to issues in the libraries we are using.
 
 ```
-glue -t owasp-dep-check target
+glue -t owaspdependencycheck target
 ```
 
 ### PMD
