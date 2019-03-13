@@ -19,6 +19,8 @@ class Glue::URLMounter < Glue::BaseMounter
     last = target.slice(-4,target.length)
     if last === ".git"
       return false
+    elsif target.include?("@dev.azure.com/") && target.include?("/_git/")
+      return false
     elsif start === "http"
       return true
     else
