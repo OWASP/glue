@@ -54,9 +54,9 @@ curl --fail $PROXY_URL/OTHER/core/other/jsonreport/?formMethod=GET --output repo
 ```
 Than, use [jq](https://stedolan.github.io/jq/) to flatten the report so Glue can parse it:
 ```
-jq '{ "@name" : .site."@name",
+jq '{ "@name" : .site[0]."@name",
   "alerts": 
-  [.site.alerts[] as $in 
+  [.site[] | .alerts[] as $in 
   | $in.instances[] as $h 
   | $in
   | $h * $in
@@ -65,10 +65,10 @@ jq '{ "@name" : .site."@name",
       "source": "URI: \($h.uri) Method: \($h.method)",
       "detail": "\($in.name) \n Evidence: \($h.evidence) \n Solution: \($in.solution) \n Other info: \($in.otherinfo) \n Reference: \($in.reference)",
       "severity": $in.riskdesc | split(" ") | .[0],
-      "fingerprint": "\($in.pluginid)_\($h.uri)_\($h.method)" 
+      "fingerprint": "\($in.pluginid)_\($in.name)_\($h.uri)_\($h.method)" 
     }
   ]
-} ' report.json > output.json
+}' report.json > output.json
 ```
 Now use Glue to process the report:
 ```
