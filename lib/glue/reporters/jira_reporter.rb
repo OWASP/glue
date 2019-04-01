@@ -80,7 +80,7 @@ class Glue::JiraReporter < Glue::BaseReporter
   end
 
   def jira_issue_type(issue_type)
-    if issue_type.empty?
+    if issue_type.to_s.empty?
       return "Bug"
     end
 
