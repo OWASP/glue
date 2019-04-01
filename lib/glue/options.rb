@@ -151,6 +151,9 @@ module Glue::Options
         opts.on "--jira-default-priority PRIORITY", "Specify a default priority for JIRA issues. This will override the mapping of severity to priority." do |default_priority|
           options[:jira_default_priority] = default_priority
         end
+        opts.on "--jira-issue-type ISSUETYPE", "Specify issue type to use when rasing issues." do |jira_issue_type|
+          options[:jira_issue_type] = jira_issue_type
+        end
 
         opts.separator ""
         opts.separator "Pivotal options:"
