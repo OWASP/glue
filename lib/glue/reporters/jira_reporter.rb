@@ -42,7 +42,7 @@ class Glue::JiraReporter < Glue::BaseReporter
     tracker.findings.each do |finding|
       begin
         issue = @jira.Issue.build
-        json = get_jira_json(finding, tracker.options[:jira_skip_fields] || '', tracker.options[:jira_default_priority])
+        json = get_jira_json(finding, tracker.options[:jira_skip_fields] || '', tracker.options[:jira_default_priority], tracker.options[:jira_issue_type])
         issue.save(json)
       rescue Exception => e
         puts "Issue #{e.message}"
@@ -52,7 +52,7 @@ class Glue::JiraReporter < Glue::BaseReporter
   end
 
   private
-  def get_jira_json(finding, skip_fields, default_priority=nil)
+  def get_jira_json(finding, skip_fields, default_priority=nil, issue_type=nil)
 	  json = {
     	"fields": {
        		"project":
@@ -65,7 +65,7 @@ class Glue::JiraReporter < Glue::BaseReporter
             'name': jira_priority(finding.severity, default_priority)
           },
        		"issuetype": {
-          		"name": "Bug"
+          		"name": jira_issue_type(issue_type)
        		},       		
        		#{}"components": [ { "name": "#{@component}" } ]
        	}
@@ -77,6 +77,14 @@ class Glue::JiraReporter < Glue::BaseReporter
 
     json['labels'] = [ "Glue", "#{finding.appname}" ] unless skip_fields.split(',').include?('labels')
     json
+  end
+
+  def jira_issue_type(issue_type)
+    if issue_type.to_s.empty?
+      return "Bug"
+    end
+
+    issue_type
   end
 
   def jira_priority(severity, default_priority=nil)
