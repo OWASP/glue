@@ -258,6 +258,25 @@ module Glue::Options
           options[:owasp_dep_check_suppression] = path
         end
 
+        opts.on "--owasp-db-driver-name NAME", "The Java class name for the OWASP Dependency Check external database driver" do |driver_name|
+          Glue.debug "Setting OWASP DB Driver name to #{driver_name}"
+          options[:owasp_dep_check_db_driver_name] = driver_name
+        end
+
+        opts.on "--owasp-db-connection-string URL", "The connection string for the OWASP Dependency Check external database" do |db_conn_string|
+          Glue.debug "Setting OWASP DB connection string to #{db_conn_string}"
+          options[:owasp_dep_check_db_conn_string] = db_conn_string
+        end
+
+        opts.on "--owasp-db-user USER", "The user for the OWASP Dependency Check external database" do |db_user|
+          Glue.debug "Setting OWASP DB user to #{db_user}"
+          options[:owasp_dep_check_db_user] = db_user
+        end
+
+        opts.on "--owasp-db-password PASSWORD", "The password for the OWASP Dependency Check external database" do |db_password|
+          options[:owasp_dep_check_db_pass] = db_password
+        end
+
         opts.on "--sbt-path PATH", "The full path to sbt (optional)" do |path|
           options[:sbt_path] = path
         end

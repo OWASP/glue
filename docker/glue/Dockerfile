@@ -71,6 +71,10 @@ WORKDIR /home/glue/tools/
 RUN curl -L http://dl.bintray.com/jeremy-long/owasp/dependency-check-1.4.3-release.zip --output owasp-dep-check.zip
 RUN unzip owasp-dep-check.zip
 
+# PostgreSQL JDBC Plugin (for external database)
+#
+RUN curl -L https://jdbc.postgresql.org/download/postgresql-42.2.5.jar --output /home/glue/tools/dependency-check/plugins/postgresql.jar
+
 # Maven
 RUN sudo apt-get install -y maven
 
