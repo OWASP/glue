@@ -46,7 +46,7 @@ class Glue::SlackReporter < Glue::BaseReporter
     puts tracker.options[:slack_channel]
 
     begin
-      client.chat_postMessage(channel: tracker.options[:slack_channel], text: "OWASP Glue found some issues. Raised as a message attachment.", attachments: reports.join << "\n", as_user: post_as_user)
+      client.chat_postMessage(channel: tracker.options[:slack_channel], text: "OWASP Glue test run completed - See attachment.", attachments: reports.join << "\n", as_user: post_as_user)
     rescue Slack::Web::Api::Error => error
       Glue.fatal "Post to slack failed: " << error.to_s
     end
