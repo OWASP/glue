@@ -2,7 +2,6 @@ require 'glue/finding'
 require 'glue/reporters/base_reporter'
 require 'jira-ruby'
 require 'slack-ruby-client'
-require 'pry'
 
 # In IRB
 # require 'slack-ruby-client'
@@ -41,11 +40,11 @@ class Glue::SlackReporter < Glue::BaseReporter
     if is_number?(severity)
       f = Float(severity)
       if f == 3
-        'warning'
+        'good'
       elsif f == 2
-        'danger'
+        'warning'
       elsif f == 1
-        '#192022'
+        'danger'
       else
         Glue.notify "**** Unknown severity type #{severity}"
         severity
@@ -92,8 +91,12 @@ class Glue::SlackReporter < Glue::BaseReporter
     puts tracker.options[:slack_channel]
 
     begin
-      binding.pry
-      client.chat_postMessage(channel: tracker.options[:slack_channel], text: "OWASP Glue test run completed - See attachment.", attachments: reports , as_user: post_as_user)
+      client.chat_postMessage(
+        channel: tracker.options[:slack_channel], 
+        text: "OWASP Glue has found " + reports.length.to_s + " vulnerabilities in *" + tracker.options[:appname] + "* . \n Here's a summary:", 
+        attachments: reports , 
+        as_user: post_as_user
+        )
     rescue Slack::Web::Api::Error => error
       Glue.fatal "Post to slack failed: " << error.to_s
     end
