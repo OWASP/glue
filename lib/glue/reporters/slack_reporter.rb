@@ -2,7 +2,7 @@ require 'glue/finding'
 require 'glue/reporters/base_reporter'
 require 'jira-ruby'
 require 'slack-ruby-client'
-
+require 'pry'
 
 # In IRB
 # require 'slack-ruby-client'
@@ -27,9 +27,9 @@ class Glue::SlackReporter < Glue::BaseReporter
     true if Float(str) rescue false
   end
 
-  def get_slack_attachment(finding)
+  def get_slack_attachment(finding,tracker)
     json = {
-      "fallback": "Results of OWASP Glue test for repository #{tracker.options[:appname]}:",
+      "fallback": "Results of OWASP Glue test for repository" + tracker.options[:appname] + ":",
       "color": slack_priority(finding.severity),
       "title": "#{finding.description}",
       "title_link":"#{finding.detail}",
@@ -49,50 +49,53 @@ class Glue::SlackReporter < Glue::BaseReporter
       else
         Glue.notify "**** Unknown severity type #{severity}"
         severity
+      end
     end
   end
 
-    def run_report(tracker)
-      post_as_user = false
-      if (tracker.options[:slack_post_as_user])
-        post_as_user = true
-      end
+  def run_report(tracker)
+    post_as_user = false
+    if (tracker.options[:slack_post_as_user])
+      post_as_user = true
+    end
 
-      mandatory = [:slack_token, :slack_channel]
-      missing = mandatory.select{ |param| tracker.options[param].nil? }
-      unless missing.empty?
-        Glue.fatal "missing one or more required params: #{missing}"
-        return
-      end
+    mandatory = [:slack_token, :slack_channel]
+    missing = mandatory.select{ |param| tracker.options[param].nil? }
+    unless missing.empty?
+      Glue.fatal "missing one or more required params: #{missing}"
+      return
+    end
 
-      Slack.configure do |config|
-          config.token = tracker.options[:slack_token]
-      end
+    Slack.configure do |config|
+      config.token = tracker.options[:slack_token]
+    end
 
-      client = Slack::Web::Client.new
+    client = Slack::Web::Client.new
 
-      begin
-        client.auth_test
-      rescue Slack::Web::Api::Error => error
-        Glue.fatal "Slack authentication failed: " << error.to_s
-      end
+    begin
+      client.auth_test
+    rescue Slack::Web::Api::Error => error
+      Glue.fatal "Slack authentication failed: " << error.to_s
+    end
 
-      reports = []
-      tracker.findings.each do |finding|
-        begin
-          reports << get_slack_attachment(finding)
-          binding.pry
-        end
-      reports.join
-      end
+    reports = []
+    # tracker.findings.each do |finding|
+    #   reports << get_slack_attachment(finding)
+    #   binding.pry
+    #   reports.join
+    # end
+    tracker.findings.each do |finding|
+      # reports << finding.to_json
+      reports << get_slack_attachment(finding,tracker)
+    end
 
-      puts tracker.options[:slack_channel]
+    puts tracker.options[:slack_channel]
 
-      begin
-        client.chat_postMessage(channel: tracker.options[:slack_channel], text: "OWASP Glue test run completed - See attachment.", attachments: reports.to_json << "\n", as_user: post_as_user)
-      rescue Slack::Web::Api::Error => error
-        Glue.fatal "Post to slack failed: " << error.to_s
-      end
+    begin
+      binding.pry
+      client.chat_postMessage(channel: tracker.options[:slack_channel], text: "OWASP Glue test run completed - See attachment.", attachments: reports , as_user: post_as_user)
+    rescue Slack::Web::Api::Error => error
+      Glue.fatal "Post to slack failed: " << error.to_s
     end
   end
 end
