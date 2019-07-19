@@ -48,11 +48,11 @@ RUN /bin/bash -l -c "sudo pip install awsscout2"
 #
 ## JDK needed for Dependency Check Maven plugin
 RUN sudo apt-get install -y software-properties-common
-RUN sudo add-apt-repository -y ppa:webupd8team/java
-RUN sudo apt-get update
+#RUN sudo add-apt-repository -y ppa:webupd8team/java
+#RUN sudo apt-get update
 ## Auto-accept the Oracle JDK license
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-RUN sudo apt-get install -y oracle-java8-installer
+#RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+#RUN sudo apt-get install -y oracle-java8-installer
 
 RUN /bin/bash -l -c "mkdir -p /home/glue/tools"
 WORKDIR /home/glue/tools/
@@ -100,7 +100,7 @@ RUN /bin/bash -l -c "mkdir -p /home/glue/tmp"
 WORKDIR /home/glue/
 
 ## Core Pipeline (and ruby tools)
-RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
+RUN /bin/bash -l -c "git clone -b better-slack-reporter https://github.com/PastNullInfinity/glue.git"
 #RUN /bin/bash -l -c "mkdir -p /home/glue/glue"
 ADD . /home/glue/glue
 
