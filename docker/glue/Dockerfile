@@ -97,7 +97,7 @@ RUN /bin/bash -l -c "mkdir -p /home/glue/tmp"
 WORKDIR /home/glue/
 
 ## Core Pipeline (and ruby tools)
-RUN /bin/bash -l -c "git clone https://github.com/OWASP/glue.git"
+RUN /bin/bash -l -c "git clone -b better-slack-reporter https://github.com/PastNullInfinity/glue.git"
 #RUN /bin/bash -l -c "mkdir -p /home/glue/glue"
 ADD . /home/glue/glue
 
