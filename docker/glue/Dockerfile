@@ -48,11 +48,8 @@ RUN /bin/bash -l -c "sudo pip install awsscout2"
 #
 ## JDK needed for Dependency Check Maven plugin
 RUN sudo apt-get install -y software-properties-common
-RUN sudo add-apt-repository -y ppa:webupd8team/java
 RUN sudo apt-get update
-## Auto-accept the Oracle JDK license
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-RUN sudo apt-get install -y oracle-java8-installer
+RUN sudo apt-get install -y default-jre
 
 RUN /bin/bash -l -c "mkdir -p /home/glue/tools"
 WORKDIR /home/glue/tools/
