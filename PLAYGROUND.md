@@ -73,20 +73,74 @@ Open `glue.json`, and you'll see JSON similar to this file:
 Each line represent one finding, and it's state. The state can be either `new` (Glue will report it), `ignore` (Glue will not report it) or `postpone:%d-%m-%Y` (Glue will ignore this issue until the specific date). This gives you the ability to ignore or postpone the issues found by Glue.
 
 ####Docker example
-Another example might exclude specific findings:
+Another example, using Docker:
 ```
 	docker run --rm --name=Glue \
 		-v $(PWD):/tmp/triage owasp/glue \
 		-t sfl \
-		-t retirejs \
-		-t nodesecurityproject \
-		--finding-file-path /tmp/triage/glue_ignore.json  \
 		/tmp/triage
 ```
-If there were several items reported which you believed were false-positives, `glue_ignore.json` might include the following:
+Because the default output is text, your terminal might display the following:
+```
+Loading scanner...
+Logfile nil?
+calling scan
+Running scanner
+Mounting /tmp/triage with #<Glue::FileSystemMounter:0x000000016215a0>
+Mounted /tmp/triage with #<Glue::FileSystemMounter:0x000000016215a0>
+Processing target.../tmp/triage
+Running tasks in stage: wait
+Running tasks in stage: mount
+Running tasks in stage: file
+Running tasks in stage: code
+code - SFL - #<Set:0x00000001698038>
+SFL
+Running tasks in stage: live
+Running tasks in stage: done
+Running base report...
+
+	Description: Contains word: password
+
+	Timestamp: 2019-09-10 12:24:19 +0000
+
+	Source: SFL:/tmp/triage/node_modules/foo/bar/passwordrules.js
+
+	Severity: 1
+
+	Fingerprint:  abcdefda571868ff484331cdaa4348f32bd7c59a76c22806a11eeddcdb123456
+
+	Found by:  SFL
+
+	Detail:
+
+	Description: Contains words: private, key
+
+	Timestamp: 2019-09-10 12:24:19 +0000
+
+	Source: SFL:/tmp/triage/node_modules/foo/bar/classPrivateFieldLooseKey.js
+
+	Severity: 1
+
+	Fingerprint:  abcdefb862731c42b16d621598de09516352862c7bf2da5a68bafc4c5d098765
+
+	Found by:  SFL
+
+	Detail:
+```
+The `Fingerprint` lines can be used to ignore any reported items which you believe are false-positives. Adding a `glue_ignore.json` to the root of your project, place the following:
 ```
 {
   "abcdefda571868ff484331cdaa4348f32bd7c59a76c22806a11eeddcdb123456": "ignore",
   "abcdefb862731c42b16d621598de09516352862c7bf2da5a68bafc4c5d098765": "ignore"
 }
 ```
+Finally, modify your Docker script to include `--finding-file-path /tmp/triage/glue_ignore.json`.
+
+```
+	docker run --rm --name=Glue \
+		-v $(PWD):/tmp/triage owasp/glue \
+		-t sfl \
+		--finding-file-path /tmp/triage/glue_ignore.json \
+		/tmp/triage
+```
+Now your output should look clean!
