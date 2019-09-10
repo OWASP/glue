@@ -57,9 +57,9 @@ Glue report each finding as a failed or ignored test. By default, all finding th
 
 ## Ignoring Result
 Any security tools has false positives, and it's critical to be able to ignore them.
-One of Glue features, is the ability to ignore specific findings. To enable this feature, you first need to tell Glue to use a file for filtering the findings (using the `--finding-file glue.json`). Replace `glue.json` with the name of the file:
+One of Glue's features is the ability to ignore specific findings. To enable this feature, you first need to tell Glue to use a file for filtering the findings (using the `--finding-file-path glue.json`). Replace `glue.json` with the name of the file:
 ```
-ruby bin/glue -t zap --zap-host http://localhost --zap-port 1234 --zap-passive-mode http://juice-shop -z 0 --finding-file glue.json
+ruby bin/glue -t zap --zap-host http://localhost --zap-port 1234 --zap-passive-mode http://juice-shop -z 0 --finding-file-path glue.json
 ```
 Open `glue.json`, and you'll see JSON similar to this file:
 ```
@@ -71,3 +71,22 @@ Open `glue.json`, and you'll see JSON similar to this file:
 }
 ```
 Each line represent one finding, and it's state. The state can be either `new` (Glue will report it), `ignore` (Glue will not report it) or `postpone:%d-%m-%Y` (Glue will ignore this issue until the specific date). This gives you the ability to ignore or postpone the issues found by Glue.
+
+####Docker example
+Another example might exclude specific findings:
+```
+	docker run --rm --name=Glue \
+		-v $(PWD):/tmp/triage owasp/glue \
+		-t sfl \
+		-t retirejs \
+		-t nodesecurityproject \
+		--finding-file-path /tmp/triage/glue_ignore.json  \
+		/tmp/triage
+```
+If there were several items reported which you believed were false-positives, `glue_ignore.json` might include the following:
+```
+{
+  "abcdefda571868ff484331cdaa4348f32bd7c59a76c22806a11eeddcdb123456": "ignore",
+  "abcdefb862731c42b16d621598de09516352862c7bf2da5a68bafc4c5d098765": "ignore"
+}
+```
