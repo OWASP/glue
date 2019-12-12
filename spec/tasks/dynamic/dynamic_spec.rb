@@ -117,17 +117,17 @@ describe Glue::Dynamic do
       task.run
     end
     it "should produce one finding" do
-      should have(7).items
+      should have(8).items
     end
 
     it "should fill all the required fields" do
       finding = subject[0]
-      expect(finding.severity).to eq(2)
+      expect(finding.severity).to eq(3)
       expect(finding.description).to eq("This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device.")
       expect(finding.detail).to eq("Application Data can be Backed up<br>[android:allowBackup=true]")
       expect(finding.source).to eq("Application Data can be Backed up<br>[android:allowBackup=true]")
       expect(finding.fingerprint).to eq("Application Data can be Backed up<br>[android:allowBackup=true]")
-      expect(finding.appname).to eq("InsecureBankv2.apk")
+      expect(finding.appname).to eq("InsecureBankv2")
       expect(finding.task).to eq("MobSF")
     end
   end
