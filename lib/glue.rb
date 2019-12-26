@@ -168,6 +168,8 @@ module Glue
       [:to_teamcity]
     when :slack
       [:to_slack]
+    when :off
+      [:to_off]
     else
       [:to_s]
     end
@@ -180,6 +182,8 @@ module Glue
         [:to_csv]
       when /\.json$/i
         [:to_json]
+      when /\.off$/i
+        [:to_off]
       else
         [:to_s]
       end
