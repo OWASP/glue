@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: glue-triage
+  labels:
+    purpose: run-glue-on-triage
+spec:
+  containers:
+  - name: glue-triage-container
+    image: owasp/glue
+    command: ["glue"]
+    args: ["-t", "brakeman", "https://github.com/jemurai/triage.git"]
+  restartPolicy: Never

@@ -1,0 +1,16 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: glue-triage-cron
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: glue-triage
+            image: owasp/glue
+            command: ["glue"]
+            args: ["-t", "brakeman", "https://github.com/jemurai.com/triage.git"]
+          restartPolicy: Never

@@ -41,7 +41,9 @@ ENV PATH $PATH:/home/glue/.rvm/rubies/ruby-2.3.1/bin
 #
 RUN /bin/bash -l -c "sudo pip install --upgrade pip"
 RUN /bin/bash -l -c "sudo pip install bandit"
+RUN /bin/bash -l -c "sudo pip install safety"
 RUN /bin/bash -l -c "sudo pip install awsscout2"
+
 
 #################################################################################################
 #       Java
