@@ -128,6 +128,22 @@ class Glue::OWASPDependencyCheck < Glue::BaseTask
       run_args << [ "--suppression", "#{@tracker.options[:owasp_dep_check_suppression]}" ]
     end
 
+    if @tracker.options[:owasp_dep_check_db_driver_name]
+      run_args << [ "--dbDriverName", "#{@tracker.options[:owasp_dep_check_db_driver_name]}" ]
+    end
+
+    if @tracker.options[:owasp_dep_check_db_conn_string]
+      run_args << [ "--connectionString", "#{@tracker.options[:owasp_dep_check_db_conn_string]}" ]
+    end
+
+    if @tracker.options[:owasp_dep_check_db_user]
+      run_args << [ "--dbUser", "#{@tracker.options[:owasp_dep_check_db_user]}" ]
+    end
+
+    if @tracker.options[:owasp_dep_check_db_pass]
+      run_args << [ "--dbPassword", "#{@tracker.options[:owasp_dep_check_db_pass]}" ]
+    end
+
     run_args << [ "-out", "#{rootpath}", "-s", "#{rootpath}" ] unless @scala_project || @gradle_project || @maven_project
 
     initial_dir = Dir.pwd
