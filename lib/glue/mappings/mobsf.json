@@ -1,9 +1,9 @@
 {
   "task_name": "MobSF",
-  "app_name": "name",
+  "app_name": "app_name",
   "mappings": [
     {
-      "key": "manifest",
+      "key": "manifest_analysis",
       "properties": {
         "description": "desc",
         "detail": "title",
