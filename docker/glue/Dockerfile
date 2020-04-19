@@ -65,8 +65,16 @@ RUN git checkout rg-local-scan
 WORKDIR /home/glue/tools/
 
 # OWASP DEPENDENCY CHECK (needs unzip and default-jre)
-RUN curl -L http://dl.bintray.com/jeremy-long/owasp/dependency-check-1.4.3-release.zip --output owasp-dep-check.zip
-RUN unzip owasp-dep-check.zip
+# Release updates published at: https://bintray.com/jeremy-long/owasp/dependency-check
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys F9514E84AE3708288374BBBE097586CFEA37F9A6 \
+ && curl -L http://dl.bintray.com/jeremy-long/owasp/dependency-check-4.0.3-release.zip --output owasp-dep-check.zip \
+ && curl -L http://dl.bintray.com/jeremy-long/owasp/dependency-check-4.0.3-release.zip.asc --output owasp-dep-check.zip.asc \
+ && gpg --verify owasp-dep-check.zip.asc \
+ && unzip owasp-dep-check.zip \
+ && rm owasp-dep-check.zip owasp-dep-check.zip.asc
+
+# Mono (Required for OWASP Dependency Check scans of .exe and .dll files)
+RUN sudo apt-get install -y mono-runtime mono-devel
 
 # Maven
 RUN sudo apt-get install -y maven
