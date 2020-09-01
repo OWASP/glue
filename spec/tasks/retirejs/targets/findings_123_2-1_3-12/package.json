@@ -3,6 +3,6 @@
   "dependencies": {
     "cli": "0.11.3",
     "cookie-signature": "1.0.3",
-    "pivottable": "1.4.0"
+    "pivottable": "2.23.0"
   }
 }
