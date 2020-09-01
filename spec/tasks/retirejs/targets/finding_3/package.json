@@ -1,6 +1,6 @@
 {
   "name": "retirejs-test",
   "dependencies": {
-    "pivottable": "1.4.0"
+    "pivottable": "2.23.0"
   }
 }
