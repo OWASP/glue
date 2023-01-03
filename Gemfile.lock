@@ -78,7 +78,8 @@ GEM
     hashdiff (0.3.7)
     hashie (3.5.7)
     highline (1.7.10)
-    httparty (0.16.2)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
@@ -93,6 +94,7 @@ GEM
       multi_json
       to_regexp (~> 0.2.1)
     method_source (0.9.0)
+    mini_mime (1.1.2)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
     multi_json (1.13.1)
