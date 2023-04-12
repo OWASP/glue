@@ -8,6 +8,8 @@
 
 # OWASP Glue
 
+** THIS PROJECT IS ARCHIVED. CONTENT REMAINS AVAILABLE FOR HISTORICAL PURPOSES ONLY **
+
 Glue is a framework for running a series of tools.  Generally, it is intended as a backbone for automating a security analysis pipeline of tools.
 
 # Recommended Usage
